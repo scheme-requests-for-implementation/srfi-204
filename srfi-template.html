@@ -256,9 +256,9 @@ patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
     | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer.
-                                   ;;   Example: <b>..1</b>, <b>..2</b> ...
+                                   ;;   Example: <b>..= 1</b>, <b>..= 2</b> ...
     | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers.
-                                   ;;   Example: <b>__1</b>, <b>__2</b> ...
+                                   ;;   Example: <b>..* 3 4</b>, match 3 or 4 of a pattern <b>..* 1 5</b> match from 1 to 5 of a pattern
 
 </pre>
 <h3>Procedures</h3>
