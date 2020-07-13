@@ -1,4 +1,5 @@
 .:
+
 **gauche-grammar** the syntax description from Gauche's documentation
 
 **match-implementations.md** all the documentation and implementation
@@ -13,8 +14,10 @@ implementation of pattern matching
 
 **README.md** this file
 
-**srfi-template.html** the filled out SRFI
+**srfi-template.html** the filled-out SRFI
+
 
 ./match:
+
 **match.scm** Chibi pattern matching library implementation
 
