@@ -1,0 +1,11 @@
+%%%% Starting test hello
+Group begin: hello
+Test begin:
+  source-file: "test/hello-test.scm"
+  source-line: 5
+  source-form: (test-assert (not (equal? "hello" "world")))
+Test end:
+  result-kind: pass
+  actual-value: #t
+Group end: hello
+# of expected passes      1
