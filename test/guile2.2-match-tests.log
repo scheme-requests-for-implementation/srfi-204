@@ -1,9 +1,9 @@
-%%%% Starting test match
-Group begin: match
+%%%% Starting test guile2.2-match-tests
+Group begin: guile2.2-match-tests
 Test begin:
   test-name: "any"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 13
+  source-file: "test/tests-common.scm"
+  source-line: 12
   source-form: (test-equal "any" (quote ok) (match (quote any) (_ (quote ok))))
 Test end:
   result-kind: pass
@@ -11,8 +11,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "symbol"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 14
+  source-file: "test/tests-common.scm"
+  source-line: 13
   source-form: (test-equal "symbol" (quote ok) (match (quote ok) (x x)))
 Test end:
   result-kind: pass
@@ -20,8 +20,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "number"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 15
+  source-file: "test/tests-common.scm"
+  source-line: 14
   source-form: (test-equal "number" (quote ok) (match 28 (28 (quote ok))))
 Test end:
   result-kind: pass
@@ -29,8 +29,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "string"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 16
+  source-file: "test/tests-common.scm"
+  source-line: 15
   source-form: (test-equal "string" (quote ok) (match "good" ("bad" (quote fail)) ("good" (quote ok))))
 Test end:
   result-kind: pass
@@ -38,8 +38,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "literal symbol"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 17
+  source-file: "test/tests-common.scm"
+  source-line: 16
   source-form: (test-equal "literal symbol" (quote ok) (match (quote good) ((quote bad) (quote fail)) ((quote good) (quote ok))))
 Test end:
   result-kind: pass
@@ -47,8 +47,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "null"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 18
+  source-file: "test/tests-common.scm"
+  source-line: 17
   source-form: (test-equal "null" (quote ok) (match (quote ()) (() (quote ok))))
 Test end:
   result-kind: pass
@@ -56,8 +56,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "pair"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 19
+  source-file: "test/tests-common.scm"
+  source-line: 18
   source-form: (test-equal "pair" (quote ok) (match (quote (ok)) ((x) x)))
 Test end:
   result-kind: pass
@@ -65,8 +65,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "vector"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 20
+  source-file: "test/tests-common.scm"
+  source-line: 19
   source-form: (test-equal "vector" (quote ok) (match (quote #(ok)) (#(x) x)))
 Test end:
   result-kind: pass
@@ -74,8 +74,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "any doubled"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 21
+  source-file: "test/tests-common.scm"
+  source-line: 20
   source-form: (test-equal "any doubled" (quote ok) (match (quote (1 2)) ((_ _) (quote ok))))
 Test end:
   result-kind: pass
@@ -83,8 +83,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "and empty"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 22
+  source-file: "test/tests-common.scm"
+  source-line: 21
   source-form: (test-equal "and empty" (quote ok) (match (quote (o k)) ((and) (quote ok))))
 Test end:
   result-kind: pass
@@ -92,8 +92,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "and single"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 23
+  source-file: "test/tests-common.scm"
+  source-line: 22
   source-form: (test-equal "and single" (quote ok) (match (quote ok) ((and x) x)))
 Test end:
   result-kind: pass
@@ -101,8 +101,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "and double"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 24
+  source-file: "test/tests-common.scm"
+  source-line: 23
   source-form: (test-equal "and double" (quote ok) (match (quote ok) ((and (? symbol?) y) (quote ok))))
 Test end:
   result-kind: pass
@@ -110,8 +110,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "or empty"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 25
+  source-file: "test/tests-common.scm"
+  source-line: 24
   source-form: (test-equal "or empty" (quote ok) (match (quote (o k)) ((or) (quote fail)) (else (quote ok))))
 Test end:
   result-kind: pass
@@ -119,8 +119,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "or single"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 26
+  source-file: "test/tests-common.scm"
+  source-line: 25
   source-form: (test-equal "or single" (quote ok) (match (quote ok) ((or x) (quote ok))))
 Test end:
   result-kind: pass
@@ -128,8 +128,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "or double"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 27
+  source-file: "test/tests-common.scm"
+  source-line: 26
   source-form: (test-equal "or double" (quote ok) (match (quote ok) ((or (? symbol? y) y) y)))
 Test end:
   result-kind: pass
@@ -137,8 +137,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "not"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 28
+  source-file: "test/tests-common.scm"
+  source-line: 27
   source-form: (test-equal "not" (quote ok) (match 28 ((not (a . b)) (quote ok))))
 Test end:
   result-kind: pass
@@ -146,8 +146,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "pred"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 29
+  source-file: "test/tests-common.scm"
+  source-line: 28
   source-form: (test-equal "pred" (quote ok) (match 28 ((? number?) (quote ok))))
 Test end:
   result-kind: pass
@@ -155,8 +155,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "named pred"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 30
+  source-file: "test/tests-common.scm"
+  source-line: 29
   source-form: (test-equal "named pred" 29 (match 28 ((? number? x) (+ x 1))))
 Test end:
   result-kind: pass
@@ -164,8 +164,8 @@ Test end:
   expected-value: 29
 Test begin:
   test-name: "duplicate symbols pass"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 32
+  source-file: "test/tests-common.scm"
+  source-line: 31
   source-form: (test-equal "duplicate symbols pass" (quote ok) (match (quote (ok . ok)) ((x . x) x)))
 Test end:
   result-kind: pass
@@ -173,8 +173,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "duplicate symbols fail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 33
+  source-file: "test/tests-common.scm"
+  source-line: 32
   source-form: (test-equal "duplicate symbols fail" (quote ok) (match (quote (ok . bad)) ((x . x) (quote bad)) (else (quote ok))))
 Test end:
   result-kind: pass
@@ -182,8 +182,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "duplicate symbols samth"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 35
+  source-file: "test/tests-common.scm"
+  source-line: 34
   source-form: (test-equal "duplicate symbols samth" (quote ok) (match (quote (ok . ok)) ((x quote bad) x) (((quote ok) . x) x)))
 Test end:
   result-kind: pass
@@ -191,8 +191,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "duplicate symbols bound"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 37
+  source-file: "test/tests-common.scm"
+  source-line: 36
   source-form: (test-equal "duplicate symbols bound" 3 (let ((a (quote (1 2)))) (match a ((and (a 2) (1 b)) (+ a b)) (_ #f))))
 Test end:
   result-kind: pass
@@ -200,8 +200,8 @@ Test end:
   expected-value: 3
 Test begin:
   test-name: "duplicate quasiquote"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 39
+  source-file: "test/tests-common.scm"
+  source-line: 38
   source-form: (test-equal "duplicate quasiquote" (quote ok) (match (quote (a b)) ((or (quasiquote (a (unquote x))) (quasiquote ((unquote x) b))) (quote ok)) (_ #f)))
 Test end:
   result-kind: pass
@@ -209,8 +209,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "ellipses"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 42
+  source-file: "test/tests-common.scm"
+  source-line: 41
   source-form: (test-equal "ellipses" (quote ((a b c) (1 2 3))) (match (quote ((a . 1) (b . 2) (c . 3))) (((x . y) ___) (list x y))))
 Test end:
   result-kind: pass
@@ -218,8 +218,8 @@ Test end:
   expected-value: ((a b c) (1 2 3))
 Test begin:
   test-name: "real ellipses"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 46
+  source-file: "test/tests-common.scm"
+  source-line: 45
   source-form: (test-equal "real ellipses" (quote ((a b c) (1 2 3))) (match (quote ((a . 1) (b . 2) (c . 3))) (((x . y) ...) (list x y))))
 Test end:
   result-kind: pass
@@ -227,8 +227,8 @@ Test end:
   expected-value: ((a b c) (1 2 3))
 Test begin:
   test-name: "vector ellipses"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 50
+  source-file: "test/tests-common.scm"
+  source-line: 49
   source-form: (test-equal "vector ellipses" (quote (1 2 3 (a b c) (1 2 3))) (match (quote #(1 2 3 (a . 1) (b . 2) (c . 3))) (#(a b c (hd . tl) ...) (list a b c hd tl))))
 Test end:
   result-kind: pass
@@ -236,8 +236,8 @@ Test end:
   expected-value: (1 2 3 (a b c) (1 2 3))
 Test begin:
   test-name: "pred ellipses"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 54
+  source-file: "test/tests-common.scm"
+  source-line: 53
   source-form: (test-equal "pred ellipses" (quote (1 2 3)) (match (quote (1 2 3)) (((? odd? n) ___) n) (((? number? n) ___) n)))
 Test end:
   result-kind: pass
@@ -245,8 +245,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "failure continuation"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 59
+  source-file: "test/tests-common.scm"
+  source-line: 58
   source-form: (test-equal "failure continuation" (quote ok) (match (quote (1 2)) ((a . b) (=> next) (if (even? a) (quote fail) (next))) ((a . b) (quote ok))))
 Test end:
   result-kind: pass
@@ -254,8 +254,8 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "let"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 64
+  source-file: "test/tests-common.scm"
+  source-line: 63
   source-form: (test-equal "let" (quote (o k)) (match-let ((x (quote ok)) (y (quote (o k)))) y))
 Test end:
   result-kind: pass
@@ -263,8 +263,8 @@ Test end:
   expected-value: (o k)
 Test begin:
   test-name: "let*"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 67
+  source-file: "test/tests-common.scm"
+  source-line: 66
   source-form: (test-equal "let*" (quote (f o o f)) (match-let* ((x (quote f)) (y (quote o)) ((z w) (list y x))) (list x y z w)))
 Test end:
   result-kind: pass
@@ -272,8 +272,8 @@ Test end:
   expected-value: (f o o f)
 Test begin:
   test-name: "getter car"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 70
+  source-file: "test/tests-common.scm"
+  source-line: 69
   source-form: (test-equal "getter car" (quote (1 2)) (match (quote (1 . 2)) (((get! a) . b) (list (a) b))))
 Test end:
   result-kind: pass
@@ -281,8 +281,8 @@ Test end:
   expected-value: (1 2)
 Test begin:
   test-name: "getter cdr"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 73
+  source-file: "test/tests-common.scm"
+  source-line: 72
   source-form: (test-equal "getter cdr" (quote (1 2)) (match (quote (1 . 2)) ((a get! b) (list a (b)))))
 Test end:
   result-kind: pass
@@ -290,8 +290,8 @@ Test end:
   expected-value: (1 2)
 Test begin:
   test-name: "getter vector"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 76
+  source-file: "test/tests-common.scm"
+  source-line: 75
   source-form: (test-equal "getter vector" (quote (1 2 3)) (match (quote #(1 2 3)) (#((get! a) b c) (list (a) b c))))
 Test end:
   result-kind: pass
@@ -299,8 +299,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "setter car"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 79
+  source-file: "test/tests-common.scm"
+  source-line: 78
   source-form: (test-equal "setter car" (quote (3 . 2)) (let ((x (cons 1 2))) (match x (((set! a) . b) (a 3))) x))
 Test end:
   result-kind: pass
@@ -308,8 +308,8 @@ Test end:
   expected-value: (3 . 2)
 Test begin:
   test-name: "setter cdr"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 84
+  source-file: "test/tests-common.scm"
+  source-line: 83
   source-form: (test-equal "setter cdr" (quote (1 . 3)) (let ((x (cons 1 2))) (match x ((a set! b) (b 3))) x))
 Test end:
   result-kind: pass
@@ -317,8 +317,8 @@ Test end:
   expected-value: (1 . 3)
 Test begin:
   test-name: "setter vector"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 89
+  source-file: "test/tests-common.scm"
+  source-line: 88
   source-form: (test-equal "setter vector" (quote #(1 0 3)) (let ((x (vector 1 2 3))) (match x (#(a (set! b) c) (b 0))) x))
 Test end:
   result-kind: pass
@@ -326,8 +326,8 @@ Test end:
   expected-value: #(1 0 3)
 Test begin:
   test-name: "single tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 94
+  source-file: "test/tests-common.scm"
+  source-line: 93
   source-form: (test-equal "single tail" (quote ((a b) (1 2) (c . 3))) (match (quote ((a . 1) (b . 2) (c . 3))) (((x . y) ... last) (list x y last))))
 Test end:
   result-kind: pass
@@ -335,8 +335,8 @@ Test end:
   expected-value: ((a b) (1 2) (c . 3))
 Test begin:
   test-name: "single tail 2"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 98
+  source-file: "test/tests-common.scm"
+  source-line: 97
   source-form: (test-equal "single tail 2" (quote ((a b) (1 2) 3)) (match (quote ((a . 1) (b . 2) 3)) (((x . y) ... last) (list x y last))))
 Test end:
   result-kind: pass
@@ -344,8 +344,8 @@ Test end:
   expected-value: ((a b) (1 2) 3)
 Test begin:
   test-name: "multiple tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 102
+  source-file: "test/tests-common.scm"
+  source-line: 101
   source-form: (test-equal "multiple tail" (quote ((a b) (1 2) (c . 3) (d . 4) (e . 5))) (match (quote ((a . 1) (b . 2) (c . 3) (d . 4) (e . 5))) (((x . y) ... u v w) (list x y u v w))))
 Test end:
   result-kind: pass
@@ -353,8 +353,8 @@ Test end:
   expected-value: ((a b) (1 2) (c . 3) (d . 4) (e . 5))
 Test begin:
   test-name: "tail against improper list"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 106
+  source-file: "test/tests-common.scm"
+  source-line: 105
   source-form: (test-equal "tail against improper list" #f (match (quote (a b c d e f . g)) ((x ... y u v w) (list x y u v w)) (else #f)))
 Test end:
   result-kind: pass
@@ -362,8 +362,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "Riastradh quasiquote"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 111
+  source-file: "test/tests-common.scm"
+  source-line: 110
   source-form: (test-equal "Riastradh quasiquote" (quote (2 3)) (match (quote (1 2 3)) ((quasiquote (1 (unquote b) (unquote c))) (list b c))))
 Test end:
   result-kind: pass
@@ -371,8 +371,8 @@ Test end:
   expected-value: (2 3)
 Test begin:
   test-name: "unquote-splicing"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 114
+  source-file: "test/tests-common.scm"
+  source-line: 113
   source-form: (test-equal "unquote-splicing" (quote (2 3)) (match (quote (1 2 3)) ((quasiquote (1 (unquote-splicing ls))) ls)))
 Test end:
   result-kind: pass
@@ -380,8 +380,8 @@ Test end:
   expected-value: (2 3)
 Test begin:
   test-name: "unquote-splicing tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 117
+  source-file: "test/tests-common.scm"
+  source-line: 116
   source-form: (test-equal "unquote-splicing tail" (quote (b c)) (match (quote (a b c d)) ((quasiquote (a (unquote-splicing ls) d)) ls)))
 Test end:
   result-kind: pass
@@ -389,8 +389,8 @@ Test end:
   expected-value: (b c)
 Test begin:
   test-name: "unquote-splicing tail fail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 120
+  source-file: "test/tests-common.scm"
+  source-line: 119
   source-form: (test-equal "unquote-splicing tail fail" #f (match (quote (a b c e)) ((quasiquote (a (unquote-splicing ls) d)) ls) (else #f)))
 Test end:
   result-kind: pass
@@ -398,8 +398,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "trivial tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 123
+  source-file: "test/tests-common.scm"
+  source-line: 122
   source-form: (test-equal "trivial tree search" (quote (1 2 3)) (match (quote (1 2 3)) ((_ *** (a b c)) (list a b c))))
 Test end:
   result-kind: pass
@@ -407,8 +407,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "simple tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 126
+  source-file: "test/tests-common.scm"
+  source-line: 125
   source-form: (test-equal "simple tree search" (quote (1 2 3)) (match (quote (x (1 2 3))) ((_ *** (a b c)) (list a b c))))
 Test end:
   result-kind: pass
@@ -416,8 +416,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "deep tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 129
+  source-file: "test/tests-common.scm"
+  source-line: 128
   source-form: (test-equal "deep tree search" (quote (1 2 3)) (match (quote (x (x (x (1 2 3))))) ((_ *** (a b c)) (list a b c))))
 Test end:
   result-kind: pass
@@ -425,8 +425,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "non-tail tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 132
+  source-file: "test/tests-common.scm"
+  source-line: 131
   source-form: (test-equal "non-tail tree search" (quote (1 2 3)) (match (quote (x (x (x a b c (1 2 3) d e f)))) ((_ *** (a b c)) (list a b c))))
 Test end:
   result-kind: pass
@@ -434,8 +434,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "restricted tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 135
+  source-file: "test/tests-common.scm"
+  source-line: 134
   source-form: (test-equal "restricted tree search" (quote (1 2 3)) (match (quote (x (x (x a b c (1 2 3) d e f)))) (((quote x) *** (a b c)) (list a b c))))
 Test end:
   result-kind: pass
@@ -443,8 +443,8 @@ Test end:
   expected-value: (1 2 3)
 Test begin:
   test-name: "fail restricted tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 138
+  source-file: "test/tests-common.scm"
+  source-line: 137
   source-form: (test-equal "fail restricted tree search" #f (match (quote (x (y (x a b c (1 2 3) d e f)))) (((quote x) *** (a b c)) (list a b c)) (else #f)))
 Test end:
   result-kind: pass
@@ -452,8 +452,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "sxml tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 143
+  source-file: "test/tests-common.scm"
+  source-line: 142
   source-form: (test-equal "sxml tree search" (quote (((href . "http://synthcode.com/")) ("synthcode"))) (match (quote (p (ul (li a (b c) (a (@ (href . "http://synthcode.com/")) "synthcode") d e f)))) (((or (quote p) (quote ul) (quote li) (quote b)) *** ((quote a) ((quote @) attrs ...) text ...)) (list attrs text)) (else #f)))
 Test end:
   result-kind: pass
@@ -461,8 +461,8 @@ Test end:
   expected-value: (((href . "http://synthcode.com/")) ("synthcode"))
 Test begin:
   test-name: "failed sxml tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 151
+  source-file: "test/tests-common.scm"
+  source-line: 150
   source-form: (test-equal "failed sxml tree search" #f (match (quote (p (ol (li a (b c) (a (@ (href . "http://synthcode.com/")) "synthcode") d e f)))) (((or (quote p) (quote ul) (quote li) (quote b)) *** ((quote a) ((quote @) attrs ...) text ...)) (list attrs text)) (else #f)))
 Test end:
   result-kind: pass
@@ -470,8 +470,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "collect tree search"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 158
+  source-file: "test/tests-common.scm"
+  source-line: 157
   source-form: (test-equal "collect tree search" (quote ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))) (match (quote (p (ul (li a (b c) (a (@ (href . "http://synthcode.com/")) "synthcode") d e f)))) (((and tag (or (quote p) (quote ul) (quote li) (quote b))) *** ((quote a) ((quote @) attrs ...) text ...)) (list tag attrs text)) (else #f)))
 Test end:
   result-kind: pass
@@ -479,8 +479,8 @@ Test end:
   expected-value: ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
 Test begin:
   test-name: "anded tail pattern"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 166
+  source-file: "test/tests-common.scm"
+  source-line: 165
   source-form: (test-equal "anded tail pattern" (quote (1 2)) (match (quote (1 2 3)) ((and (a ... b) x) a)))
 Test end:
   result-kind: pass
@@ -488,8 +488,8 @@ Test end:
   expected-value: (1 2)
 Test begin:
   test-name: "anded search pattern"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 169
+  source-file: "test/tests-common.scm"
+  source-line: 168
   source-form: (test-equal "anded search pattern" (quote (a b c)) (match (quote (a (b (c d)))) ((and (p *** (quote d)) x) p)))
 Test end:
   result-kind: pass
@@ -497,8 +497,8 @@ Test end:
   expected-value: (a b c)
 Test begin:
   test-name: "joined tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 172
+  source-file: "test/tests-common.scm"
+  source-line: 171
   source-form: (test-equal "joined tail" (quote (1 2)) (match (quote (1 2 3)) ((and (a ... b) x) a)))
 Test end:
   result-kind: pass
@@ -506,8 +506,8 @@ Test end:
   expected-value: (1 2)
 Test begin:
   test-name: "list ..1"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 175
+  source-file: "test/tests-common.scm"
+  source-line: 174
   source-form: (test-equal "list ..1" (quote (a b c)) (match (quote (a b c)) ((x ..1) x)))
 Test end:
   result-kind: pass
@@ -515,8 +515,8 @@ Test end:
   expected-value: (a b c)
 Test begin:
   test-name: "list ..1 failed"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 178
+  source-file: "test/tests-common.scm"
+  source-line: 177
   source-form: (test-equal "list ..1 failed" #f (match (quote ()) ((x ..1) x) (else #f)))
 Test end:
   result-kind: pass
@@ -524,8 +524,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..1 with predicate"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 183
+  source-file: "test/tests-common.scm"
+  source-line: 182
   source-form: (test-equal "list ..1 with predicate" (quote (a b c)) (match (quote (a b c)) (((and x (? symbol?)) ..1) x)))
 Test end:
   result-kind: pass
@@ -533,8 +533,8 @@ Test end:
   expected-value: (a b c)
 Test begin:
   test-name: "list ..1 with failed predicate"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 187
+  source-file: "test/tests-common.scm"
+  source-line: 186
   source-form: (test-equal "list ..1 with failed predicate" #f (match (quote (a b 3)) (((and x (? symbol?)) ..1) x) (else #f)))
 Test end:
   result-kind: pass
@@ -542,8 +542,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..= too few"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 192
+  source-file: "test/tests-common.scm"
+  source-line: 191
   source-form: (test-equal "list ..= too few" #f (match (list 1 2) ((a b ..= 2) b) (else #f)))
 Test end:
   result-kind: pass
@@ -551,8 +551,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..="
-  source-file: "test/guile2.2-test.scm"
-  source-line: 194
+  source-file: "test/tests-common.scm"
+  source-line: 193
   source-form: (test-equal "list ..=" (quote (2 3)) (match (list 1 2 3) ((a b ..= 2) b) (else #f)))
 Test end:
   result-kind: pass
@@ -560,8 +560,8 @@ Test end:
   expected-value: (2 3)
 Test begin:
   test-name: "list ..= too many"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 196
+  source-file: "test/tests-common.scm"
+  source-line: 195
   source-form: (test-equal "list ..= too many" #f (match (list 1 2 3 4) ((a b ..= 2) b) (else #f)))
 Test end:
   result-kind: pass
@@ -569,8 +569,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..= tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 198
+  source-file: "test/tests-common.scm"
+  source-line: 197
   source-form: (test-equal "list ..= tail" 4 (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)))
 Test end:
   result-kind: pass
@@ -578,8 +578,8 @@ Test end:
   expected-value: 4
 Test begin:
   test-name: "list ..= tail fail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 200
+  source-file: "test/tests-common.scm"
+  source-line: 199
   source-form: (test-equal "list ..= tail fail" #f (match (list 1 2 3 4 5 6) ((a b ..= 2 c) c) (else #f)))
 Test end:
   result-kind: pass
@@ -587,8 +587,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..* too few"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 203
+  source-file: "test/tests-common.scm"
+  source-line: 202
   source-form: (test-equal "list ..* too few" #f (match (list 1 2) ((a b ..* 2 4) b) (else #f)))
 Test end:
   result-kind: pass
@@ -596,8 +596,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..* lo"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 205
+  source-file: "test/tests-common.scm"
+  source-line: 204
   source-form: (test-equal "list ..* lo" (quote (2 3)) (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)))
 Test end:
   result-kind: pass
@@ -605,8 +605,8 @@ Test end:
   expected-value: (2 3)
 Test begin:
   test-name: "list ..* hi"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 207
+  source-file: "test/tests-common.scm"
+  source-line: 206
   source-form: (test-equal "list ..* hi" (quote (2 3 4 5)) (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)))
 Test end:
   result-kind: pass
@@ -614,8 +614,8 @@ Test end:
   expected-value: (2 3 4 5)
 Test begin:
   test-name: "list ..* too many"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 209
+  source-file: "test/tests-common.scm"
+  source-line: 208
   source-form: (test-equal "list ..* too many" #f (match (list 1 2 3 4 5 6) ((a b ..* 2 4) b) (else #f)))
 Test end:
   result-kind: pass
@@ -623,8 +623,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "list ..* tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 211
+  source-file: "test/tests-common.scm"
+  source-line: 210
   source-form: (test-equal "list ..* tail" 4 (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)))
 Test end:
   result-kind: pass
@@ -632,8 +632,8 @@ Test end:
   expected-value: 4
 Test begin:
   test-name: "list ..* tail 2"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 213
+  source-file: "test/tests-common.scm"
+  source-line: 212
   source-form: (test-equal "list ..* tail 2" 5 (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)))
 Test end:
   result-kind: pass
@@ -641,8 +641,8 @@ Test end:
   expected-value: 5
 Test begin:
   test-name: "list ..* tail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 215
+  source-file: "test/tests-common.scm"
+  source-line: 214
   source-form: (test-equal "list ..* tail" 6 (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)))
 Test end:
   result-kind: pass
@@ -650,8 +650,8 @@ Test end:
   expected-value: 6
 Test begin:
   test-name: "list ..* tail fail"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 217
+  source-file: "test/tests-common.scm"
+  source-line: 216
   source-form: (test-equal "list ..* tail fail" #f (match (list 1 2 3 4 5 6 7) ((a b ..* 2 4 c) c) (else #f)))
 Test end:
   result-kind: pass
@@ -659,8 +659,8 @@ Test end:
   expected-value: #f
 Test begin:
   test-name: "match-named-let"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 220
+  source-file: "test/tests-common.scm"
+  source-line: 219
   source-form: (test-equal "match-named-let" 6 (match-let loop (((x . rest) (quote (1 2 3))) (sum 0)) (let ((sum (+ x sum))) (if (null? rest) sum (loop rest sum)))))
 Test end:
   result-kind: pass
@@ -668,8 +668,8 @@ Test end:
   expected-value: 6
 Test begin:
   test-name: "match-letrec"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 228
+  source-file: "test/tests-common.scm"
+  source-line: 227
   source-form: (test-equal "match-letrec" (quote (2 1 1 2)) (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))))
 Test end:
   result-kind: fail
@@ -678,8 +678,8 @@ Test end:
   expected-value: (2 1 1 2)
 Test begin:
   test-name: "record positional"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 234
+  source-file: "test/tests-common.scm"
+  source-line: 233
   source-form: (test-equal "record positional" (quote (1 0)) (match (make-point 0 1) (($ Point x y) (list y x))))
 Test end:
   result-kind: pass
@@ -687,14 +687,14 @@ Test end:
   expected-value: (1 0)
 Test begin:
   test-name: "record named"
-  source-file: "test/guile2.2-test.scm"
-  source-line: 238
+  source-file: "test/tests-common.scm"
+  source-line: 237
   source-form: (test-equal "record named" (quote (1 0)) (match (make-point 0 1) ((@ Point (x x) (y y)) (list y x))))
 Test end:
   result-kind: fail
   actual-value: #f
   actual-error: (wrong-type-arg #f "Wrong type (expecting ~A): ~S" ("exact integer" x) (x))
   expected-value: (1 0)
-Group end: match
+Group end: guile2.2-match-tests
 # of expected passes      75
 # of unexpected failures  2
