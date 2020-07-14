@@ -1,6 +1,6 @@
-##Files used to make SRFI for WCS pattern matcher.
+## Files used to make SRFI for WCS pattern matcher.
 
-####.:
+#### .:
 
 **gauche-grammar** the syntax description from Gauche's documentation
 
@@ -19,22 +19,22 @@ implementation of pattern matching
 **srfi-template.html** the filled-out SRFI
 
 
-####./match:
+#### ./match:
 
 **match.scm** Chibi pattern matching library implementation
 
 
-####./guile2.2:
+#### ./guile2.2:
 
 **match.scm** Guile implementation of library definition, uses define-module
               and include-from-path instead of define-libarary and include and
               defines is-a? macro used in upstream
 
-####./guile2.2/match:
+#### ./guile2.2/match:
 
 **match-upstream.scm** no changes from ./match/match.scm
 
-####./test:
+#### ./test:
 
 **guile2.2-test.scm** match-test-sld tests re-written to use srfi-64 and srfi-9
 
