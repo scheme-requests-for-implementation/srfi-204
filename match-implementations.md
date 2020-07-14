@@ -1,4 +1,8 @@
 ### Andrew Wright's (and some other)pattern matchers:
+
+**publication**
+<https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf> pp.116-120
+**implementation**
 <https://legacy.cs.indiana.edu/scheme-repository/code.match.html>
 
 ### s7
@@ -101,7 +105,13 @@ I thought Loko had this pattern matcher via Akku, now I'm not so sure
 <https://github.com/manuel-serrano/bigloo/tree/master/runtime/Match>
 
 ### Chez
-did not see any thing in Chez's documentation, but saw references to its pattern matcher elsewhere.
+
+**documentation**
+<https://web.archive.org/web/20180718090106/https://www.cs.indiana.edu/chezscheme/match/>
+(I don't know the current status of this re:Chez)
+
+**implementation**
+<https://github.com/guenchi/match>
 
 ### Chicken
 
