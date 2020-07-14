@@ -1,0 +1,11 @@
+%%%% Starting test guile-hello
+Group begin: guile-hello
+Test begin:
+  source-file: "test/hello-common.scm"
+  source-line: 5
+  source-form: (test-assert (not (equal? "hello" "world")))
+Test end:
+  result-kind: pass
+  actual-value: #t
+Group end: guile-hello
+# of expected passes      1

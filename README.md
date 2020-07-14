@@ -19,11 +19,6 @@ implementation of pattern matching
 **srfi-template.html** the filled-out SRFI
 
 
-## ./match:
-
-**match.scm** Chibi pattern matching library implementation
-
-
 ## ./guile2.2:
 
 **match.scm** Guile implementation of library definition, uses define-module
@@ -34,11 +29,20 @@ implementation of pattern matching
 
 **match-upstream.scm** no changes from ./match/match.scm
 
+## ./match:
+
+**match.scm** Chibi pattern matching library implementation
+
+
 ## ./test:
 
 **guile2.2-test.scm** match-test-sld tests re-written to use srfi-64 and srfi-9
 
-**hello-test.scm** should always pass
+**guile-hello-test.scm** passes if guile is set up correctly in Makefile
+
+**hello-common.scm** check compilers/interpreters
+
+**tests-common.scm** match tests
 
 **Makefile** make check runs all tests
 
