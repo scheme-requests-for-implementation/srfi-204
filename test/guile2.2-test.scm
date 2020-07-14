@@ -1,4 +1,4 @@
-(use-modules (srfi srfi-64)
+(import (srfi srfi-64)
 	     (guile2.2 match)
 	     (srfi srfi-9))
 
