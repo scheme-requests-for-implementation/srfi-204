@@ -52,7 +52,18 @@ matching.
 <p>
 Currently, the pattern matching facilities that have been implemented
 by SRFIs are procedures of variable arity (SRFI 16) and S-expressions
-(SRFI 200). The pattern matcher originated by Andrew K. Wright and
+(SRFI 200). The focus of SRFI-200 is both consensus and clarity. That is,
+it aims to provide a pattern syntax that is both widely shared, and easily
+read without having to know any notation that is not ordinary Scheme. So the
+aim of SRFI-200 two-fold, to provide an implementation, but also a way of using
+the pattern matchers already available in many implementations in a way that is
+both portable and readable.
+</p>
+<p>
+This SRFI aims to take one pattern matcher that has a matching syntax beyond
+S-expressions and provide a reference implementation, documentation, and
+tests.
+The pattern matcher originated by Andrew K. Wright and
 Robert Cartwright and further developed by Alex Shinn (WCS) is already in
 use (at least in part) in several Scheme implementations. Aside from
 S-expressions it also matches vectors and records. It has the
@@ -65,8 +76,11 @@ with a pattern.
 This library is already part of Chibi, Guile, Cyclone, Chicken, Gauche,
 LispKit, Mosh, and Sagittarius. There are other pattern matching
 libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje. Making the WCS pattern matcher a SRFI
-makes a common interface and a portable implementation more readily available.
+Scheme 9 from Empty Space, and Scheje which vary in how similar they are to
+WCS, what they match, and what part of the language (core or library)
+they are in. Making the WCS pattern matcher a SRFI
+makes a common interface and a portable implementation, along with its
+tests and documentation available in a central repository.
 </p>
 <h2>Specification</h2>
 
@@ -297,7 +311,7 @@ is available on Github.
 
 <h2>Acknowledgements</h2>
 
-Andrew K. Wright, Robert Cartwright, and Alex Shinn
+Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Godek.
 
 <h2>Copyright</h2>
 <p>Copyright &copy; Felix Thibault (2020).</p>
