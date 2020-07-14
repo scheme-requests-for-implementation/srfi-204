@@ -8,6 +8,8 @@
   (y point-y point-y-set!))
 
 (test-begin test-name)
+;;;log version
+(test-equal scheme-version-name 1 1)
 
 (test-equal "any" 'ok (match 'any (_ 'ok)))
 (test-equal "symbol" 'ok (match 'ok (x x)))

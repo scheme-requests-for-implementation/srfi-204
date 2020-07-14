@@ -19,4 +19,4 @@
      (and (struct? rec)
           (eq? (struct-vtable rec) rtd)))))
 
-(include-from-path "guile2.2/match/match-upstream.scm")
+(include-from-path "./match/match.scm")

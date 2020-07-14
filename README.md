@@ -23,11 +23,7 @@ implementation of pattern matching
 
 **match.scm** Guile implementation of library definition, uses define-module
               and include-from-path instead of define-libarary and include and
-              defines is-a? macro used in upstream
-
-## ./guile2.2/match:
-
-**match-upstream.scm** no changes from ./match/match.scm
+              defines is-a? macro used in ./match/match.scm
 
 ## ./match:
 
@@ -36,7 +32,7 @@ implementation of pattern matching
 
 ## ./test:
 
-**guile2.2-test.scm** match-test-sld tests re-written to use srfi-64 and srfi-9
+**guile-match-test.scm** match-test-sld tests re-written to use srfi-64 and srfi-9
 
 **guile-hello-test.scm** passes if guile is set up correctly in Makefile
 
