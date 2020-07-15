@@ -73,10 +73,10 @@ or more, one or more, or exactly n times a pattern, or down a tree
 with a pattern.
 </p>
 <p>
-This library is already part of Chibi, Guile, Cyclone, Chicken, Gauche,
+This library is already part of Chibi, Guile, Cyclone, Chicken, 
 LispKit, Mosh, and Sagittarius. There are other pattern matching
-libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to that the WCS matcher, S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. The also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program. Links to documentation and implementation (as available) are in <a href="https://github.com/fthibault1969/SRFI-WCS/blob/master/match-implementations.md">the repository</a>.
+libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Gauche, Picrin, Racket,
+Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to that the WCS matcher, S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/fthibault1969/SRFI-WCS/blob/master/match-implementations.md">the repository</a>.
 </p>
 <p>
 Making the WCS pattern matcher a SRFI
@@ -289,7 +289,8 @@ and the result of the last expression is returned as the result
 of the entire <code>match</code>.  If a <code>failure</code> is provided,
 then it is bound to a procedure of no arguments which continues,
 processing at the next <code>pattern</code>.  If no <code>pattern</code> matches,
-an error is signalled.</p><h4><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
+an error is signalled. If SRFI-201 is used, this is the only procedure needed</p>
+<h4><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
 clause.</p><h4><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
 number of arguments, and matches the argument list against each

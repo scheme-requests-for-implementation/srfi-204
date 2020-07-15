@@ -31,14 +31,6 @@
 **implementation**
 <https://github.com/justinethier/cyclone/blob/master/libs/cyclone/match.sld>
 
-### Gauche
-
-**documentation**
-<http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching>
-
-**implementation**
-<https://sourceforge.net/p/gauche/code/ci/master/tree/libsrc/util/match.scm>
-
 ### Guile
 
 **documentation**
@@ -47,24 +39,6 @@
 **implementation**
 <http://git.savannah.gnu.org/cgit/guile.git/tree/module/ice-9/match.scm>
 <http://git.savannah.gnu.org/cgit/guile.git/tree/module/ice-9/match.upstream.scm>
-
-### Kawa
-
-**documentation**
-<https://www.gnu.org/software/kawa/Variables-and-Patterns.html>
-(non-WCS)
-
-**implementation**
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/AnyPat.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/BindDecls.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/EqualPat.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/ListPat.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/ListRepeatPat.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/PairPat.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/Pattern.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/PatternScope.java>
-<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/VarListPat.java>
-(some of these may be related to syntax-rules instead of the pattern matcher)
 
 ### LispKit
 
@@ -118,7 +92,6 @@ I thought Loko had this pattern matcher via Akku, now I'm not so sure
 
 **documentation**
 <http://wiki.call-cc.org/eggref/4/matchable>
-(non-WCS matcher)
 
 **documentation**
 <http://wiki.call-cc.org/eggref/4/bindings>
@@ -131,6 +104,16 @@ I thought Loko had this pattern matcher via Akku, now I'm not so sure
 <https://github.com/gambit/gambit/blob/master/lib/termite/match-support%23.scm>
 <https://github.com/gambit/gambit/blob/master/lib/termite/match%23.scm>
 
+### Gauche
+
+**documentation**
+<http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching>
+
+**implementation**
+<https://sourceforge.net/p/gauche/code/ci/master/tree/libsrc/util/match.scm>
+
+on the surface the syntax is almost identical to WCS, but the implementation is very different.
+
 ### Gerbil
 
 **documentation**
@@ -139,6 +122,23 @@ I thought Loko had this pattern matcher via Akku, now I'm not so sure
 **implementation**
 <https://github.com/vyzo/gerbil/tree/master/src/bootstrap/gerbil>
 (haven't located the individual files)
+
+### Kawa
+
+**documentation**
+<https://www.gnu.org/software/kawa/Variables-and-Patterns.html>
+
+**implementation**
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/AnyPat.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/BindDecls.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/EqualPat.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/ListPat.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/ListRepeatPat.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/PairPat.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/Pattern.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/PatternScope.java>
+<https://gitlab.com/kashell/Kawa/-/blob/master/kawa/lang/VarListPat.java>
+(some of these may be related to syntax-rules instead of the pattern matcher)
 
 ### Rapid
 
