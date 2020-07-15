@@ -42,9 +42,9 @@ compound data structures.
 
 <p>
 Scheme comes with its own pattern matching language since R4RS, as
-part of <code>syntax-rules</code>. Many implementations add an additional pattern
+part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
 matcher that does not involve using macros to make pattern matching
-available to all users. Before R4RS, there was only the <code>case</code>
+available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
 statement, which does match, but does not bind its key. At least one Scheme
 implementation (s7), uses an extended <code>case</code> statement for pattern
 matching.
@@ -64,7 +64,7 @@ This SRFI aims to take one pattern matcher that has a matching syntax beyond
 S-expressions and provide a reference implementation, documentation, and
 tests.
 The pattern matcher originated by Andrew K. Wright and
-Robert Cartwright and further developed by Alex Shinn (WCS) is already in
+Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120] and further developed by Alex Shinn (WCS) is already in
 use (at least in part) in several Scheme implementations. Aside from
 S-expressions it also matches vectors and records. It has the
 ability to match based on predicates, to match "fields" (procedure
@@ -76,11 +76,12 @@ with a pattern.
 This library is already part of Chibi, Guile, Cyclone, Chicken, Gauche,
 LispKit, Mosh, and Sagittarius. There are other pattern matching
 libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje which vary in how similar they are to
-WCS, what they match, and what part of the language (core or library)
-they are in. Making the WCS pattern matcher a SRFI
+Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to that the WCS matcher, S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. The also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program. Links to documentation and implementation (as available) are in <a href="https://github.com/fthibault1969/SRFI-WCS/blob/master/match-implementations.md">the repository</a>.
+</p>
+<p>
+Making the WCS pattern matcher a SRFI
 makes a common interface and a portable implementation, along with its
-tests and documentation available in a central repository.
+tests and documentation available in a central repository. This SRFI would also collect implementation-dependent code in one place, making it easier for future implementers to find.
 </p>
 <h2>Specification</h2>
 
@@ -309,9 +310,19 @@ A
 <a href="https://github.com/fthibault1969/SRFI-WCS">Sample implementation</a>
 is available on Github.
 
+<h2>References</h2>
+<p id="SCG">
+Alex Shinn, John Cowan, Arthur A. Gleckler, et al. 2013 <em>Revised<sup>7</sup> Report on the Algorithmic Language Scheme.</em> Retrieved from <a href="https://small.r7rs.org/attachment/r7rs.pdf">https://small.r7rs.org/attachment/r7rs.pdf</a>.
+</p>
+<p id="WC">
+Andrew K. Wright & Robert Cartwright. <em>ACM Transactions on Programming Languages and Systems.</em> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>
+</p>
+<p id="Norvig">
+Peter Norvig. 1992 *Paradigms of Artificial intelligence.* (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
+<p>
 <h2>Acknowledgements</h2>
 
-Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Godek.
+Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Maciej Godek.
 
 <h2>Copyright</h2>
 <p>Copyright &copy; Felix Thibault (2020).</p>

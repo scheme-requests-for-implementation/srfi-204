@@ -1,7 +1,8 @@
 ### Andrew Wright's (and some other)pattern matchers:
 
 **publication**
-<https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf> pp.116-120
+<https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf> pp.116-120 Andrew K. Wright & Robert Cartwright. *ACM Transactions on Programming Languages and Systems.* Vol. 19, No. 1. January 1997. Pages 87-152.
+
 **implementation**
 <https://legacy.cs.indiana.edu/scheme-repository/code.match.html>
 
@@ -181,3 +182,17 @@ I thought Loko had a pattern matcher via Akku, now I'm not sure
 
 **implementation**
 <https://github.com/egallesio/STklos/tree/master/lib/Match.d>
+
+### RnRS
+
+**definition/standard**
+<https://small.r7rs.org/> (this page also has links to all previous standards) pp.23-24 syntax-rules, pp. 14-15 case.
+Alex Shinn, John Cowan, Arthur A. Gleckler, et al. 2013 *Revised<sup>7</sup> Report on the Algorithmic Language Scheme.* Retrieved from <https://small.r7rs.org/attachment/r7rs.pdf>.
+
+### Expert System
+
+**publication**
+<https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md> Peter Norvig. 1992 *Paradigms of Artificial intelligence.* (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA.
+
+
+
