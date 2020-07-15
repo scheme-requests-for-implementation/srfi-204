@@ -19,11 +19,11 @@ The editor will add this section.
 
 <h2>Abstract</h2>
 
-Pattern matching is a way of decomposing a compound data structure
+<p>Pattern matching is a way of decomposing a compound data structure
 into its component parts and assigning those parts to variables. This
 SRFI describes a pattern matching library which is already in use by 
 several scheme implementations which is able to match many common 
-compound data structures.
+compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
@@ -60,7 +60,7 @@ both portable and readable.
 </p>
 <p>
 This SRFI aims to take one pattern matcher that has a matching syntax beyond
-S-expressions and provide a reference implementation, documentation, and
+S-expressions and provide a sample implementation, documentation, and
 tests.
 The pattern matcher originated by Andrew K. Wright and
 Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120] and further developed by Alex Shinn (WCS) is already in
@@ -84,8 +84,7 @@ tests and documentation available in a central repository. This SRFI would also 
 </p>
 <h2>Specification</h2>
 
-
-A portable hygienic pattern matcher.
+<p>A portable hygienic pattern matcher.
 This is a full superset of the popular <a href="https://legacy.cs.indiana.edu/scheme-repository/code.match.html">match</a>
 package by Andrew Wright, written in fully portable <code>syntax-rules</code>
 and thus preserving hygiene.
@@ -279,7 +278,7 @@ ooo : <b>...</b>                          ;; zero or more
 </pre>
 <h3>Procedures</h3>
 <p></p>
-<h4><code>(match expr (pattern . body) ...)<br></br>
+<h4><code>(match expr (pattern . body) ...)<br>
 (match expr (pattern (=> failure) . body) ...)</code></h4><p>
 The result of <code>expr</code> is matched against each <code>pattern</code> in
 turn, according to the pattern rules described in the previous
@@ -294,7 +293,7 @@ an error is signalled. If SRFI-201 is used, this is the only procedure needed</p
 procedure of one argument, and matches that argument against each
 clause.</p><h4><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
 number of arguments, and matches the argument list against each
-clause.</p><h4><code>(match-let ((var value) ...) . body)<br></br>(match-let loop ((var init) ...) . body)</code></h4><p>Matches each var to the corresponding expression, and evaluates
+clause.</p><h4><code>(match-let ((var value) ...) . body)<br>(match-let loop ((var init) ...) . body)</code></h4><p>Matches each var to the corresponding expression, and evaluates
 the body with all match variables in scope.  Raises an error if
 any of the expressions fail to match.  Syntax analogous to named
 let can also be used for recursive functions which match on their
@@ -302,7 +301,7 @@ arguments as in <code>match-lambda*</code>.</p><h4><code>(match-letrec ((var val
 matches and binds the variables with all match variables in scope.</p><h4><code>(match-let* ((var value) ...) body ...)</code></h4><p>
 Similar to <code>match-let</code>, but analogously to <code>let*</code>
 matches and binds the variables in sequence, with preceding match
-variables in scope.</p></body></html>
+variables in scope.</p>
 
 <h2>Implementation</h2>
 
