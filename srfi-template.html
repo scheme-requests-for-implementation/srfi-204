@@ -267,10 +267,11 @@ used.
     | `qp                          ;; a quasi-pattern
 
 patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
-         <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>..=</b>, <b>..*</b>.
+         <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>..1</b>, <b>..=</b>, <b>..*</b>.
 
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
+    | <b>..1</b>                          ;; one or more
     | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer.
                                    ;;   Example: <b>..= 1</b>, <b>..= 2</b> ...
     | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers.
@@ -319,7 +320,7 @@ Alex Shinn, John Cowan, Arthur A. Gleckler, et al. 2013 <em>Revised<sup>7</sup> 
 Andrew K. Wright & Robert Cartwright. <em>ACM Transactions on Programming Languages and Systems.</em> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>
 </p>
 <p id="Norvig">
-Peter Norvig. 1992 *Paradigms of Artificial intelligence.* (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
+Peter Norvig. 1992 <em>Paradigms of Artificial intelligence.</em> (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
 <p>
 <h2>Acknowledgements</h2>
 
