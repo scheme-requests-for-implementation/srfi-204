@@ -64,7 +64,7 @@ I thought Loko had this pattern matcher via Akku, now I'm not so sure
 **implementation**
 <https://bitbucket.org/ktakashi/sagittarius-scheme/src/master/sitelib/match.scm>
 
-###  NonWCS Pattern Matching    
+###  NonWCS Pattern Matching
 
 ### Armpit Scheme
 

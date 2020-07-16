@@ -5,7 +5,7 @@
 #|./implementation-hello-test.scm
 (define test-name "implementation-hello.log")
 (define scheme-version-name (version))
-(include-from-path "./test/hello-common.scm") 
+(include-from-path "./test/hello-common.scm")
 
 |#
 

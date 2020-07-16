@@ -21,8 +21,8 @@ The editor will add this section.
 
 <p>Pattern matching is a way of decomposing a compound data structure
 into its component parts and assigning those parts to variables. This
-SRFI describes a pattern matching library which is already in use by 
-several scheme implementations which is able to match many common 
+SRFI describes a pattern matching library which is already in use by
+several scheme implementations which is able to match many common
 compound data structures.</p>
 
 <h2>Issues</h2>
@@ -72,7 +72,7 @@ or more, one or more, or exactly n times a pattern, or down a tree
 with a pattern.
 </p>
 <p>
-This library is already part of Chibi, Guile, Cyclone, Chicken, 
+This library is already part of Chibi, Guile, Cyclone, Chicken,
 LispKit, Mosh, and Sagittarius. There are other pattern matching
 libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Gauche, Picrin, Racket,
 Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to that the WCS matcher, S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/fthibault1969/SRFI-WCS/blob/master/match-implementations.md">the repository</a>.
@@ -251,9 +251,9 @@ used.
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
     | (<b>$</b> <var>class</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
-    | (<b>struct</b> <var>class</var> <var>pat1</var> ... <var>patN</var>) ;; ditto 
-    | (<b>@</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names) 
-    | (<b>object</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto 
+    | (<b>struct</b> <var>class</var> <var>pat1</var> ... <var>patN</var>) ;; ditto
+    | (<b>@</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names)
+    | (<b>object</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
     | (<b>or</b> <var>pat</var> ...)                 ;; if any of pats match
