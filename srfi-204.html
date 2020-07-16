@@ -50,8 +50,8 @@ matching.
 </p>
 <p>
 Currently, the pattern-matching facilities that have been implemented
-  by SRFIs are procedures of variable arity (<a href="https://srfi.schemers.org/srfi-16">SRFI 16</a>) and S-expressions
-(<a href="https://srfi.schemers.org/srfi-200">SRFI 200</a>). The focus of SRFI 200 is both consensus and clarity. That is,
+  by SRFIs are procedures of variable arity (<a href="https://srfi.schemers.org/srfi-16/">SRFI 16</a>) and S-expressions
+(<a href="https://srfi.schemers.org/srfi-200/">SRFI 200</a>). The focus of SRFI 200 is both consensus and clarity. That is,
 it aims to provide a pattern syntax that is both widely shared and easily
 read without requiring knowledge of any notation that is not ordinary Scheme. So the
 aim of SRFI 200 is twofold: to provide not only an implementation, but also a portable, readable way of using
@@ -184,7 +184,7 @@ if the value isn't a pair.
 </p><pre><code>(match '(1 . 2) ((= car x) x))</code></pre><code>=> 1</code><p>
 </p><pre><code>(match 4 ((= square x) x))</code></pre><code>=> 16</code><p>
 The record operator <code>$</code> is used as a concise way to match
-records defined by <a href="https://srfi.schemers.org/srfi-9">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99">SRFI 99</a>).  The usage is
+records defined by <a href="https://srfi.schemers.org/srfi-9/">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99/">SRFI 99</a>).  The usage is
 <code>($ rtd field ...)</code>, where <code>rtd</code> should be the record
 type descriptor specified as the first argument to
 <code>define-record-type</code>, and each <code>field</code> is a subpattern
@@ -287,7 +287,7 @@ and the result of the last expression is returned as the result
 of the entire <code>match</code>.  If a <code>failure</code> is provided,
 then it is bound to a procedure of no arguments which continues
 processing at the next <code>pattern</code>.  If no <code>pattern</code> matches,
-an error is signalled. If <a href="https://srfi.schemers.org/srfi-201">SRFI 201</a> is used, this is the only procedure needed.</p>
+an error is signalled. If <a href="https://srfi.schemers.org/srfi-201/">SRFI 201</a> is used, this is the only procedure needed.</p>
 <h4><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
 clause.</p><h4><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
