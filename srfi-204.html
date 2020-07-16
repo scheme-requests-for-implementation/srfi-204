@@ -30,14 +30,15 @@ compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
-	<li>Should this be implemented with match-let and company or should it use
-		SRFI-201?</li>
 	<li>If tree matching is experimental, should it be part of this SRFI?</li>
 	<li>For Guile 2.2, letrec and named-record tests fail</li>
+	<li>For Gauche 0.9.6, letrec positional-record and named-record tests fail</li>
 	<li>This SRFI includes the documentation from Chibi as well as a
 		modified version of the Gauche pattern grammar specification,
 		but no quasipattern specification.</li>
-	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation</li>
+	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation (this issue may be solved
+	if it is not necessary to run tests for all implementations in one go).</li>
+	<li>Remove bash dependency from Makefile if possible (uses |&amp;) and necessary.</li>
 </ul>
 
 <h2>Rationale</h2>
@@ -316,9 +317,20 @@ is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-2
 <p id="SCG">
 Alex Shinn, John Cowan, Arthur A. Gleckler, et al. 2013 <cite>Revised<sup>7</sup> Report on the Algorithmic Language Scheme.</cite> Retrieved from <a href="https://small.r7rs.org/attachment/r7rs.pdf">https://small.r7rs.org/attachment/r7rs.pdf</a>.
 </p>
+<p id="s7">
+Bill Schottstaedt. 2020 <cite>s7 case.scm</cite> Retrieved from <a href="https://ccrma.stanford.edu/software/snd/snd/s7.html#case">https://ccrma.stanford.edu/software/snd/snd/s7.html#case</a>
+</p>
 <p id="WC">
 Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Languages and Systems.</cite> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>
 </p>
+<p id="Chibi">
+Alex Shinn. 2020. <cite>(chibi match)</cite> Retrieved from <a href="http://synthcode.com/scheme/chibi/lib/chibi/match.html">http://synthcode.com/scheme/chibi/lib/chibi/match.html</a>
+</p>
+<p id="Cyclone">
+Justin Ethier. 2019. <cite>Match Library</cite> Retrieved from <a href="http://justinethier.github.io/cyclone/docs/api/cyclone/match">http://justinethier.github.io/cyclone/docs/api/cyclone/match</a>
+</p>
+<p id="Guile">
+
 <p id="Norvig">
   Peter Norvig. 1992 <cite>Paradigms of Artificial intelligence.</cite> (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
 <p>
