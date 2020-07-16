@@ -1,0 +1,473 @@
+%%%% Starting test gauche-match-test
+Group begin: gauche-match-test
+Test begin:
+  test-name: "gauche-???"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "any"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "symbol"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "number"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "string"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "literal symbol"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "null"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "pair"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "vector"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "any doubled"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "and empty"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "and single"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "and double"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "or empty"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "or single"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "or double"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "not"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "pred"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "named pred"
+Test end:
+  result-kind: pass
+  actual-value: 29
+  expected-value: 29
+Test begin:
+  test-name: "duplicate symbols pass"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "duplicate symbols fail"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "duplicate symbols samth"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "duplicate symbols bound"
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+  test-name: "duplicate quasiquote"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "ellipses"
+Test end:
+  result-kind: pass
+  actual-value: ((a b c) (1 2 3))
+  expected-value: ((a b c) (1 2 3))
+Test begin:
+  test-name: "real ellipses"
+Test end:
+  result-kind: pass
+  actual-value: ((a b c) (1 2 3))
+  expected-value: ((a b c) (1 2 3))
+Test begin:
+  test-name: "vector ellipses"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 (a b c) (1 2 3))
+  expected-value: (1 2 3 (a b c) (1 2 3))
+Test begin:
+  test-name: "pred ellipses"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "failure continuation"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "let"
+Test end:
+  result-kind: pass
+  actual-value: (o k)
+  expected-value: (o k)
+Test begin:
+  test-name: "let*"
+Test end:
+  result-kind: pass
+  actual-value: (f o o f)
+  expected-value: (f o o f)
+Test begin:
+  test-name: "getter car"
+Test end:
+  result-kind: pass
+  actual-value: (1 2)
+  expected-value: (1 2)
+Test begin:
+  test-name: "getter cdr"
+Test end:
+  result-kind: pass
+  actual-value: (1 2)
+  expected-value: (1 2)
+Test begin:
+  test-name: "getter vector"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "setter car"
+Test end:
+  result-kind: pass
+  actual-value: (3 . 2)
+  expected-value: (3 . 2)
+Test begin:
+  test-name: "setter cdr"
+Test end:
+  result-kind: pass
+  actual-value: (1 . 3)
+  expected-value: (1 . 3)
+Test begin:
+  test-name: "setter vector"
+Test end:
+  result-kind: pass
+  actual-value: #(1 0 3)
+  expected-value: #(1 0 3)
+Test begin:
+  test-name: "single tail"
+Test end:
+  result-kind: pass
+  actual-value: ((a b) (1 2) (c . 3))
+  expected-value: ((a b) (1 2) (c . 3))
+Test begin:
+  test-name: "single tail 2"
+Test end:
+  result-kind: pass
+  actual-value: ((a b) (1 2) 3)
+  expected-value: ((a b) (1 2) 3)
+Test begin:
+  test-name: "multiple tail"
+Test end:
+  result-kind: pass
+  actual-value: ((a b) (1 2) (c . 3) (d . 4) (e . 5))
+  expected-value: ((a b) (1 2) (c . 3) (d . 4) (e . 5))
+Test begin:
+  test-name: "tail against improper list"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "Riastradh quasiquote"
+Test end:
+  result-kind: pass
+  actual-value: (2 3)
+  expected-value: (2 3)
+Test begin:
+  test-name: "unquote-splicing"
+Test end:
+  result-kind: pass
+  actual-value: (2 3)
+  expected-value: (2 3)
+Test begin:
+  test-name: "unquote-splicing tail"
+Test end:
+  result-kind: pass
+  actual-value: (b c)
+  expected-value: (b c)
+Test begin:
+  test-name: "unquote-splicing tail fail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "trivial tree search"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "simple tree search"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "deep tree search"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "non-tail tree search"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "restricted tree search"
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3)
+  expected-value: (1 2 3)
+Test begin:
+  test-name: "fail restricted tree search"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "sxml tree search"
+Test end:
+  result-kind: pass
+  actual-value: (((href . "http://synthcode.com/")) ("synthcode"))
+  expected-value: (((href . "http://synthcode.com/")) ("synthcode"))
+Test begin:
+  test-name: "failed sxml tree search"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "collect tree search"
+Test end:
+  result-kind: pass
+  actual-value: ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
+  expected-value: ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
+Test begin:
+  test-name: "anded tail pattern"
+Test end:
+  result-kind: pass
+  actual-value: (1 2)
+  expected-value: (1 2)
+Test begin:
+  test-name: "anded search pattern"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "joined tail"
+Test end:
+  result-kind: pass
+  actual-value: (1 2)
+  expected-value: (1 2)
+Test begin:
+  test-name: "list ..1"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "list ..1 failed"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..1 with predicate"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "list ..1 with failed predicate"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..= too few"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..="
+Test end:
+  result-kind: pass
+  actual-value: (2 3)
+  expected-value: (2 3)
+Test begin:
+  test-name: "list ..= too many"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..= tail"
+Test end:
+  result-kind: pass
+  actual-value: 4
+  expected-value: 4
+Test begin:
+  test-name: "list ..= tail fail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..* too few"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..* lo"
+Test end:
+  result-kind: pass
+  actual-value: (2 3)
+  expected-value: (2 3)
+Test begin:
+  test-name: "list ..* hi"
+Test end:
+  result-kind: pass
+  actual-value: (2 3 4 5)
+  expected-value: (2 3 4 5)
+Test begin:
+  test-name: "list ..* too many"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "list ..* tail"
+Test end:
+  result-kind: pass
+  actual-value: 4
+  expected-value: 4
+Test begin:
+  test-name: "list ..* tail 2"
+Test end:
+  result-kind: pass
+  actual-value: 5
+  expected-value: 5
+Test begin:
+  test-name: "list ..* tail"
+Test end:
+  result-kind: pass
+  actual-value: 6
+  expected-value: 6
+Test begin:
+  test-name: "list ..* tail fail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "match-named-let"
+Test end:
+  result-kind: pass
+  actual-value: 6
+  expected-value: 6
+Test begin:
+  test-name: "match-letrec"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: (2 1 1 2)
+Test begin:
+  test-name: "record positional"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: (1 0)
+Test begin:
+  test-name: "record named"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: (1 0)
+Group end: gauche-match-test
+# of expected passes      75
+# of unexpected failures  3
