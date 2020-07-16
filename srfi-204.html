@@ -31,8 +31,8 @@ compound data structures.</p>
 		SRFI-201?</li>
 	<li>If tree matching is experimental, should it be part of this SRFI?</li>
 	<li>For Guile 2.2, letrec and named-record tests fail</li>
-	<li>This SRFI includes the documentation from Chibi, and a
-		modified version of the Gauche pattern grammar specification
+	<li>This SRFI includes the documentation from Chibi as well as a
+		modified version of the Gauche pattern grammar specification,
 		but no quasipattern specification.</li>
 	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation</li>
 </ul>
@@ -40,7 +40,7 @@ compound data structures.</p>
 <h2>Rationale</h2>
 
 <p>
-Scheme comes with its own pattern matching language since R4RS, as
+Scheme has come with its own pattern-matching language since R4RS, as
 part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
 matcher that does not involve using macros to make pattern matching
 available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
@@ -49,14 +49,13 @@ implementation (s7), uses an extended <code>case</code> statement for pattern
 matching.
 </p>
 <p>
-Currently, the pattern matching facilities that have been implemented
-by SRFIs are procedures of variable arity (SRFI 16) and S-expressions
-(SRFI 200). The focus of SRFI-200 is both consensus and clarity. That is,
-it aims to provide a pattern syntax that is both widely shared, and easily
-read without having to know any notation that is not ordinary Scheme. So the
-aim of SRFI-200 two-fold, to provide an implementation, but also a way of using
-the pattern matchers already available in many implementations in a way that is
-both portable and readable.
+Currently, the pattern-matching facilities that have been implemented
+  by SRFIs are procedures of variable arity (<a href="https://srfi.schemers.org/srfi-16">SRFI 16</a>) and S-expressions
+(<a href="https://srfi.schemers.org/srfi-200">SRFI 200</a>). The focus of SRFI 200 is both consensus and clarity. That is,
+it aims to provide a pattern syntax that is both widely shared and easily
+read without requiring knowledge of any notation that is not ordinary Scheme. So the
+aim of SRFI 200 is twofold: to provide not only an implementation, but also a portable, readable way of using
+the pattern matchers already available in many implementations.
 </p>
 <p>
 This SRFI aims to take one pattern matcher that has a matching syntax beyond
@@ -65,22 +64,22 @@ tests.
 The pattern matcher originated by Andrew K. Wright and
 Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120] and further developed by Alex Shinn (WCS) is already in
 use (at least in part) in several Scheme implementations. Aside from
-S-expressions it also matches vectors and records. It has the
+S-expressions, it also matches vectors and records. It has the
 ability to match based on predicates, to match "fields" (procedure
-applications), getters, and setters, and has syntax to match zero
-or more, one or more, or exactly n times a pattern, or down a tree
+applications), getters, and setters, and has syntax to match patterns zero
+or more, one or more, or exactly n times, or to walk down a tree
 with a pattern.
 </p>
 <p>
 This library is already part of Chibi, Guile, Cyclone, Chicken,
 LispKit, Mosh, and Sagittarius. There are other pattern matching
 libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Gauche, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to that the WCS matcher, S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/fthibault1969/SRFI-WCS/blob/master/match-implementations.md">the repository</a>.
+Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/match-implementations.md">the repository</a>.
 </p>
 <p>
 Making the WCS pattern matcher a SRFI
 makes a common interface and a portable implementation, along with its
-tests and documentation available in a central repository. This SRFI would also collect implementation-dependent code in one place, making it easier for future implementers to find.
+tests and documentation, available in a central repository. This SRFI also collects implementation-dependent code in one place, making it easier for future implementers to find.
 </p>
 <h2>Specification</h2>
 
@@ -89,8 +88,8 @@ This is a full superset of the popular <a href="https://legacy.cs.indiana.edu/sc
 package by Andrew Wright, written in fully portable <code>syntax-rules</code>
 and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
-patterns - patterns in which the same identifier occurs multiple
-times, tail patterns after ellipsis, and the experimental tree patterns.
+patterns &mdash; patterns in which the same identifier occurs multiple
+times, tail patterns after an ellipsis, and the experimental tree patterns.
 </p><h3>Patterns</h3><p>
 Patterns are written to look like the printed representation of
 the objects they match.  The basic usage is
@@ -100,7 +99,7 @@ turn, and the corresponding body is evaluated for the first to
 succeed.  Thus, a list of three elements matches a list of three
 elements.
 </p><pre><code>(let ((ls (list 1 2 3))) (match ls ((1 2 3) #t)))</code></pre><code>=> #t</code><p>
-If no patterns match an error is signalled.
+If no patterns match, an error is signalled.
 Identifiers will match anything, and make the corresponding
 binding available in the body.
 </p><pre><code>(match (list 1 2 3) ((a b c) b))</code></pre><code>=> 2</code><p>
@@ -185,12 +184,12 @@ if the value isn't a pair.
 </p><pre><code>(match '(1 . 2) ((= car x) x))</code></pre><code>=> 1</code><p>
 </p><pre><code>(match 4 ((= square x) x))</code></pre><code>=> 16</code><p>
 The record operator <code>$</code> is used as a concise way to match
-records defined by SRFI-9 (or SRFI-99).  The usage is
+records defined by <a href="https://srfi.schemers.org/srfi-9">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99">SRFI 99</a>).  The usage is
 <code>($ rtd field ...)</code>, where <code>rtd</code> should be the record
 type descriptor specified as the first argument to
 <code>define-record-type</code>, and each <code>field</code> is a subpattern
 matched against the fields of the record in order.  Not all fields
-must be present.
+need be present.
 </p><pre><code>(let ()
   (define-record-type employee
     (make-employee name title)
@@ -257,7 +256,7 @@ used.
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
     | (<b>or</b> <var>pat</var> ...)                 ;; if any of pats match
-    | (<b>not</b> <var>pat</var> ...)                ;; if all pats don't match at all
+    | (<b>not</b> <var>pat</var> ...)                ;; if no pats match
     | (<b>?</b> <var>predicate</var> <var>pat</var> ...)        ;; if predicate true and all pats match
     | (<b>set!</b> <var>patvar</var>)                ;; anything, and binds setter
     | (<b>get!</b> <var>patvar</var>)                ;; anything, and binds getter
@@ -286,9 +285,9 @@ section, until the the first <code>pattern</code> matches.  When a match is
 found, the corresponding <code>body</code>s are evaluated in order,
 and the result of the last expression is returned as the result
 of the entire <code>match</code>.  If a <code>failure</code> is provided,
-then it is bound to a procedure of no arguments which continues,
+then it is bound to a procedure of no arguments which continues
 processing at the next <code>pattern</code>.  If no <code>pattern</code> matches,
-an error is signalled. If SRFI-201 is used, this is the only procedure needed</p>
+an error is signalled. If <a href="https://srfi.schemers.org/srfi-201">SRFI 201</a> is used, this is the only procedure needed.</p>
 <h4><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
 clause.</p><h4><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
