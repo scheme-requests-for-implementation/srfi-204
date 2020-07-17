@@ -48,8 +48,8 @@ Scheme has come with its own pattern-matching language since R4RS, as
 part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
 matcher that does not involve using macros to make pattern matching
 available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
-statement, which does match, but does not bind its key. At least one Scheme
-implementation (s7), uses an extended <code>case</code> statement for pattern
+statement, which does match, but does not bind its key. Bigloo<sup><a href="#Bigloo">1</a></sup>, STklos<sup><a href="#STklos">2</a></sup>
+and (s7<sup><a href="#s7">3</a></sup>), all use an extended <code>case</code> statements for pattern
 matching.
 </p>
 <p>
@@ -75,10 +75,10 @@ or more, one or more, or exactly n times, or to walk down a tree
 with a pattern.
 </p>
 <p>
-This library is already part of Chibi, Guile, Cyclone, Chicken,
-LispKit, Mosh, and Sagittarius. There are other pattern matching
-libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Gauche, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
+This library is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
+LispKit<sup><a href="#LispKit">8</a></sup>, Mosh<sup><a href="#Mosh">9</a></sup>, and Sagittarius<sup><a href="#Sagittarius">10</a></sup>. There are other pattern matching
+libraries that are part of Armpit Scheme<sup><a href="#Armpit">11</a></sup>, Gerbil<sup><a href="#Gerbil">12</a></sup>, Bigloo<sup><a href="#Bigloo">13</a></sup>, STklos<sup><a href="#STklos">14</a></sup>, Chicken<sup><a href="#Chicken:bindings">15</a></sup>, Kawa<sup><a href="#Kawa">16</a></sup>, Gambit<sup><a href="#Gambit">17</a></sup>, Gauche<sup><a href="#Gauche">18</a></sup>, Picrin<sup><a href="#Picrin">19</a></sup>, Racket<sup><a href="#Racket">20</a></sup>,
+Scheme 9 from Empty Space<sup><a href="#s9fes">21</a></sup>, and Scheje<sup><a href="#Scheje">22</a></sup>. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
 </p>
 <p>
 Making the WCS pattern matcher a SRFI
@@ -330,13 +330,68 @@ Alex Shinn. 2020. <cite>(chibi match)</cite> Retrieved from <a href="http://synt
 Justin Ethier. 2019. <cite>Match Library</cite> Retrieved from <a href="http://justinethier.github.io/cyclone/docs/api/cyclone/match">http://justinethier.github.io/cyclone/docs/api/cyclone/match</a>
 </p>
 <p id="Guile">
-
+Ludovic Cort&egrave;s, Bake Timmons, Arun Isaac, &amp; Paul Morris. 2019. <cite>Guile Reference Manual</cite>. Sect. 7.8 "Pattern Matching." Retrieved from <a href="https://www.gnu.org/software/guile/manual/html_node/Pattern-Matching.html">https://www.gnu.org/software/guile/manual/html_node/Pattern-Matching.html</a>
+</p>
+<p id="LispKit">
+Matthias Zenger. 2019. <cite>match.scm (source file)</cite> Retrieved from <a href="https://github.com/objecthub/swift-lispkit/blob/master/Sources/LispKit/Resources/Libraries/lispkit/match.sld">https://github.com/objecthub/swift-lispkit/blob/master/Sources/LispKit/Resources/Libraries/lispkit/match.sld</a>
+</p>
+<p id="Mosh">
+Higepon Taro Minowa, et. al. 2010 <cite>Pattern Match</cite> Retrieved from <a href="http://mosh.monaos.org/files/lib/match-ss.html#Pattern_Match">http://mosh.monaos.org/files/lib/match-ss.html#Pattern_Match</a>
+</p>
+<p id="Sagittarius">
+Takashi Kato. 2019. <cite>Sagittarius Users' Reference</cite> Sect. 8.1 "(match) -- Pattern Matching" Retrieved from <a href="http://ktakashi.github.io/sagittarius-online-ref/section81.html">http://ktakashi.github.io/sagittarius-online-ref/section81.html</a>
+</p>
+<p id="Armpit">
+Hubert Montas. 2018. <cite>A Scheme Interpreter for ARM Microcontrollers</cite> Sect. "Program Examples for Version 080 - Expert System" Retrieved from <a href="http://armpit.sourceforge.net/v080/aps_080_common_examples.html#Expert">http://armpit.sourceforge.net/v080/aps_080_common_examples.html#Expert</a>
+</p>
+<p id="Bigloo">
+Manuel Serrano &amp; Jean-Marie Geffroy. 2013. <cite>Bigloo/manual</cite> Chapter 6. "Pattern Matching" Retrieved from <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/manual-chapter6.html">http://www-sop.inria.fr/mimosa/fp/Bigloo/manual-chapter6.html</a>
+<p id="Chez">
+R. Kent Dybig. 2010. <cite>"Using Match"</cite> Retrieved from Indiana University Bloomington via archive.org: <a href="https://web.archive.org/web/20180718090106/https://www.cs.indiana.edu/chezscheme/match/">https://web.archive.org/web/20180718090106/https://www.cs.indiana.edu/chezscheme/match/</a>
+<p id="Chicken:matchable">
+Alex Shinn. 2020. <cite>The Chicken Scheme Wiki.</cite> "matchable." Retrieved from <a href="http://wiki.call-cc.org/eggref/4/matchable">http://wiki.call-cc.org/eggref/4/matchable</a>
+</p>
+<p id="Chicken:bindings">
+Juergen Lorenz. 2020. <cite>The Chicken Scheme Wiki.</cite> "bindings." Retrieved from <a href="http://wiki.call-cc.org/eggref/4/bindings">http://wiki.call-cc.org/eggref/4/bindings</a>
+<p id="Gambit">
+Marc Feely &amp; Fr&eacute;d&eacute;ric Hamel. 2020. <cite>match-support.scm (source file)</cite> Retrieved from <a href="https://github.com/gambit/gambit/blob/master/lib/termite/match-support.scm">https://github.com/gambit/gambit/blob/master/lib/termite/match-support.scm</a>
+</p>
+<p id="Gauche">
+Shiro Kawai. <cite>Gauche Users Reference.<cite> Sect. 12.68 "util.match - Pattern matching." Retrieved from <a href="http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching">http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching</a>
+</p>
+<p id="Gerbil">
+vyzo et. al. <cite>Gerbil Reference.</cite> Sect. "Core Prelude - Prelude Macros - Pattern Matching." <a href="https://cons.io/reference/core-prelude.html#pattern-matching">https://cons.io/reference/core-prelude.html#pattern-matching</a>
+</p>
+<p id="Kawa">
+Per Bothner. 2020. <cite>The Kawa Scheme Language - Reference Documentation.</cite> Sect. 8.3 "Variables and Patterns." Retrieved from <a href="https://www.gnu.org/software/kawa/Variables-and-Patterns.html">https://www.gnu.org/software/kawa/Variables-and-Patterns.html</a>
+</p>
+<p id="Rapid">
+Marc Nieper-Wi&szlig;kirchen. 2016. <cite>snow-fort.org</cite> "(rapid match)" <a href="http://snow-fort.org/s/rapid-scheme.org/marc/rapid/match/0.1.5/index.html"> http://snow-fort.org/s/rapid-scheme.org/marc/rapid/match/0.1.5/index.html</a>
+</p>
+<p id="Picrin">
+Yuichi Nishiwaki. 2016 <cite>50.destructuring-bind (source directory)</cite> Retrieved from <a href="https://github.com/picrin-scheme/picrin/tree/master/contrib/50.destructuring-bind">https://github.com/picrin-scheme/picrin/tree/master/contrib/50.destructuring-bind</a>
+</p>
+<p id="Racket">
+Matthew Flatt &amp; PLT. <cite>The Racket Reference</cite> Chap. 9 "Pattern Matching" Retrieved from <a href="https://docs.racket-lang.org/reference/match.html?q=match#%28form._%28%28lib._racket%2Fmatch..rkt%29._match%29%29">https://docs.racket-lang.org/reference/match.html?q=match#%28form._%28%28lib._racket%2Fmatch..rkt%29._match%29%29</a>
+</p>
+<p id="s9fes">
+Nils M. Holm. <cite>matcher.scm (source code)</cite> Retrieved from <a href="http://t3x.org/s9fes/matcher.scm.html">http://t3x.org/s9fes/matcher.scm.html</a>
+</p>
+<p id="Scheje">
+Rafik Naccache <cite>unifier.cljc (source code)</cite> Retrieved from <a href="https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc">https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc</a>
+</p>
+<p id="STklos">
+Erick Gallesio. <cite>STklos Reference Manual</cite> Chapter 6 "Pattern Matching." Retrieved from <a href="https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching">https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching</a>
+</p>
 <p id="Norvig">
   Peter Norvig. 1992 <cite>Paradigms of Artificial intelligence.</cite> (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
 <p>
 <h2>Acknowledgements</h2>
 
 Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Maciej Godek.
+<p>
+Alex Shinn provided documentation of his implementation.
+</p>
 
 <h2>Copyright</h2>
 <p>Copyright &copy; Felix Thibault (2020).</p>
