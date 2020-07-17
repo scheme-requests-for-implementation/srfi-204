@@ -1,3 +1,13 @@
+# Making a match library for a new implementation
+
+1. Make a directory for that implementation in this directory
+
+2. Write a file with any implementation dependent code in that directory, at the end include **./match/match.scm**. This may just involve copying **./match.sld** into that directory (and possibly changing the file extension) for R7RS schemes.
+
+3. Get the library to load in the REPL and try matching a simple pattern (not using records).
+
+4. When step 3 succeeds, follow the instructions for setting uptesting in **./test/README.md**.
+
 # Files used to make SRFI for WCS pattern matcher.
 
 ## .:
@@ -16,8 +26,6 @@ implementation of pattern matching
 
 **README.md** this file
 
-**srfi-template.html** the filled-out SRFI
-
 
 ## ./guile2.2:
 
@@ -32,15 +40,18 @@ implementation of pattern matching
 
 ## ./test:
 
-**guile-match-test.scm** match-test-sld tests re-written to use srfi-64 and srfi-9
+**match-tests.scm** match-test-sld tests re-written to use srfi-64 (may also import srfi-9)
 
-**guile-hello-test.scm** passes if guile is set up correctly in Makefile
+**match-common.scm** implementation-specific parts of match tests
 
-**hello-common.scm** check compilers/interpreters
+**hello-test.scm** <code>cond-expand</code> to run tests in hello common. Used to check <code>SCM</code>, <code>SCMFLAGS</code> and <code>cond-expand</code> before adding <code>cond-expand</code> to **match-tests.scm**
 
-**tests-common.scm** match tests
+**hello-common.scm** 2 tests that will pass.
+
+**README.md** testing how-to
 
 **Makefile** make check runs all tests
 
+## ./test/logs
 **\*.log** test results
 
