@@ -1,6 +1,3 @@
-(import (srfi srfi-64)
-	     (srfi srfi-9))
-
 (define-record-type Point
   (make-point x y)
   point?

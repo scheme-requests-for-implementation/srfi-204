@@ -8,6 +8,8 @@ top_srcdir = ..
 SHELL := bash
 SCM = guile
 SCMFLAGS = --no-auto-compile -L $(top_srcdir)
+#SCM = gosh
+#SCMFLAGS = -I $(top_srcdir)
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))
@@ -27,7 +29,7 @@ check: $(LOGS)
 	@echo "tests complete"
 
 clean:
-	rm -f $(LOGS)
+	rm -f *.log
 
 $(NAMES): $(TESTS)
 	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
