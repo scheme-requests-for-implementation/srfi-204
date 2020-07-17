@@ -187,6 +187,9 @@ to <code>(x . y)</code>, except it will result in an immediate error
 if the value isn't a pair.
 </p><pre><code>(match '(1 . 2) ((= car x) x))</code></pre><code>=> 1</code><p>
 </p><pre><code>(match 4 ((= square x) x))</code></pre><code>=> 16</code><p>
+<strong>Note:</strong><em> record introspection is not currently portable,
+	so record operators are an interface whose implementation will not be portable.</em></p>
+<p>
 The record operator <code>$</code> is used as a concise way to match
 records defined by <a href="https://srfi.schemers.org/srfi-9/">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99/">SRFI 99</a>).  The usage is
 <code>($ rtd field ...)</code>, where <code>rtd</code> should be the record
