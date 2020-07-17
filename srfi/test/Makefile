@@ -6,10 +6,10 @@
 #     of bash dependency.
 top_srcdir = ..
 SHELL := bash
-SCM = guile
-SCMFLAGS = --no-auto-compile -L $(top_srcdir)
-#SCM = gosh
-#SCMFLAGS = -I $(top_srcdir)
+#SCM = guile
+#SCMFLAGS = --no-auto-compile -L $(top_srcdir)
+SCM = gosh
+SCMFLAGS = -I $(top_srcdir)
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))

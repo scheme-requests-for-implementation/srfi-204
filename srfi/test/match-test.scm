@@ -7,11 +7,10 @@
     (define scheme-version-name (string-append "guile-" (version)))
     (include-from-path "./test/match-common.scm"))
   (gauche
-    (import (gauche0.9.6 match)
+    (import (only (gauche base) gauche-version)
+	    (gauche0.9.6 match)
 	    (scheme base)
 	    (srfi-64))
     (define test-name "gauche-match-test")
-    (define scheme-version-name (string-append "gauche-" "???"))
-    ;gauche-version dissapears when (scheme base is run),
-    ;so I don't know how to determine version number programatically
+    (define scheme-version-name (string-append "gauche-" (gauche-version)))
     (include "match-common.scm")))
