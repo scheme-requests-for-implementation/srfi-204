@@ -102,50 +102,61 @@ where the result of <code>expr</code> is matched against each pattern in
 turn, and the corresponding body is evaluated for the first to
 succeed.  Thus, a list of three elements matches a list of three
 elements.
-</p><pre><code>(let ((ls (list 1 2 3))) (match ls ((1 2 3) #t)))</code></pre><code>=> #t</code><p>
+</p><pre><code>(let ((ls (list 1 2 3)))
+  (match ls
+    ((1 2 3) #t)))</code></pre>
+<code>=> #t</code><p>
 If no patterns match, an error is signalled.
 Identifiers will match anything, and make the corresponding
 binding available in the body.
-</p><pre><code>(match (list 1 2 3) ((a b c) b))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match (list 1 2 3) ((a b c) b)) => 2</code></pre><p>
 If the same identifier occurs multiple times, the first instance
 will match anything, but subsequent instances must match a value
 which is <code>equal?</code> to the first.
-</p><pre><code>(match (list 1 2 1) ((a a b) 1) ((a b a) 2))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match (list 1 2 1)
+  ((a a b) 1)
+  ((a b a) 2))</code></pre><code>=> 2</code><p>
 The special identifier <code>_</code> matches anything, no matter how
 many times it is used, and does not bind the result in the body.
-</p><pre><code>(match (list 1 2 1) ((_ _ b) 1) ((a b a) 2))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match (list 1 2 1)
+  ((_ _ b) 1)
+  ((a b a) 2))</code></pre><code>=> 1</code><p>
 To match a literal identifier (or list or any other literal), use
 <code>quote</code>.
-</p><pre><code>(match 'a ('b 1) ('a 2))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match 'a ('b 1) ('a 2)) => 2</code></pre><p>
 Analogous to its normal usage in scheme, <code>quasiquote</code> can
 be used to quote a mostly literally matching object with selected
 parts unquoted.
-</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c)))</code></pre><code>=> (2 3)</code><p>
+</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre><p>
 Often you want to match any number of a repeated pattern.  Inside
 a list pattern you can append <code>...</code> after an element to
 match zero or more of that pattern (like a regexp Kleene star).
-</p><pre><code>(match (list 1 2) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match (list 1 2 3) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match (list 1 2 3 3 3) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
+</p><pre><code>(match (list 1 2) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match (list 1 2 3) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match (list 1 2 3 3 3) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match '((a time) (stitch saves) (in nine))
+  (((x y)...) (append x y)))
+
+=> (a stitch in time saves nine)</code></pre><p>
 Pattern variables matched inside the repeated pattern are bound to
 a list of each matching instance in the body.
-</p><pre><code>(match (list 1 2) ((a b c ...) c))</code></pre><code>=> ()</code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c ...) c))</code></pre><code>=> (3)</code><p>
-</p><pre><code>(match (list 1 2 3 4 5) ((a b c ...) c))</code></pre><code>=> (3 4 5)</code><p>
+</p><pre><code>(match (list 1 2) ((a b c ...) c)) => ()</code></pre><p>
+</p><pre><code>(match (list 1 2 3) ((a b c ...) c)) => (3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5) ((a b c ...) c)) => (3 4 5)</code></pre><p>
 More than one <code>...</code> may not be used in the same list, since
 this would require exponential backtracking in the general case.
 However, <code>...</code> need not be the final element in the list,
 and may be succeeded by a fixed number of patterns.
-</p><pre><code>(match (list 1 2 3 4) ((a b c ... d e) c))</code></pre><code>=> ()</code><p>
-</p><pre><code>(match (list 1 2 3 4 5) ((a b c ... d e) c))</code></pre><code>=> (3)</code><p>
-</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c))</code></pre><code>=> (3 4 5)</code><p>
+</p><pre><code>(match (list 1 2 3 4) ((a b c ... d e) c)) => ()</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5) ((a b c ... d e) c)) => (3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c)) => (3 4 5)</code></pre><p>
 <code>___</code> is provided as an alias for <code>...</code> when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
 The <code>..1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c ..1) c))</code></pre><code>ERROR: match: "no matching pattern"
 </code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c ..1) c))</code></pre><code>=> (3)</code><p>
+</p><pre><code>(match (list 1 2 3) ((a b c ..1) c)) => (3)</code></pre><p>
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
 can be used to group and negate patterns analogously to their
 Scheme counterparts.
@@ -155,26 +166,26 @@ bind <code>x</code> to the entire value that matches <code>pat</code>
 (c.f. "as-patterns" in ML or Haskell).  Another common use is in
 conjunction with <code>not</code> patterns to match a general case
 with certain exceptions.
-</p><pre><code>(match 1 ((and) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match 1 ((and x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 1 ((and x 1) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((and) #t)) => #t</code></pre><p>
+</p><pre><code>(match 1 ((and x) x)) => 1</code></pre><p>
+</p><pre><code>(match 1 ((and x 1) x)) => 1</code></pre><p>
 The <code>or</code> operator ensures that at least one subpattern
 matches.  If the same identifier occurs in different subpatterns,
 it is matched independently.  All identifiers from all subpatterns
 are bound if the <code>or</code> operator matches, but the binding is
 only defined for identifiers from the subpattern which matched.
-</p><pre><code>(match 1 ((or) #t) (else #f))</code></pre><code>=> #f</code><p>
-</p><pre><code>(match 1 ((or x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 1 ((or x 2) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((or) #t) (else #f)) => #f</code></pre><p>
+</p><pre><code>(match 1 ((or x) x)) => 1</code></pre><p>
+</p><pre><code>(match 1 ((or x 2) x)) => 1</code></pre><p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body.
-</p><pre><code>(match 1 ((not 2) #t))</code></pre><code>=> #t</code><p>
+</p><pre><code>(match 1 ((not 2) #t)) => #t</code></pre><p>
 The more general operator <code>?</code> can be used to provide a
 predicate.  The usage is <code>(? predicate pat ...)</code> where
 <code>predicate</code> is a Scheme expression evaluating to a predicate
 called on the value to match, and any optional patterns after the
 predicate are then matched as in an <code>and</code> pattern.
-</p><pre><code>(match 1 ((? odd? x) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((? odd? x) x)) => 1</code></pre><p>
 The field operator <code>=</code> is used to extract an arbitrary
 field and match against it.  It is useful for more complex or
 conditional destructuring that can't be more directly expressed in
@@ -185,8 +196,8 @@ to generate a new value to match against <code>pat</code>.
 Thus the pattern <code>(and (= car x) (= cdr y))</code> is equivalent
 to <code>(x . y)</code>, except it will result in an immediate error
 if the value isn't a pair.
-</p><pre><code>(match '(1 . 2) ((= car x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 4 ((= square x) x))</code></pre><code>=> 16</code><p>
+</p><pre><code>(match '(1 . 2) ((= car x) x)) => 1</code></pre><p>
+</p><pre><code>(match 4 ((= square x) x)) => 16</code></pre><p>
 <strong>Note:</strong><em> record introspection is not currently portable,
 	so record operators are an interface whose implementation will not be portable.</em></p>
 <p>
@@ -223,8 +234,10 @@ identifier to the setter and getter of a field, respectively.  The
 setter is a procedure of one argument, which mutates the field to
 that argument.  The getter is a procedure of no arguments which
 returns the current value of the field.
-</p><pre><code>(let ((x (cons 1 2))) (match x ((1 . (set! s)) (s 3) x)))</code></pre><code>=> (1 . 3)</code><p>
-</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g)))</code></pre><code>=> 2</code><p>
+</p><pre><code>(let ((x (cons 1 2)))
+  (match x
+    ((1 . (set! s)) (s 3) x)))</code></pre><code>=> (1 . 3)</code><p>
+</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) => 2</code></pre><p>
 The new operator <code>***</code> can be used to search a tree for
 subpatterns.  A pattern of the form <code>(x *** y)</code> represents
 the subpattern <code>y</code> located somewhere in a tree where the path
@@ -235,8 +248,8 @@ a 2-dimensional version of the <code>...</code> pattern.
 As a common case the pattern <code>(_ *** y)</code> can be used to
 search for <code>y</code> anywhere in a tree, regardless of the path
 used.
-</p><pre><code>(match '(a (a (a b))) ((x *** 'b) x))</code></pre><code>=> (a a a)</code><p>
-</p><pre><code>(match '(a (b) (c (d e) (f g))) ((x *** 'g) x))</code></pre><code>=> (a c f)</code>
+</p><pre><code>(match '(a (a (a b))) ((x *** 'b) x)) => (a a a)</code></pre><p>
+</p><pre><code>(match '(a (b) (c (d e) (f g))) ((x *** 'g) x)) => (a c f)</code></pre>
 <h3>Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var
