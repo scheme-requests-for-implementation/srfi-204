@@ -94,7 +94,7 @@ and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, and the experimental tree patterns.
-</p><h3>Patterns</h3><p>
+</p><h3>Introduction</h3><p>
 Patterns are written to look like the printed representation of
 the objects they match.  The basic usage is
 <code>(match expr (pat body ...) ...)</code>
@@ -234,7 +234,7 @@ search for <code>y</code> anywhere in a tree, regardless of the path
 used.
 </p><pre><code>(match '(a (a (a b))) ((x *** 'b) x))</code></pre><code>=> (a a a)</code><p>
 </p><pre><code>(match '(a (b) (c (d e) (f g))) ((x *** 'g) x))</code></pre><code>=> (a c f)</code>
-<h3>Pattern Syntax</h3>
+<h3>Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var
     | <b>_</b>                            ;; anything
@@ -279,7 +279,7 @@ ooo : <b>...</b>                          ;; zero or more
                                    ;;   Example: <b>..* 3 4</b>, match 3 or 4 of a pattern <b>..* 1 5</b> match from 1 to 5 of a pattern
 
 </pre>
-<h3>Procedures</h3>
+<h3>Syntax</h3>
 <p></p>
 <h4><code>(match expr (pattern . body) ...)<br>
 (match expr (pattern (=> failure) . body) ...)</code></h4><p>
