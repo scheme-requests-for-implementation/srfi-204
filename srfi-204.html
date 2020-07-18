@@ -269,10 +269,10 @@ used.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<b>$</b> <var>class</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
-    | (<b>struct</b> <var>class</var> <var>pat1</var> ... <var>patN</var>) ;; ditto
-    | (<b>@</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names)
-    | (<b>object</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto
+    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
+    | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*)
+    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names) (*)
+    | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*)
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
     | (<b>or</b> <var>pat</var> ...)                 ;; if any of pats match
@@ -280,8 +280,10 @@ used.
     | (<b>?</b> <var>predicate</var> <var>pat</var> ...)        ;; if predicate true and all pats match
     | (<b>set!</b> <var>patvar</var>)                ;; anything, and binds setter
     | (<b>get!</b> <var>patvar</var>)                ;; anything, and binds getter
-    | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern
+    | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern (*)
     | `qp                          ;; a quasi-pattern
+
+    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
 
 patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>..1</b>, <b>..=</b>, <b>..*</b>.
@@ -289,10 +291,30 @@ patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
     | <b>..1</b>                          ;; one or more
-    | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer.
+    | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer. (*)
                                    ;;   Example: <b>..= 1</b>, <b>..= 2</b> ...
-    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers.
+    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers. (*)
                                    ;;   Example: <b>..* 3 4</b>, match 3 or 4 of a pattern <b>..* 1 5</b> match from 1 to 5 of a pattern
+
+    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
+
+qp  : ()                           ;; the empty list
+    | #t                           ;; #t
+    | #f                           ;; #f
+    | <var>string</var>                       ;; a string
+    | <var>number</var>                       ;; a number
+    | <var>character</var>                    ;; a character
+    | <var>identifier</var>                   ;; a symbol
+    | (<var>qp_1</var> ... <var>qp_n</var>)              ;; list of n elements
+    | (<var>qp_1</var> ... <var>qp_n</var> . <var>qp_{n+1}</var>)   ;; list of n or more
+    | (<var>qp_1</var> ... <var>qp_n</var> <var>qp_n+1</var> ooo)   ;; list of n or more, each element
+                                   ;;   of remainder must match qp_n+1
+    | #(<var>qp_1</var> ... <var>qp_n</var>)             ;; vector of n elements
+    | #(<var>qp_1</var> ... <var>qp_n</var> <var>qp_n+1</var> ooo)  ;; vector of n or more, each element
+                                   ;;   of remainder must match qp_n+1
+    | #&amp;qp                         ;; box
+    | ,<var>pat</var>                         ;; a pattern
+    | <var>,@</var>pat                        ;; a pattern
 
 </pre>
 <h3>Syntax</h3>
