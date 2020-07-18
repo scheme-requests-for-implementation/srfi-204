@@ -1,7 +1,7 @@
 %%%% Starting test gauche-match-test
 Group begin: gauche-match-test
 Test begin:
-  test-name: "gauche-???"
+  test-name: "gauche-0.9.6"
 Test end:
   result-kind: pass
   actual-value: 1

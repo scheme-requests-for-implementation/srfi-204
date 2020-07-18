@@ -16,7 +16,7 @@
 <p>This SRFI is currently in <em>draft</em> status.  Here is <a href="https://srfi.schemers.org/srfi-process.html">an explanation</a> of each status that a SRFI can hold.  To provide input on this SRFI, please send email to <code><a href="mailto:srfi+minus+204+at+srfi+dotschemers+dot+org">srfi-204@<span class="antispam">nospam</span>srfi.schemers.org</a></code>.  To subscribe to the list, follow <a href="https://srfi.schemers.org/srfi-list-subscribe.html">these instructions</a>.  You can access previous messages via the mailing list <a href="https://srfi-email.schemers.org/srfi-204">archive</a>.</p>
 <ul>
   <li>Received: 2020-07-15</li>
-  <li>60-day deadline: 2020-07-13</li>
+  <li>60-day deadline: 2020-09-13</li>
   <li>Draft #1 published: 2020-07-15</li>
 </ul>
 
@@ -30,14 +30,11 @@ compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
-	<li>Should this be implemented with match-let and company or should it use
-		SRFI-201?</li>
-	<li>If tree matching is experimental, should it be part of this SRFI?</li>
 	<li>For Guile 2.2, letrec and named-record tests fail</li>
-	<li>This SRFI includes the documentation from Chibi as well as a
-		modified version of the Gauche pattern grammar specification,
-		but no quasipattern specification.</li>
-	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation</li>
+	<li>For Gauche 0.9.6, letrec positional-record and named-record tests fail</li>
+	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation (this issue may be solved
+	if it is not necessary to run tests for all implementations in one go).</li>
+	<li>Remove bash dependency from Makefile if possible (uses |&amp;) and necessary.</li>
 </ul>
 
 <h2>Rationale</h2>
@@ -47,8 +44,8 @@ Scheme has come with its own pattern-matching language since R4RS, as
 part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
 matcher that does not involve using macros to make pattern matching
 available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
-statement, which does match, but does not bind its key. At least one Scheme
-implementation (s7), uses an extended <code>case</code> statement for pattern
+statement, which does match, but does not bind its key. Bigloo<sup><a href="#Bigloo">1</a></sup>, STklos<sup><a href="#STklos">2</a></sup>
+and (s7<sup><a href="#s7">3</a></sup>), all use an extended <code>case</code> statements for pattern
 matching.
 </p>
 <p>
@@ -74,10 +71,10 @@ or more, one or more, or exactly n times, or to walk down a tree
 with a pattern.
 </p>
 <p>
-This library is already part of Chibi, Guile, Cyclone, Chicken,
-LispKit, Mosh, and Sagittarius. There are other pattern matching
-libraries that are part of Gerbil, Bigloo, STklos, Kawa, Gambit, Gauche, Picrin, Racket,
-Scheme 9 from Empty Space, and Scheje. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
+This library is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
+LispKit<sup><a href="#LispKit">8</a></sup>, Loko<sup><a href="#Loko">9</a></sup>, Mosh<sup><a href="#Mosh">10</a></sup>, and Sagittarius<sup><a href="#Sagittarius">11</a></sup>. There are other pattern matching
+libraries that are part of Armpit Scheme<sup><a href="#Armpit">12</a></sup>, Gerbil<sup><a href="#Gerbil">13</a></sup>, Bigloo<sup><a href="#Bigloo">14</a></sup>, STklos<sup><a href="#STklos">15</a></sup>, Chicken<sup><a href="#Chicken:bindings">16</a></sup>, Kawa<sup><a href="#Kawa">17</a></sup>, Gambit<sup><a href="#Gambit">18</a></sup>, Gauche<sup><a href="#Gauche">19</a></sup>, Picrin<sup><a href="#Picrin">20</a></sup>, Racket<sup><a href="#Racket">21</a></sup>,
+Scheme 9 from Empty Space<sup><a href="#s9fes">22</a></sup>, and Scheje<sup><a href="#Scheje">23</a></sup>. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program; in length they range from about 20 lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
 </p>
 <p>
 Making the WCS pattern matcher a SRFI
@@ -93,7 +90,7 @@ and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, and the experimental tree patterns.
-</p><h3>Patterns</h3><p>
+</p><h3>Introduction</h3><p>
 Patterns are written to look like the printed representation of
 the objects they match.  The basic usage is
 <code>(match expr (pat body ...) ...)</code>
@@ -101,50 +98,61 @@ where the result of <code>expr</code> is matched against each pattern in
 turn, and the corresponding body is evaluated for the first to
 succeed.  Thus, a list of three elements matches a list of three
 elements.
-</p><pre><code>(let ((ls (list 1 2 3))) (match ls ((1 2 3) #t)))</code></pre><code>=> #t</code><p>
+</p><pre><code>(let ((ls (list 1 2 3)))
+  (match ls
+    ((1 2 3) #t)))</code></pre>
+<code>=> #t</code><p>
 If no patterns match, an error is signalled.
 Identifiers will match anything, and make the corresponding
 binding available in the body.
-</p><pre><code>(match (list 1 2 3) ((a b c) b))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match (list 1 2 3) ((a b c) b)) => 2</code></pre><p>
 If the same identifier occurs multiple times, the first instance
 will match anything, but subsequent instances must match a value
 which is <code>equal?</code> to the first.
-</p><pre><code>(match (list 1 2 1) ((a a b) 1) ((a b a) 2))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match (list 1 2 1)
+  ((a a b) 1)
+  ((a b a) 2))</code></pre><code>=> 2</code><p>
 The special identifier <code>_</code> matches anything, no matter how
 many times it is used, and does not bind the result in the body.
-</p><pre><code>(match (list 1 2 1) ((_ _ b) 1) ((a b a) 2))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match (list 1 2 1)
+  ((_ _ b) 1)
+  ((a b a) 2))</code></pre><code>=> 1</code><p>
 To match a literal identifier (or list or any other literal), use
 <code>quote</code>.
-</p><pre><code>(match 'a ('b 1) ('a 2))</code></pre><code>=> 2</code><p>
+</p><pre><code>(match 'a ('b 1) ('a 2)) => 2</code></pre><p>
 Analogous to its normal usage in scheme, <code>quasiquote</code> can
 be used to quote a mostly literally matching object with selected
 parts unquoted.
-</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c)))</code></pre><code>=> (2 3)</code><p>
+</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre><p>
 Often you want to match any number of a repeated pattern.  Inside
 a list pattern you can append <code>...</code> after an element to
 match zero or more of that pattern (like a regexp Kleene star).
-</p><pre><code>(match (list 1 2) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match (list 1 2 3) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match (list 1 2 3 3 3) ((1 2 3 ...) #t))</code></pre><code>=> #t</code><p>
+</p><pre><code>(match (list 1 2) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match (list 1 2 3) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match (list 1 2 3 3 3) ((1 2 3 ...) #t)) => #t</code></pre><p>
+</p><pre><code>(match '((a time) (stitch saves) (in nine))
+  (((x y)...) (append x y)))
+
+=> (a stitch in time saves nine)</code></pre><p>
 Pattern variables matched inside the repeated pattern are bound to
 a list of each matching instance in the body.
-</p><pre><code>(match (list 1 2) ((a b c ...) c))</code></pre><code>=> ()</code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c ...) c))</code></pre><code>=> (3)</code><p>
-</p><pre><code>(match (list 1 2 3 4 5) ((a b c ...) c))</code></pre><code>=> (3 4 5)</code><p>
+</p><pre><code>(match (list 1 2) ((a b c ...) c)) => ()</code></pre><p>
+</p><pre><code>(match (list 1 2 3) ((a b c ...) c)) => (3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5) ((a b c ...) c)) => (3 4 5)</code></pre><p>
 More than one <code>...</code> may not be used in the same list, since
 this would require exponential backtracking in the general case.
 However, <code>...</code> need not be the final element in the list,
 and may be succeeded by a fixed number of patterns.
-</p><pre><code>(match (list 1 2 3 4) ((a b c ... d e) c))</code></pre><code>=> ()</code><p>
-</p><pre><code>(match (list 1 2 3 4 5) ((a b c ... d e) c))</code></pre><code>=> (3)</code><p>
-</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c))</code></pre><code>=> (3 4 5)</code><p>
+</p><pre><code>(match (list 1 2 3 4) ((a b c ... d e) c)) => ()</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5) ((a b c ... d e) c)) => (3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c)) => (3 4 5)</code></pre><p>
 <code>___</code> is provided as an alias for <code>...</code> when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
 The <code>..1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c ..1) c))</code></pre><code>ERROR: match: "no matching pattern"
 </code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c ..1) c))</code></pre><code>=> (3)</code><p>
+</p><pre><code>(match (list 1 2 3) ((a b c ..1) c)) => (3)</code></pre><p>
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
 can be used to group and negate patterns analogously to their
 Scheme counterparts.
@@ -154,26 +162,26 @@ bind <code>x</code> to the entire value that matches <code>pat</code>
 (c.f. "as-patterns" in ML or Haskell).  Another common use is in
 conjunction with <code>not</code> patterns to match a general case
 with certain exceptions.
-</p><pre><code>(match 1 ((and) #t))</code></pre><code>=> #t</code><p>
-</p><pre><code>(match 1 ((and x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 1 ((and x 1) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((and) #t)) => #t</code></pre><p>
+</p><pre><code>(match 1 ((and x) x)) => 1</code></pre><p>
+</p><pre><code>(match 1 ((and x 1) x)) => 1</code></pre><p>
 The <code>or</code> operator ensures that at least one subpattern
 matches.  If the same identifier occurs in different subpatterns,
 it is matched independently.  All identifiers from all subpatterns
 are bound if the <code>or</code> operator matches, but the binding is
 only defined for identifiers from the subpattern which matched.
-</p><pre><code>(match 1 ((or) #t) (else #f))</code></pre><code>=> #f</code><p>
-</p><pre><code>(match 1 ((or x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 1 ((or x 2) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((or) #t) (else #f)) => #f</code></pre><p>
+</p><pre><code>(match 1 ((or x) x)) => 1</code></pre><p>
+</p><pre><code>(match 1 ((or x 2) x)) => 1</code></pre><p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body.
-</p><pre><code>(match 1 ((not 2) #t))</code></pre><code>=> #t</code><p>
+</p><pre><code>(match 1 ((not 2) #t)) => #t</code></pre><p>
 The more general operator <code>?</code> can be used to provide a
 predicate.  The usage is <code>(? predicate pat ...)</code> where
 <code>predicate</code> is a Scheme expression evaluating to a predicate
 called on the value to match, and any optional patterns after the
 predicate are then matched as in an <code>and</code> pattern.
-</p><pre><code>(match 1 ((? odd? x) x))</code></pre><code>=> 1</code><p>
+</p><pre><code>(match 1 ((? odd? x) x)) => 1</code></pre><p>
 The field operator <code>=</code> is used to extract an arbitrary
 field and match against it.  It is useful for more complex or
 conditional destructuring that can't be more directly expressed in
@@ -184,8 +192,11 @@ to generate a new value to match against <code>pat</code>.
 Thus the pattern <code>(and (= car x) (= cdr y))</code> is equivalent
 to <code>(x . y)</code>, except it will result in an immediate error
 if the value isn't a pair.
-</p><pre><code>(match '(1 . 2) ((= car x) x))</code></pre><code>=> 1</code><p>
-</p><pre><code>(match 4 ((= square x) x))</code></pre><code>=> 16</code><p>
+</p><pre><code>(match '(1 . 2) ((= car x) x)) => 1</code></pre><p>
+</p><pre><code>(match 4 ((= square x) x)) => 16</code></pre><p>
+<strong>Note:</strong><em> record introspection is not currently portable,
+	so record operators are an interface whose implementation will not be portable.</em></p>
+<p>
 The record operator <code>$</code> is used as a concise way to match
 records defined by <a href="https://srfi.schemers.org/srfi-9/">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99/">SRFI 99</a>).  The usage is
 <code>($ rtd field ...)</code>, where <code>rtd</code> should be the record
@@ -219,8 +230,10 @@ identifier to the setter and getter of a field, respectively.  The
 setter is a procedure of one argument, which mutates the field to
 that argument.  The getter is a procedure of no arguments which
 returns the current value of the field.
-</p><pre><code>(let ((x (cons 1 2))) (match x ((1 . (set! s)) (s 3) x)))</code></pre><code>=> (1 . 3)</code><p>
-</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g)))</code></pre><code>=> 2</code><p>
+</p><pre><code>(let ((x (cons 1 2)))
+  (match x
+    ((1 . (set! s)) (s 3) x)))</code></pre><code>=> (1 . 3)</code><p>
+</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) => 2</code></pre><p>
 The new operator <code>***</code> can be used to search a tree for
 subpatterns.  A pattern of the form <code>(x *** y)</code> represents
 the subpattern <code>y</code> located somewhere in a tree where the path
@@ -231,9 +244,9 @@ a 2-dimensional version of the <code>...</code> pattern.
 As a common case the pattern <code>(_ *** y)</code> can be used to
 search for <code>y</code> anywhere in a tree, regardless of the path
 used.
-</p><pre><code>(match '(a (a (a b))) ((x *** 'b) x))</code></pre><code>=> (a a a)</code><p>
-</p><pre><code>(match '(a (b) (c (d e) (f g))) ((x *** 'g) x))</code></pre><code>=> (a c f)</code>
-<h3>Pattern Syntax</h3>
+</p><pre><code>(match '(a (a (a b))) ((x *** 'b) x)) => (a a a)</code></pre><p>
+</p><pre><code>(match '(a (b) (c (d e) (f g))) ((x *** 'g) x)) => (a c f)</code></pre>
+<h3>Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var
     | <b>_</b>                            ;; anything
@@ -252,10 +265,10 @@ used.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<b>$</b> <var>class</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
-    | (<b>struct</b> <var>class</var> <var>pat1</var> ... <var>patN</var>) ;; ditto
-    | (<b>@</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names)
-    | (<b>object</b> <var>class</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto
+    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
+    | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*)
+    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names) (*)
+    | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*)
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
     | (<b>or</b> <var>pat</var> ...)                 ;; if any of pats match
@@ -263,8 +276,10 @@ used.
     | (<b>?</b> <var>predicate</var> <var>pat</var> ...)        ;; if predicate true and all pats match
     | (<b>set!</b> <var>patvar</var>)                ;; anything, and binds setter
     | (<b>get!</b> <var>patvar</var>)                ;; anything, and binds getter
-    | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern
+    | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern (*)
     | `qp                          ;; a quasi-pattern
+
+    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
 
 patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>..1</b>, <b>..=</b>, <b>..*</b>.
@@ -272,13 +287,32 @@ patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
     | <b>..1</b>                          ;; one or more
-    | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer.
+    | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer. (*)
                                    ;;   Example: <b>..= 1</b>, <b>..= 2</b> ...
-    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers.
+    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers. (*)
                                    ;;   Example: <b>..* 3 4</b>, match 3 or 4 of a pattern <b>..* 1 5</b> match from 1 to 5 of a pattern
 
+    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
+
+qp  : ()                           ;; the empty list
+    | #t                           ;; #t
+    | #f                           ;; #f
+    | <var>string</var>                       ;; a string
+    | <var>number</var>                       ;; a number
+    | <var>character</var>                    ;; a character
+    | <var>identifier</var>                   ;; a symbol
+    | (<var>qp_1</var> ... <var>qp_n</var>)              ;; list of n elements
+    | (<var>qp_1</var> ... <var>qp_n</var> . <var>qp_{n+1}</var>)   ;; list of n or more
+    | (<var>qp_1</var> ... <var>qp_n</var> <var>qp_n+1</var> ooo)   ;; list of n or more, each element
+                                   ;;   of remainder must match qp_n+1
+    | #(<var>qp_1</var> ... <var>qp_n</var>)             ;; vector of n elements
+    | #(<var>qp_1</var> ... <var>qp_n</var> <var>qp_n+1</var> ooo)  ;; vector of n or more, each element
+                                   ;;   of remainder must match qp_n+1
+    | ,<var>pat</var>                         ;; a pattern
+    | <var>,@</var>pat                        ;; a pattern
+
 </pre>
-<h3>Procedures</h3>
+<h3>Syntax</h3>
 <p></p>
 <h4><code>(match expr (pattern . body) ...)<br>
 (match expr (pattern (=> failure) . body) ...)</code></h4><p>
@@ -316,8 +350,74 @@ is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-2
 <p id="SCG">
 Alex Shinn, John Cowan, Arthur A. Gleckler, et al. 2013 <cite>Revised<sup>7</sup> Report on the Algorithmic Language Scheme.</cite> Retrieved from <a href="https://small.r7rs.org/attachment/r7rs.pdf">https://small.r7rs.org/attachment/r7rs.pdf</a>.
 </p>
+<p id="s7">
+Bill Schottstaedt. 2020 <cite>s7 case.scm.</cite> Retrieved from <a href="https://ccrma.stanford.edu/software/snd/snd/s7.html#case">https://ccrma.stanford.edu/software/snd/snd/s7.html#case</a>.
+</p>
 <p id="WC">
-Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Languages and Systems.</cite> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>
+Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Languages and Systems.</cite> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>.
+</p>
+<p id="Chibi">
+Alex Shinn. 2020. <cite>(chibi match).</cite> Retrieved from <a href="http://synthcode.com/scheme/chibi/lib/chibi/match.html">http://synthcode.com/scheme/chibi/lib/chibi/match.html</a>.
+</p>
+<p id="Cyclone">
+Justin Ethier. 2019. <cite>Match Library.</cite> Retrieved from <a href="http://justinethier.github.io/cyclone/docs/api/cyclone/match">http://justinethier.github.io/cyclone/docs/api/cyclone/match</a>.
+</p>
+<p id="Guile">
+Ludovic Cort&egrave;s, Bake Timmons, Arun Isaac, &amp; Paul Morris. 2019. <cite>Guile Reference Manual.</cite>. Sect. 7.8 "Pattern Matching." Retrieved from <a href="https://www.gnu.org/software/guile/manual/html_node/Pattern-Matching.html">https://www.gnu.org/software/guile/manual/html_node/Pattern-Matching.html</a>.
+</p>
+<p id="LispKit">
+Matthias Zenger. 2019. <cite>match.scm (source file).</cite> Retrieved from <a href="https://github.com/objecthub/swift-lispkit/blob/master/Sources/LispKit/Resources/Libraries/lispkit/match.sld">https://github.com/objecthub/swift-lispkit/blob/master/Sources/LispKit/Resources/Libraries/lispkit/match.sld</a>.
+</p>
+<p id="Loko">
+G&ouml;ran Weinholt. 2019. <cite>match.sls (source file).</cite> Retrived from <a href="https://gitlab.com/weinholt/loko/-/blob/master/lib/match.sls">https://gitlab.com/weinholt/loko/-/blob/master/lib/match.sls</a>.
+</p>
+<p id="Mosh">
+Higepon Taro Minowa, et. al. 2010 <cite>Pattern Match.</cite> Retrieved from <a href="http://mosh.monaos.org/files/lib/match-ss.html#Pattern_Match">http://mosh.monaos.org/files/lib/match-ss.html#Pattern_Match</a>.
+</p>
+<p id="Sagittarius">
+Takashi Kato. 2019. <cite>Sagittarius Users' Reference.</cite> Sect. 8.1 "(match) -- Pattern Matching" Retrieved from <a href="http://ktakashi.github.io/sagittarius-online-ref/section81.html">http://ktakashi.github.io/sagittarius-online-ref/section81.html</a>.
+</p>
+<p id="Armpit">
+Hubert Montas. 2018. <cite>A Scheme Interpreter for ARM Microcontrollers.</cite> Sect. "Program Examples for Version 080 - Expert System" Retrieved from <a href="http://armpit.sourceforge.net/v080/aps_080_common_examples.html#Expert">http://armpit.sourceforge.net/v080/aps_080_common_examples.html#Expert</a>.
+</p>
+<p id="Bigloo">
+Manuel Serrano &amp; Jean-Marie Geffroy. 2013. <cite>Bigloo/manual.</cite> Chapter 6. "Pattern Matching" Retrieved from <a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/manual-chapter6.html">http://www-sop.inria.fr/mimosa/fp/Bigloo/manual-chapter6.html</a>.
+<p id="Chez">
+R. Kent Dybig. 2010. <cite>"Using Match."</cite> Retrieved from Indiana University Bloomington via archive.org: <a href="https://web.archive.org/web/20180718090106/https://www.cs.indiana.edu/chezscheme/match/">https://web.archive.org/web/20180718090106/https://www.cs.indiana.edu/chezscheme/match/</a>.
+<p id="Chicken:matchable">
+Alex Shinn. 2020. <cite>The Chicken Scheme Wiki.</cite> "matchable." Retrieved from <a href="http://wiki.call-cc.org/eggref/4/matchable">http://wiki.call-cc.org/eggref/4/matchable</a>.
+</p>
+<p id="Chicken:bindings">
+Juergen Lorenz. 2020. <cite>The Chicken Scheme Wiki.</cite> "bindings." Retrieved from <a href="http://wiki.call-cc.org/eggref/4/bindings">http://wiki.call-cc.org/eggref/4/bindings</a>.
+<p id="Gambit">
+Marc Feely &amp; Fr&eacute;d&eacute;ric Hamel. 2020. <cite>match-support.scm (source file).</cite> Retrieved from <a href="https://github.com/gambit/gambit/blob/master/lib/termite/match-support.scm">https://github.com/gambit/gambit/blob/master/lib/termite/match-support.scm</a>.
+</p>
+<p id="Gauche">
+Shiro Kawai. <cite>Gauche Users Reference.<cite> Sect. 12.68 "util.match - Pattern matching." Retrieved from <a href="http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching">http://practical-scheme.net/gauche/man/gauche-refe/Pattern-matching.html#Pattern-matching</a>.
+</p>
+<p id="Gerbil">
+vyzo et. al. <cite>Gerbil Reference.</cite> Sect. "Core Prelude - Prelude Macros - Pattern Matching." <a href="https://cons.io/reference/core-prelude.html#pattern-matching">https://cons.io/reference/core-prelude.html#pattern-matching</a>.
+</p>
+<p id="Kawa">
+Per Bothner. 2020. <cite>The Kawa Scheme Language - Reference Documentation.</cite> Sect. 8.3 "Variables and Patterns." Retrieved from <a href="https://www.gnu.org/software/kawa/Variables-and-Patterns.html">https://www.gnu.org/software/kawa/Variables-and-Patterns.html</a>.
+</p>
+<p id="Rapid">
+Marc Nieper-Wi&szlig;kirchen. 2016. <cite>snow-fort.org.</cite> "(rapid match)" <a href="http://snow-fort.org/s/rapid-scheme.org/marc/rapid/match/0.1.5/index.html"> http://snow-fort.org/s/rapid-scheme.org/marc/rapid/match/0.1.5/index.html</a>.
+</p>
+<p id="Picrin">
+Yuichi Nishiwaki. 2016 <cite>50.destructuring-bind (source directory).</cite> Retrieved from <a href="https://github.com/picrin-scheme/picrin/tree/master/contrib/50.destructuring-bind">https://github.com/picrin-scheme/picrin/tree/master/contrib/50.destructuring-bind</a>.
+</p>
+<p id="Racket">
+Matthew Flatt &amp; PLT. <cite>The Racket Reference.</cite> Chap. 9 "Pattern Matching" Retrieved from <a href="https://docs.racket-lang.org/reference/match.html?q=match#%28form._%28%28lib._racket%2Fmatch..rkt%29._match%29%29">https://docs.racket-lang.org/reference/match.html?q=match#%28form._%28%28lib._racket%2Fmatch..rkt%29._match%29%29</a>.
+</p>
+<p id="s9fes">
+Nils M. Holm. <cite>matcher.scm (source code).</cite> Retrieved from <a href="http://t3x.org/s9fes/matcher.scm.html">http://t3x.org/s9fes/matcher.scm.html</a>.
+</p>
+<p id="Scheje">
+Rafik Naccache <cite>unifier.cljc (source code).</cite> Retrieved from <a href="https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc">https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc</a>.
+</p>
+<p id="STklos">
+Erick Gallesio. <cite>STklos Reference Manual.</cite> Chapter 6 "Pattern Matching." Retrieved from <a href="https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching">https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching</a>.
 </p>
 <p id="Norvig">
   Peter Norvig. 1992 <cite>Paradigms of Artificial intelligence.</cite> (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
@@ -325,6 +425,12 @@ Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Lang
 <h2>Acknowledgements</h2>
 
 Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Maciej Godek.
+<p>
+Alex Shinn provided documentation of his implementation.
+</p>
+<p>
+Shiro Kawai and Ludovic Cort&egrave;s et. al. provided pattern grammar documentation.
+</p>
 
 <h2>Copyright</h2>
 <p>Copyright &copy; Felix Thibault (2020).</p>
