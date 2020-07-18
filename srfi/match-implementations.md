@@ -45,7 +45,10 @@
 **implementation**
 <https://github.com/objecthub/swift-lispkit/blob/master/Sources/LispKit/Resources/Libraries/lispkit/match.sld>
 
-I thought Loko had this pattern matcher via Akku, now I'm not so sure
+### Loko
+
+**implementation**
+<https://gitlab.com/weinholt/loko/-/blob/master/lib/match.sls>
 
 ### Mosh
 
