@@ -312,7 +312,6 @@ qp  : ()                           ;; the empty list
     | #(<var>qp_1</var> ... <var>qp_n</var>)             ;; vector of n elements
     | #(<var>qp_1</var> ... <var>qp_n</var> <var>qp_n+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match qp_n+1
-    | #&amp;qp                         ;; box
     | ,<var>pat</var>                         ;; a pattern
     | <var>,@</var>pat                        ;; a pattern
 
