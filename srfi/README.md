@@ -20,9 +20,13 @@ for scheme pattern matching I could find.
 **match.mhtml** the documentation that goes with the Chibi Scheme
 implementation of pattern matching
 
+**match.ps** documentation of Wright-Cartwright matcher
+
 **match.sld** Chibi pattern matching library definition
 
 **match-test.sld** Chibi pattern matching tests
+
+**qp-grammar-guile.txt** quasiquote grammar from Guile's documentation
 
 **README.md** this file
 
