@@ -30,12 +30,8 @@ compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
-	<li>If tree matching is experimental, should it be part of this SRFI?</li>
 	<li>For Guile 2.2, letrec and named-record tests fail</li>
 	<li>For Gauche 0.9.6, letrec positional-record and named-record tests fail</li>
-	<li>This SRFI includes the documentation from Chibi as well as a
-		modified version of the Gauche pattern grammar specification,
-		but no quasipattern specification.</li>
 	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation (this issue may be solved
 	if it is not necessary to run tests for all implementations in one go).</li>
 	<li>Remove bash dependency from Makefile if possible (uses |&amp;) and necessary.</li>
@@ -431,6 +427,9 @@ Erick Gallesio. <cite>STklos Reference Manual.</cite> Chapter 6 "Pattern Matchin
 Andrew K. Wright, Robert Cartwright, Alex Shinn, and Panicz Maciej Godek.
 <p>
 Alex Shinn provided documentation of his implementation.
+</p>
+<p>
+Shiro Kawai and Ludovic Cort&egrave;s et. al. provided pattern grammar documentation.
 </p>
 
 <h2>Copyright</h2>
