@@ -13,4 +13,14 @@
 	    (srfi-64))
     (define test-name "gauche-match-test")
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
-    (include "match-common.scm")))
+    (include "match-common.scm"))
+  (larceny
+    ;run like:
+    ; $rlwrap larceny -r7rs -I ..
+    ; > (include "test/match-test.scm")
+    (import (scheme base)
+	    (larceny1.3 match)
+	    (srfi 64))
+    (define test-name "larceny-match-tests")
+    (define scheme-version-name "larceny-???")
+    (include "test/match-common.scm")))
