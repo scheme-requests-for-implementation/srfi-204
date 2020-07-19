@@ -370,7 +370,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (__ ___ __1 __= __* *** quote quasiquote ? $ struct _@ object = and or not set! get!)
+  (syntax-rules (_ ___ __1 __= __* *** quote quasiquote ? $ struct _@ object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -444,7 +444,7 @@
          fk))
     ((match-two v #(p ...) g+s . x)
      (match-vector v 0 () (p ...) . x))
-    ((match-two v __ g+s (sk ...) fk i) (sk ... i))
+    ((match-two v _ g+s (sk ...) fk i) (sk ... i))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
@@ -831,7 +831,7 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (__ ___ __1 __= __* *** ? $ struct _@ object = quote quasiquote and or not get! set!)
+  (syntax-rules (_ ___ __1 __= __* *** ? $ struct _@ object = quote quasiquote and or not get! set!)
     ((match-extract-vars (? pred . p) . x)
      (match-extract-vars p . x))
     ((match-extract-vars ($ rec . p) . x)
@@ -865,7 +865,7 @@
      (match-extract-vars p (match-extract-vars-step q k i v) i ()))
     ((match-extract-vars #(p ...) . x)
      (match-extract-vars (p ...) . x))
-    ((match-extract-vars __ (k ...) i v)    (k ... v))
+    ((match-extract-vars _ (k ...) i v)    (k ... v))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
     ((match-extract-vars __1 (k ...) i v)  (k ... v))
@@ -1002,6 +1002,37 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
+
+(cond-expand
+ (chibi
+  (define-syntax match-check-ellipsis
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (compare '... (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-check-identifier
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (identifier? (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr)))))))
+
+ (chicken
+  (define-syntax match-check-ellipsis
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (compare '... (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-check-identifier
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (and (symbol? (cadr expr)) (not (keyword? (cadr expr))))
+           (car (cddr expr))
+           (cadr (cddr expr)))))))
+
+ (else
   ;; Portable versions
   ;;
   ;; This is the R7RS version.  For other standards, and
@@ -1048,4 +1079,4 @@
                ((sym? x sk fk) sk)
                ;; otherwise x is a non-symbol datum
                ((sym? y sk fk) fk))))
-         (sym? abracadabra success-k failure-k))))))
+         (sym? abracadabra success-k failure-k))))))))
