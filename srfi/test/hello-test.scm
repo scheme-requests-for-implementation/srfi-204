@@ -13,10 +13,22 @@
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
     (include "hello-common.scm"))
   (larceny
-    ;;larceny doesn't like that this isn't a library
-    ;;send these lines to repl instead
-    (import (sheme base)
-	    (srfi 64))
+    ;;NOTE run like:
+    ;; $rlwrap larceny -r7rs -I ..
+    ;; > (include "test/hello-test.scm")
+    (import (scheme base)
+	    (srfi 64)
+	    (srfi 115))
+    (define (is-version sym)
+      (regexp-matches
+	'(seq "larceny-" (one-or-more (or numeric ".")))
+	(symbol->string sym)))
     (define test-name "larceny-hello-test")
-    (define scheme-version-name "larceny-???")
+    (define scheme-version-name
+      (let lp ((has (features)))
+	(cond
+	  ((null? has) "larceny-???")
+	  ((and (symbol? (car has)) (is-version (car has))) =>
+	   (lambda (match) (regexp-match-submatch match 0)))
+	  (else (lp (cdr has))))))
     (include "test/hello-common.scm")))

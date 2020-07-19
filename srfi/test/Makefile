@@ -10,8 +10,11 @@ SHELL := bash
 #SCMFLAGS = --no-auto-compile -L $(top_srcdir)
 #SCM = gosh
 #SCMFLAGS = -I $(top_srcdir)
-SCM = larceny
-SCMFLAGS = -r7rs -I $(top_srcdir)
+#TODO have not found a way to make larceny work from Makefile
+#     open "larceny -r7rs -I .." instead and
+#     (include "test/match-test.scm")
+#SCM = larceny
+#SCMFLAGS = -r7rs -I $(top_srcdir) --
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))
