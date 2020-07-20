@@ -1,0 +1,8 @@
+(import (scheme)
+	(srfi %3a0)
+	(srfi %3a64)
+	(srfi %3a9)
+	(match))
+(define test-name "chez-match-test")
+(define scheme-version-name (scheme-version))
+(include "./match-chez-common.scm")

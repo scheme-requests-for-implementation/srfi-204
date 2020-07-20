@@ -31,4 +31,5 @@
 	  ((and (symbol? (car has)) (is-version (car has))) =>
 	   (lambda (match) (regexp-match-submatch match 0)))
 	  (else (lp (cdr has))))))
-    (include "test/hello-common.scm")))
+    (include "test/hello-common.scm"))
+  )

@@ -1,4 +1,4 @@
-(library (chez9.5  match)
+(library (match)
   (export match match-lambda match-lambda* match-let match-letrec match-let*)
 ;  (import (only (gauche base) is-a? slot-ref slot-set!)
   (import (scheme))

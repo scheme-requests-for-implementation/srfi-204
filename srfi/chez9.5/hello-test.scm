@@ -1,0 +1,7 @@
+(import (scheme)
+	(srfi %3a0)
+	(srfi %3a64)
+	(srfi %3a9))
+(define test-name "chez-hello-test")
+(define scheme-version-name (scheme-version))
+(include "../test/hello-common.scm")
