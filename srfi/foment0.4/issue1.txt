@@ -1,0 +1,16 @@
+When I try to use the pattern matcher, foment crashes
+Specifically, the matcher works as long as there are no
+pattern variables, so:
+(match 1 (1 #t))
+
+(match 2 (1 #t)
+         (2 #f))
+
+(match '(1 2 2) ((1 2 ...) 2))
+
+all return the expected value, but
+
+(match '(1 2 2) ((a b ...) b))
+
+crashes with "assert IdentifierP(obj) (190)../src/synrules.cpp"
+and then a long column if hexcodes? instructions?
