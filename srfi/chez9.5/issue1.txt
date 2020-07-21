@@ -1,0 +1,9 @@
+
+$ chezscheme --libdirs ..
+Chez Scheme Version 9.5
+Copyright 1984-2017 Cisco Systems, Inc.
+
+> (import (chez9.5 match))
+Exception in read: ..1 symbol syntax is not allowed in #!r6rs mode at line 368, char 24 of ../chez9.5/match.scm
+Type (debug) to enter the debugger.
+> 

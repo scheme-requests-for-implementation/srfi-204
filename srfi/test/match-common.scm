@@ -228,14 +228,17 @@
 		      ((a b) (list 2 (lambda () (list x a)))))
 		     (append (y) (b))))
 
-
-(test-equal "record positional"
-	      '(1 0)
-	      (match (make-point 0 1)
-		     (($ Point x y) (list y x))))
-(test-equal "record named"
-      '(1 0)
-      (match (make-point 0 1)
-	     ((@ Point (x x) (y y)) (list y x))))
-
-(test-end test-name)
+(cond-expand
+  (is-a?
+    (test-equal "record positional"
+		'(1 0)
+		(match (make-point 0 1)
+		       (($ Point x y) (list y x))))
+    (test-equal "record named"
+		'(1 0)
+		(match (make-point 0 1)
+		       ((@ Point (x x) (y y)) (list y x))))
+    (test-end test-name) )
+  (else
+    (test-end test-name)))
+ 
