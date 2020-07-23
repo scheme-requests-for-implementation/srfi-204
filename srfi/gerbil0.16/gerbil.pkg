@@ -1,1 +1,9 @@
 (prelude: :scheme/r7rs)
+
+;;;$ gxi --lang r7rs
+;;;R7RS Scheme in Gerbil v0.16-109-g58c5eef2 on Gambit v4.9.3-1228-g1f19fb05
+;;;> (add-load-path ".")             
+;;;> (import (match match))          
+;;;> (match '(1 2 3 4) ((a b ...) b))
+;;;(2 3 4)
+;;;> 
