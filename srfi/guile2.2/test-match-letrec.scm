@@ -14,3 +14,10 @@
 (match-letrec (((x y) (list 1 (lambda () (list a x))))
 	       ((a b) (list 2 (lambda () (list x a)))))
 	      (append (y) (b)))
+;;;And this is what the interperter says:
+;;; test-match-letrec.scm:14:41: warning: possibly unbound variable `a'
+;;; test-match-letrec.scm:14:41: warning: possibly unbound variable `x'
+;;; test-match-letrec.scm:15:41: warning: possibly unbound variable `x'
+;;; test-match-letrec.scm:15:41: warning: possibly unbound variable `a'
+
+;;; 
