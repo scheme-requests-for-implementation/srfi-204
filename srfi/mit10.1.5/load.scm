@@ -14,7 +14,7 @@
 
 (load-relative "match" load-env)
 
-(let ((export-list '(match
+(let ((export-list '(shinn-match
                         match-let* match-named-let match-letrec match-let
                         match-lambda* match-lambda)))
   (for-each (lambda (sym)

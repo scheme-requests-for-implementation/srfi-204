@@ -259,8 +259,6 @@
 ;; 2007/04/08 - clean up, commenting
 ;; 2006/12/24 - bugfixes
 ;; 2006/12/01 - non-linear patterns, shared variables in OR, get!/set!
-;;;mit-scheme specific
-(declare (usual-integrations))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; force compile-time syntax errors with useful messages
@@ -292,19 +290,19 @@
 ;; code below that the binding `v' is a direct variable reference, not
 ;; an expression.
 
-(define-syntax match
+(define-syntax shinn-match
   (syntax-rules ()
-    ((match)
+    ((shinn-match)
      (match-syntax-error "missing match expression"))
-    ((match atom)
+    ((shinn-match atom)
      (match-syntax-error "no match clauses"))
-    ((match (app ...) (pat . body) ...)
+    ((shinn-match (app ...) (pat . body) ...)
      (let ((v (app ...)))
        (match-next v ((app ...) (set! (app ...))) (pat . body) ...)))
-    ((match #(vec ...) (pat . body) ...)
+    ((shinn-match #(vec ...) (pat . body) ...)
      (let ((v #(vec ...)))
        (match-next v (v (set! v)) (pat . body) ...)))
-    ((match atom (pat . body) ...)
+    ((shinn-match atom (pat . body) ...)
      (let ((v atom))
        (match-next v (atom (set! atom)) (pat . body) ...)))
     ))
@@ -922,7 +920,7 @@
 
 (define-syntax match-lambda
   (syntax-rules ()
-    ((_ (pattern . body) ...) (lambda (expr) (match expr (pattern . body) ...)))))
+    ((_ (pattern . body) ...) (lambda (expr) (shinn-match expr (pattern . body) ...)))))
 
 ;;> Similar to \scheme{match-lambda}.  Creates a procedure of any
 ;;> number of arguments, and matches the argument list against each
@@ -990,7 +988,7 @@
     ((_ () . body)
      (let () . body))
     ((_ ((pat expr) . rest) . body)
-     (match expr (pat (match-let* rest . body))))))
+     (shinn-match expr (pat (match-let* rest . body))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
