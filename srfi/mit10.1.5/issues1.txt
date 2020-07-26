@@ -1,0 +1,33 @@
+Grabbed Adam Massmann's implementation of match after several attempts to use
+r7rs style library definition.
+Using his load file with match (modified for for vector matches like original)
+gives:
+
+$ rlwrap mit-scheme
+MIT/GNU Scheme running under GNU/Linux
+<cut 6 lines from banner>
+  Release 10.1.5 || Microcode 15.3 || Runtime 15.7 || SF 4.41 || LIAR/x86-64 4.118
+
+1 ]=> (load "load")
+
+;Loading "load.scm"...
+;  Loading "match.scm"... done
+;... done
+;Unspecified return value
+
+1 ]=> (shinn-match '(1) (a #t))
+
+;Unbound variable: sk
+<cut 6 error/reset lines>
+
+Tried Adam's module instead, but even after adding match to
+(declare (usual-integrations))
+[so (declare (usual-integrations match))]
+got:
+
+1 ]=> (load "load")
+
+;Loading "load.scm"...
+;  Loading "match.scm"...
+;The object (opt (subform (cons (keep-if id=? else) (* any)))), passed as an argument to
+ pattern->spar, is not a syntax-parser pattern.

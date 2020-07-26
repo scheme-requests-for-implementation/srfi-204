@@ -92,6 +92,14 @@
 ;;> \example{(match (list 1 2) ((a b c ..1) c))}
 ;;> \example{(match (list 1 2 3) ((a b c ..1) c))}
 
+;;> The \scheme{..=} syntax is like \scheme{...} except that it takes
+;;> a tailing integer \scheme{<n>} and requires the pattern to match
+;;> exactly \scheme{<n>} times.
+
+;;> \example{(match (list 1 2) ((a b ..= 2) b))}
+;;> \example{(match (list 1 2 3) ((a b ..= 2) b))}
+;;> \example{(match (list 1 2 3 4) ((a b ..= 2) b))}
+
 ;;> The boolean operators \scheme{and}, \scheme{or} and \scheme{not}
 ;;> can be used to group and negate patterns analogously to their
 ;;> Scheme counterparts.
@@ -227,6 +235,8 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
+;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
+;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
 ;; 2015/05/09 - fixing bug in var extraction of quasiquote patterns
 ;; 2014/11/24 - adding Gauche's `@' pattern for named record field matching
@@ -252,7 +262,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; force compile-time syntax errors with useful messages
-(declare (usual-integrations match))
 
 (define-syntax match-syntax-error
   (syntax-rules ()
@@ -281,19 +290,19 @@
 ;; code below that the binding `v' is a direct variable reference, not
 ;; an expression.
 
-(define-syntax match
+(define-syntax shinn-match
   (syntax-rules ()
-    ((match)
+    ((shinn-match)
      (match-syntax-error "missing match expression"))
-    ((match atom)
+    ((shinn-match atom)
      (match-syntax-error "no match clauses"))
-    ((match (app ...) (pat . body) ...)
+    ((shinn-match (app ...) (pat . body) ...)
      (let ((v (app ...)))
        (match-next v ((app ...) (set! (app ...))) (pat . body) ...)))
-    ((match #(vec ...) (pat . body) ...)
+    ((shinn-match #(vec ...) (pat . body) ...)
      (let ((v #(vec ...)))
        (match-next v (v (set! v)) (pat . body) ...)))
-    ((match atom (pat . body) ...)
+    ((shinn-match atom (pat . body) ...)
      (let ((v atom))
        (match-next v (atom (set! atom)) (pat . body) ...)))
     ))
@@ -352,7 +361,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (_ ___ ..1 *** quote quasiquote ? $ struct @ object = and or not set! get!)
+  (syntax-rules (_ ___ ..1 ..= ..* *** quote quasiquote ? $ struct @ object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -392,6 +401,14 @@
      (if (pair? v)
          (match-one v (p ___) g+s sk fk i)
          fk))
+    ((match-two v (p ..= n . r) g+s sk fk i)
+     (match-extract-vars
+      p
+      (match-gen-ellipsis/range n n v p r g+s sk fk i) i ()))
+    ((match-two v (p ..* n m . r) g+s sk fk i)
+     (match-extract-vars
+      p
+      (match-gen-ellipsis/range n m v p r g+s sk fk i) i ()))
     ((match-two v ($ rec p ...) g+s sk fk i)
      (if (is-a? v rec)
          (match-record-refs v rec 0 (p ...) g+s sk fk i)
@@ -416,39 +433,42 @@
                       fk
                       i))
          fk))
-    ;; mit-scheme doesn support vectors in syntax-rules
-    ;; ((match-two v #(p ...) g+s . x)
-    ;;  (match-vector v 0 () (p ...) . x))
+;    ((match-two v #(p ...) g+s . x)
+;     (match-vector v 0 () (p ...) . x))
     ((match-two v _ g+s (sk ...) fk i) (sk ... i))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
     ;; compare it with EQUAL?.
     ((match-two v x g+s (sk ...) fk (id ...))
-     (let-syntax
-         ((new-sym?
-           (syntax-rules (id ...)
-             ((new-sym? x sk2 fk2) sk2)
-             ((new-sym? y sk2 fk2) fk2))))
-       (new-sym? random-sym-to-match
-                 (let ((x v)) (sk ... (id ... x)))
-                 (if (equal? v x) (sk ... (id ...)) fk))))
+     ;; This extra match-check-identifier is optional in general, but
+     ;; can serve as a fast path, and is needed to distinguish
+     ;; keywords in Chicken.
+     (match-check-identifier
+      x
+      (let-syntax
+          ((new-sym?
+            (syntax-rules (id ...)
+              ((new-sym? x sk2 fk2) sk2)
+              ((new-sym? y sk2 fk2) fk2))))
+        (new-sym? random-sym-to-match
+                  (let ((x v)) (sk ... (id ... x)))
+                  (if (equal? v x) (sk ... (id ...)) fk)))
+      (if (equal? v x) (sk ... (id ...)) fk)))
     ))
 
 ;; QUASIQUOTE patterns
 
 (define-syntax match-quasiquote
-  (syntax-rules (unquote unquote-splicing quasiquote)
+  (syntax-rules (unquote unquote-splicing quasiquote or)
     ((_ v (unquote p) g+s sk fk i)
      (match-one v p g+s sk fk i))
     ((_ v ((unquote-splicing p) . rest) g+s sk fk i)
-     (if (pair? v)
-       (match-one v
-                  (p . tmp)
-                  (match-quasiquote tmp rest g+s sk fk)
-                  fk
-                  i)
-       fk))
+     ;; TODO: it is an error to have another unquote-splicing in rest,
+     ;; check this and signal explicitly
+     (match-extract-vars
+      p
+      (match-gen-ellipsis/qq v p rest g+s sk fk i) i ()))
     ((_ v (quasiquote p) g+s sk fk i . depth)
      (match-quasiquote v p g+s sk fk i #f . depth))
     ((_ v (unquote p) g+s sk fk i x . depth)
@@ -463,12 +483,11 @@
           (match-quasiquote-step x q g+s sk fk depth)
           fk i . depth))
        fk))
-    ;; mit-scheme doesn support vectors in syntax-rules
-    ;; ((_ v #(elt ...) g+s sk fk i . depth)
-    ;;  (if (vector? v)
-    ;;    (let ((ls (vector->list v)))
-    ;;      (match-quasiquote ls (elt ...) g+s sk fk i . depth))
-    ;;    fk))
+;    ((_ v #(elt ...) g+s sk fk i . depth)
+;     (if (vector? v)
+;       (let ((ls (vector->list v)))
+;         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
+;       fk))
     ((_ v x g+s sk fk i . depth)
      (match-one v 'x g+s sk fk i))))
 
@@ -577,6 +596,66 @@
                               i)))
                 (else
                  fk)))))))))
+
+;; Variant of the above where the rest pattern is in a quasiquote.
+
+(define-syntax match-gen-ellipsis/qq
+  (syntax-rules ()
+    ((_ v p r g+s (sk ...) fk i ((id id-ls) ...))
+     (match-verify-no-ellipsis
+      r
+      (let* ((tail-len (length 'r))
+             (ls v)
+             (len (and (list? ls) (length ls))))
+        (if (or (not len) (< len tail-len))
+            fk
+            (let loop ((ls ls) (n len) (id-ls '()) ...)
+              (cond
+               ((= n tail-len)
+                (let ((id (reverse id-ls)) ...)
+                  (match-quasiquote ls r g+s (sk ...) fk i)))
+               ((pair? ls)
+                (let ((w (car ls)))
+                  (match-one w p ((car ls) (set-car! ls))
+                             (match-drop-ids
+                              (loop (cdr ls) (- n 1) (cons id id-ls) ...))
+                             fk
+                             i)))
+               (else
+                fk)))))))))
+
+;; Variant of above which takes an n/m range for the number of
+;; repetitions.  At least n elements much match, and up to m elements
+;; are greedily consumed.
+
+(define-syntax match-gen-ellipsis/range
+  (syntax-rules ()
+    ((_ %lo %hi v p r g+s (sk ...) fk i ((id id-ls) ...))
+     ;; general case, trailing patterns to match, keep track of the
+     ;; remaining list length so we don't need any backtracking
+     (match-verify-no-ellipsis
+      r
+      (let* ((lo %lo)
+             (hi %hi)
+             (tail-len (length 'r))
+             (ls v)
+             (len (and (list? ls) (- (length ls) tail-len))))
+        (if (and len (<= lo len hi))
+            (let loop ((ls ls) (j 0) (id-ls '()) ...)
+              (cond
+                ((= j len)
+                 (let ((id (reverse id-ls)) ...)
+                   (match-one ls r (#f #f) (sk ...) fk i)))
+                ((pair? ls)
+                 (let ((w (car ls)))
+                   (match-one w p ((car ls) (set-car! ls))
+                              (match-drop-ids
+                               (loop (cdr ls) (+ j 1) (cons id id-ls) ...))
+                              fk
+                              i)))
+                (else
+                 fk)))
+            fk))))))
 
 ;; This is just a safety check.  Although unlike syntax-rules we allow
 ;; trailing patterns after an ellipsis, we explicitly disable multiple
@@ -743,7 +822,7 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (_ ___ ..1 *** ? $ struct @ object = quote quasiquote and or not get! set!)
+  (syntax-rules (_ ___ ..1 ..= ..* *** ? $ struct @ object = quote quasiquote and or not get! set!)
     ((match-extract-vars (? pred . p) . x)
      (match-extract-vars p . x))
     ((match-extract-vars ($ rec . p) . x)
@@ -775,13 +854,14 @@
       (match-extract-vars p (match-extract-vars-step (q . r) k i v) i ())))
     ((match-extract-vars (p . q) k i v)
      (match-extract-vars p (match-extract-vars-step q k i v) i ()))
-    ;; mit-scheme doesn support vectors in syntax-rules
-    ;; ((match-extract-vars #(p ...) . x)
-    ;;  (match-extract-vars (p ...) . x))
+;    ((match-extract-vars #(p ...) . x)
+;     (match-extract-vars (p ...) . x))
     ((match-extract-vars _ (k ...) i v)    (k ... v))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
     ((match-extract-vars ..1 (k ...) i v)  (k ... v))
+    ((match-extract-vars ..= (k ...) i v)  (k ... v))
+    ((match-extract-vars ..* (k ...) i v)  (k ... v))
     ;; This is the main part, the only place where we might add a new
     ;; var if it's an unbound symbol.
     ((match-extract-vars p (k ...) (i ...) v)
@@ -818,9 +898,8 @@
      (match-extract-quasiquote-vars
       x
       (match-extract-quasiquote-vars-step y k i v d) i () d))
-    ;; mit-scheme doesn support vectors in syntax-rules
-    ;; ((match-extract-quasiquote-vars #(x ...) k i v d)
-    ;;  (match-extract-quasiquote-vars (x ...) k i v d))
+;    ((match-extract-quasiquote-vars #(x ...) k i v d)
+;     (match-extract-quasiquote-vars (x ...) k i v d))
     ((match-extract-quasiquote-vars x (k ...) i v d)
      (k ... v))
     ))
@@ -841,7 +920,7 @@
 
 (define-syntax match-lambda
   (syntax-rules ()
-    ((_ (pattern . body) ...) (lambda (expr) (match expr (pattern . body) ...)))))
+    ((_ (pattern . body) ...) (lambda (expr) (shinn-match expr (pattern . body) ...)))))
 
 ;;> Similar to \scheme{match-lambda}.  Creates a procedure of any
 ;;> number of arguments, and matches the argument list against each
@@ -909,31 +988,17 @@
     ((_ () . body)
      (let () . body))
     ((_ ((pat expr) . rest) . body)
-     (match expr (pat (match-let* rest . body))))))
+     (shinn-match expr (pat (match-let* rest . body))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
 
-(cond-expand
- (chibi
-  (define-syntax match-check-ellipsis
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (compare '... (cadr expr))
-           (car (cddr expr))
-           (cadr (cddr expr))))))
-  (define-syntax match-check-identifier
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (identifier? (cadr expr))
-           (car (cddr expr))
-           (cadr (cddr expr)))))))
-
- (else
   ;; Portable versions
   ;;
-  ;; This *should* work, but doesn't :(
+  ;; This is the R7RS version.  For other standards, and
+  ;; implementations not yet up-to-spec we have to use some tricks.
+  ;;
   ;;   (define-syntax match-check-ellipsis
   ;;     (syntax-rules (...)
   ;;       ((_ ... sk fk) sk)
@@ -975,4 +1040,4 @@
                ((sym? x sk fk) sk)
                ;; otherwise x is a non-symbol datum
                ((sym? y sk fk) fk))))
-         (sym? abracadabra success-k failure-k)))))))
+         (sym? abracadabra success-k failure-k)))))
