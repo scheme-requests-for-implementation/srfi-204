@@ -62,8 +62,10 @@ the pattern matchers already available in many implementations.
 This SRFI aims to take one pattern matcher that has a matching syntax beyond
 S-expressions and provide a sample implementation, documentation, and
 tests.
-The pattern matcher originated by Andrew K. Wright and
-Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120] and further developed by Alex Shinn (WCS) is already in
+It is based on apattern matcher originated by Andrew K. Wright and
+Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120], using procedures and defmacros.
+Using a technique developed by Oleg Kiselyov [<a href="#Oleg">Kiselyov</a>] Alex Shinn converted the pattern matcher to pure syntax-rules.
+This pattern-matching library (WCS) is already in
 use (at least in part) in several Scheme implementations. Aside from
 S-expressions, it also matches vectors and records. It has the
 ability to match based on predicates, to match "fields" (procedure
@@ -72,7 +74,7 @@ or more, one or more, or exactly n times, or to walk down a tree
 with a pattern.
 </p>
 <p>
-This library is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
+WCS is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
 LispKit<sup><a href="#LispKit">8</a></sup>, Loko<sup><a href="#Loko">9</a></sup>, Mosh<sup><a href="#Mosh">10</a></sup>, and Sagittarius<sup><a href="#Sagittarius">11</a></sup>. There are other pattern-matching
 libraries that are part of Armpit Scheme<sup><a href="#Armpit">12</a></sup>, Gerbil<sup><a href="#Gerbil">13</a></sup>, Bigloo<sup><a href="#Bigloo">14</a></sup>, STklos<sup><a href="#STklos">15</a></sup>, Chicken<sup><a href="#Chicken:bindings">16</a></sup>, Kawa<sup><a href="#Kawa">17</a></sup>, Gambit<sup><a href="#Gambit">18</a></sup>, Gauche<sup><a href="#Gauche">19</a></sup>, Picrin<sup><a href="#Picrin">20</a></sup>, Racket<sup><a href="#Racket">21</a></sup>,
 Scheme 9 from Empty Space<sup><a href="#s9fes">22</a></sup>, and Scheje<sup><a href="#Scheje">23</a></sup>. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program.  In length, they range from about twenty lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
@@ -346,6 +348,19 @@ variables in scope.</p>
 A
 <a href="https://github.com/scheme-requests-for-implementation/srfi-204/tree/master/srfi">Sample implementation</a>
 is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-204.tgz">this .tgz file</a>.</p>
+<p>
+To use the $, @, struct, and object syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
+<pre><code>
+(is-a? <var>obj</var> <var>type</var>) => <var>#t if type of obj matches type, #f otherwise</var>
+                    [this may be less general; it may only compare record types.]
+
+(slot-ref <var>obj</var> <var>n</var>) => If n is an integer, <var>value at position n</var>,
+                    if n is a symbol, <var>value named n</var>
+
+(slot-set! <var>obj</var> <var>n</var> <var>new-value</var>) If n is an integer, <var>set! the value at position n to new-value</var>
+                            If n is a symbol, <var>set! the value named n to new-value</var>
+</code></pre>
+Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another.
 
 <h2>References</h2>
 <p id="SCG">
@@ -356,6 +371,9 @@ Bill Schottstaedt. 2020 <cite>s7 case.scm.</cite> Retrieved from <a href="https:
 </p>
 <p id="WC">
 Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Languages and Systems.</cite> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>.
+</p>
+<p id="Oleg">
+Kiselyov, Oleg 2003 "How to write symbol? with syntax rules" comp.lang.scheme Retrieved from <a href="http://okmij.org/ftp/Scheme/macro-symbol-p.txt">http://okmij.org/ftp/Scheme/macro-symbol-p.txt</a>
 </p>
 <p id="Chibi">
 Alex Shinn. 2020. <cite>(chibi match).</cite> Retrieved from <a href="http://synthcode.com/scheme/chibi/lib/chibi/match.html">http://synthcode.com/scheme/chibi/lib/chibi/match.html</a>.
