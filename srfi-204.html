@@ -93,7 +93,35 @@ and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, and the experimental tree patterns.
-</p><h3>Introduction</h3><p>
+</p>
+<h3>Form Index</h3>
+<p>
+<pre><code>
+<a href="#match">match</a>		<a href="#match-lambda">match-lambda</a>	<a href="#match-lambda*">match-lambda*</a>
+<a href="#match-let">match-let</a>	<a href="#match-letrec">match-letrec</a>	<a href="#match-let*">match-let*</a>
+</code></pre>
+</p>
+<h3>Pattern Operator Index</h3>
+<p>
+<pre><code>
+<a href="#$">$</a>		<a href="#$">struct</a>		<a href="#at-sign">@</a>
+<a href="#at-sign">object</a>		<a href="#equal">=</a>		<a href="#bool">and</a>
+<a href="#bool">or</a>		<a href="#bool">not</a>		<a href="#quest">?</a>
+<a href="#set-and-get">set!</a>		<a href="#set-and-get">get!</a>		<a href="#***">***</a>
+<a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a> 
+<a href="#_">_</a>
+</code></pre>
+</p>
+<h3>Literal and Quasipattern Syntax</h3>
+<p>
+<code><pre>
+<a href="#quote">quote</a>		<a href="#qquote">quasiquote</a>	<a href="#unquote">unquote</a>
+<a href="#quote">'</a>		<a href="#qquote">`</a>		<a href="#unquote">,</a>
+<a href="#unquote-sp">,@</a>		<a href="#dot">.</a>
+</code></pre>
+Syntax and auxilary syntax used for constructing lists and vector literals hasa meaning similar to that in (scheme base).
+</p>
+<h3>Introduction</h3><p>
 Patterns are written to look like the printed representation of
 the objects they match.  The basic usage is
 <code>(match expr (pat body ...) ...)</code>
@@ -114,19 +142,41 @@ will match anything, but subsequent instances must match a value
 which is <code>equal?</code> to the first.
 </p><pre><code>(match (list 1 2 1)
   ((a a b) 1)
-  ((a b a) 2))</code></pre><code>=> 2</code><p>
+  ((a b a) 2))</code></pre><code>=> 2</code><p id="_">
 The special identifier <code>_</code> matches anything, no matter how
 many times it is used, and does not bind the result in the body.
 </p><pre><code>(match (list 1 2 1)
   ((_ _ b) 1)
-  ((a b a) 2))</code></pre><code>=> 1</code><p>
+  ((a b a) 2))</code></pre><code>=> 1</code><p id="quote">
 To match a literal identifier (or list or any other literal), use
 <code>quote</code>.
-</p><pre><code>(match 'a ('b 1) ('a 2)) => 2</code></pre><p>
-Analogous to its normal usage in scheme, <code>quasiquote</code> can
+</p><pre><code>(match 'a ('b 1) ('a 2)) => 2</code></pre><p id="qquote">
+Analogous to its normal usage in scheme, <code id="unquote">quasiquote</code> can
 be used to quote a mostly literally matching object with selected
 parts unquoted.
-</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre>
+<p id="unquote-sp">Unquote splicing is used to match the part of the list that is not specified:</p>
+<code><pre>
+(define ls '(john paul george ringo))
+
+
+(match ls (`(john ,@and-who) and-who)) => (paul george ringo)
+
+(match ls (`(john ,@and-who ringo) and-who)) => (paul george)
+
+(match ls (`(,@and-who george ringo) and-who)) => (john paul)
+</pre></code>
+<p id="dot">
+If the unspecified part is at the end of the list, <code>.</code> can also be used to match:
+<code><pre>
+(define salad '(lettuce tomatoes onions dressing salt pepper))
+
+
+(match salad (('lettuce . rest) rest)) => (tomatoes onions dressing salt pepper)
+	</pre></code>
+
+</p>
+<p id="...">
 Often you want to match any number of a repeated pattern.  Inside
 a list pattern you can append <code>...</code> after an element to
 match zero or more of that pattern (like a regexp Kleene star).
@@ -148,14 +198,15 @@ However, <code>...</code> need not be the final element in the list,
 and may be succeeded by a fixed number of patterns.
 </p><pre><code>(match (list 1 2 3 4) ((a b c ... d e) c)) => ()</code></pre><p>
 </p><pre><code>(match (list 1 2 3 4 5) ((a b c ... d e) c)) => (3)</code></pre><p>
-</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c)) => (3 4 5)</code></pre><p>
+</p><pre><code>(match (list 1 2 3 4 5 6 7) ((a b c ... d e) c)) => (3 4 5)</code></pre><p id="___">
 <code>___</code> is provided as an alias for <code>...</code> when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
+</p><p id="..1">
 The <code>..1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c ..1) c))</code></pre><code>ERROR: match: "no matching pattern"
 </code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c ..1) c)) => (3)</code></pre><p>
+</p><pre><code>(match (list 1 2 3) ((a b c ..1) c)) => (3)</code></pre><p id="bool">
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
 can be used to group and negate patterns analogously to their
 Scheme counterparts.
@@ -178,13 +229,13 @@ only defined for identifiers from the subpattern which matched.
 </p><pre><code>(match 1 ((or x 2) x)) => 1</code></pre><p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body.
-</p><pre><code>(match 1 ((not 2) #t)) => #t</code></pre><p>
+</p><pre><code>(match 1 ((not 2) #t)) => #t</code></pre><p id="quest">
 The more general operator <code>?</code> can be used to provide a
 predicate.  The usage is <code>(? predicate pat ...)</code> where
 <code>predicate</code> is a Scheme expression evaluating to a predicate
 called on the value to match, and any optional patterns after the
 predicate are then matched as in an <code>and</code> pattern.
-</p><pre><code>(match 1 ((? odd? x) x)) => 1</code></pre><p>
+</p><pre><code>(match 1 ((? odd? x) x)) => 1</code></pre><p id="equal">
 The field operator <code>=</code> is used to extract an arbitrary
 field and match against it.  It is useful for more complex or
 conditional destructuring that can't be more directly expressed in
@@ -198,15 +249,15 @@ if the value isn't a pair.
 </p><pre><code>(match '(1 . 2) ((= car x) x)) => 1</code></pre><p>
 </p><pre><code>(match 4 ((= square x) x)) => 16</code></pre><p>
 <strong>Note:</strong><em> record introspection is not currently portable,
-	so record operators are an interface whose implementation will not be portable.</em></p>
-<p>
+	so record operators are an interface whose implementation will not be portable. See the implementation section for more information.</em></p>
+<p id="$">
 The record operator <code>$</code> is used as a concise way to match
 records defined by <a href="https://srfi.schemers.org/srfi-9/">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99/">SRFI 99</a>).  The usage is
 <code>($ rtd field ...)</code>, where <code>rtd</code> should be the record
 type descriptor specified as the first argument to
 <code>define-record-type</code>, and each <code>field</code> is a subpattern
 matched against the fields of the record in order.  Not all fields
-need be present.
+need be present. The operator <code>struct</code> can be used as a synonym for <code>$</code>.
 </p><pre><code>(let ()
   (define-record-type employee
     (make-employee name title)
@@ -215,10 +266,10 @@ need be present.
     (title get-title))
   (match (make-employee "Bob" "Doctor")
     (($ employee n t) (list t n))))
-</code></pre><code>=> ("Doctor" "Bob")</code><p>
+</code></pre><code>=> ("Doctor" "Bob")</code><p id="at-sign">
 For records with more fields it can be helpful to match them by
 name rather than position.  For this you can use the <code>@</code>
-operator, originally a Gauche extension:
+operator, originally a Gauche extension (the operator <code>object</code> is synonomous with <code>@</code>):
 </p><pre><code>(let ()
   (define-record-type employee
     (make-employee name title)
@@ -227,7 +278,7 @@ operator, originally a Gauche extension:
     (title get-title))
   (match (make-employee "Bob" "Doctor")
     ((@ employee (title t) (name n)) (list t n))))
-</code></pre><code>=> ("Doctor" "Bob")</code><p>
+</code></pre><code>=> ("Doctor" "Bob")</code><p id="set-and-get">
 The <code>set!</code> and <code>get!</code> operators are used to bind an
 identifier to the setter and getter of a field, respectively.  The
 setter is a procedure of one argument, which mutates the field to
@@ -236,7 +287,7 @@ returns the current value of the field.
 </p><pre><code>(let ((x (cons 1 2)))
   (match x
     ((1 . (set! s)) (s 3) x)))</code></pre><code>=> (1 . 3)</code><p>
-</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) => 2</code></pre><p>
+</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) => 2</code></pre><p id="***">
 The new operator <code>***</code> can be used to search a tree for
 subpatterns.  A pattern of the form <code>(x *** y)</code> represents
 the subpattern <code>y</code> located somewhere in a tree where the path
@@ -317,7 +368,7 @@ qp  : ()                           ;; the empty list
 </pre>
 <h3>Syntax</h3>
 <p></p>
-<h4><code>(match expr (pattern . body) ...)<br>
+<h4 id="match"><code>(match expr (pattern . body) ...)<br>
 (match expr (pattern (=> failure) . body) ...)</code></h4><p>
 The result of <code>expr</code> is matched against each <code>pattern</code> in
 turn, according to the pattern rules described in the previous
@@ -328,16 +379,16 @@ of the entire <code>match</code>.  If a <code>failure</code> is provided,
 then it is bound to a procedure of no arguments which continues
 processing at the next <code>pattern</code>.  If no <code>pattern</code> matches,
 an error is signalled. If <a href="https://srfi.schemers.org/srfi-201/">SRFI 201</a> is used, this is the only procedure needed.</p>
-<h4><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
+<h4 id="match-lambda"><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
-clause.</p><h4><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
+clause.</p><h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
 number of arguments, and matches the argument list against each
-clause.</p><h4><code>(match-let ((var value) ...) . body)<br>(match-let loop ((var init) ...) . body)</code></h4><p>Matches each var to the corresponding expression, and evaluates
+clause.</p><h4 id="match-let"><code>(match-let ((var value) ...) . body)<br>(match-let loop ((var init) ...) . body)</code></h4><p>Matches each var to the corresponding expression, and evaluates
 the body with all match variables in scope.  Raises an error if
 any of the expressions fail to match.  Syntax analogous to named
 let can also be used for recursive functions which match on their
-arguments as in <code>match-lambda*</code>.</p><h4><code>(match-letrec ((var value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
-matches and binds the variables with all match variables in scope.</p><h4><code>(match-let* ((var value) ...) body ...)</code></h4><p>
+arguments as in <code>match-lambda*</code>.</p><h4 id="match-letrec"><code>(match-letrec ((var value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
+matches and binds the variables with all match variables in scope.</p><h4 id="match-let*"><code>(match-let* ((var value) ...) body ...)</code></h4><p>
 Similar to <code>match-let</code>, but analogously to <code>let*</code>
 matches and binds the variables in sequence, with preceding match
 variables in scope.</p>
@@ -349,16 +400,16 @@ A
 <a href="https://github.com/scheme-requests-for-implementation/srfi-204/tree/master/srfi">Sample implementation</a>
 is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-204.tgz">this .tgz file</a>.</p>
 <p>
-To use the $, @, struct, and object syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
+To use the <code><b>$,</b></code> <code><b>@,</b></code> <code><b>struct</b></code>, and <code><b>object</b></code> syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
 <pre><code>
 (is-a? <var>obj</var> <var>type</var>) => <var>#t if type of obj matches type, #f otherwise</var>
                     [this may be less general; it may only compare record types.]
 
-(slot-ref <var>obj</var> <var>n</var>) => If n is an integer, <var>value at position n</var>,
-                    if n is a symbol, <var>value named n</var>
+(slot-ref <var>obj</var> <var>slot</var>) => If slot is an integer, <var>value at position slot</var>,
+                    if slot is a symbol, <var>value named slot</var>
 
-(slot-set! <var>obj</var> <var>n</var> <var>new-value</var>) If n is an integer, <var>set! the value at position n to new-value</var>
-                            If n is a symbol, <var>set! the value named n to new-value</var>
+(slot-set! <var>obj</var> <var>slot</var> <var>new-value</var>) If slot is an integer, <var>set! the value at position slot to new-value</var>
+                            If slot is a symbol, <var>set! the value named slot to new-value</var>
 </code></pre>
 Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another.
 
