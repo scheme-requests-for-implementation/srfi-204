@@ -17,29 +17,26 @@
 **match-implementations.md** all the documentation and implementation
 for scheme pattern matching I could find.
 
-**match.mhtml** the documentation that goes with the Chibi Scheme
+**chibi-match-help.html** the documentation that goes with the Chibi Scheme
 implementation of pattern matching
 
-**match.ps** documentation of Wright-Cartwright matcher
+**Wright-Cartwright-Pattern-Matching-for-Scheme.ps** documentation of Wright-Cartwright matcher
 
 **match.sld** Chibi pattern matching library definition
 
 **match-test.sld** Chibi pattern matching tests
 
-**qp-grammar-guile.txt** quasiquote grammar from Guile's documentation
+**quasiquote-grammar-guile.txt** quasiquote grammar from Guile's documentation
 
 **README.md** this file
 
 
-## ./guile2.2:
-
-**match.scm** Guile implementation of library definition, uses define-module
-              and include-from-path instead of define-libarary and include and
-              defines is-a? macro used in ./match/match.scm
+## ./&lt;ImplementationVersion&gt;:
+files needed to make match work in a particular implementation of scheme, and a record of any issues.
 
 ## ./match:
 
-**match.scm** Chibi pattern matching library implementation
+**match.scm** Chibi pattern matching library, used as basis for others.
 
 
 ## ./test:

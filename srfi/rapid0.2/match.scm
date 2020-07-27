@@ -1,4 +1,4 @@
-(import (rapid))
+(import (scheme base))
 (define-library (rapid0.2 match)
   (import (rapid))
   (export match match-lambda match-lambda* match-let match-letrec match-let*)

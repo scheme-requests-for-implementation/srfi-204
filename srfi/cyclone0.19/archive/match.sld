@@ -3,5 +3,5 @@
   (cond-expand
    (chibi (import (chibi)))
    (else (import (scheme base))))
-  (include "../../match/match.scm"))
+  (include "match.scm"))
 

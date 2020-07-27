@@ -1,0 +1,28 @@
+This is where I get to currently with Gambit:
+
+$ gsi -:r7rs .
+Gambit v4.9.3-1228-g1f19fb05
+
+> (import (scheme base)(match match))
+> (match '(1 2 3 4) ((a b c d) b))   
+*** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
+(set! '(1 2 3 4))
+> (match '(1 2 3 4) ((a b ...) b))
+*** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
+(set! '(1 2 3 4))
+> (match (1 2 3 4) ((a b ...) b)) 
+*** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
+(set! (1 2 3 4))
+> 
+
+line 301 is passing in the getter and setter to the next macro:
+    ((match (app ...) (pat . body) ...)
+     (let ((v (app ...)))
+       (match-next v ((app ...) (set! (app ...))) (pat . body) ...)))
+
+where if there is a set! pattern it percolates down to match like:
+    ((match-two v (set! setter) (g (s ...)) (sk ...) fk i)
+     (let ((setter (lambda (x) (s ... x)))) (sk ... i)))
+
+I don't know if there is a way to make Gambit stop rejecting the one arg set!
+or not.

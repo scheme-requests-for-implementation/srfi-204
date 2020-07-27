@@ -1,0 +1,7 @@
+Loads in interpreter, but running tests as
+
+$gxi --lang r7rs test.ss
+
+(test had to be translated to Gerbil (std test) module)
+
+gives 53 failures, mostly due to unbound variables.

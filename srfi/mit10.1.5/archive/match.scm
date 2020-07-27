@@ -1,13 +1,3 @@
-(library (match)
-  (export match match-lambda match-lambda* match-let match-letrec match-let*)
-;  (import (only (gauche base) is-a? slot-ref slot-set!)
-  (import (scheme))
-;;;NOTE these operators have been converted to based on repl complaints:
-;;;      ..1     __1
-;;;      ..=     __=
-;;;      ..*     __*
-;;;      @       _@
-;;;      _       __
 ;;;; match.scm -- portable hygienic pattern matcher -*- coding: utf-8 -*-
 ;;
 ;; This code is written by Alex Shinn and placed in the
@@ -96,19 +86,19 @@
 ;;> \scheme{___} is provided as an alias for \scheme{...} when it is
 ;;> inconvenient to use the ellipsis (as in a syntax-rules template).
 
-;;> The \scheme{__1} syntax is exactly like the \scheme{...} except
+;;> The \scheme{..1} syntax is exactly like the \scheme{...} except
 ;;> that it matches one or more repetitions (like a regexp "+").
 
-;;> \example{(match (list 1 2) ((a b c __1) c))}
-;;> \example{(match (list 1 2 3) ((a b c __1) c))}
+;;> \example{(match (list 1 2) ((a b c ..1) c))}
+;;> \example{(match (list 1 2 3) ((a b c ..1) c))}
 
-;;> The \scheme{__=} syntax is like \scheme{...} except that it takes
+;;> The \scheme{..=} syntax is like \scheme{...} except that it takes
 ;;> a tailing integer \scheme{<n>} and requires the pattern to match
 ;;> exactly \scheme{<n>} times.
 
-;;> \example{(match (list 1 2) ((a b __= 2) b))}
-;;> \example{(match (list 1 2 3) ((a b __= 2) b))}
-;;> \example{(match (list 1 2 3 4) ((a b __= 2) b))}
+;;> \example{(match (list 1 2) ((a b ..= 2) b))}
+;;> \example{(match (list 1 2 3) ((a b ..= 2) b))}
+;;> \example{(match (list 1 2 3 4) ((a b ..= 2) b))}
 
 ;;> The boolean operators \scheme{and}, \scheme{or} and \scheme{not}
 ;;> can be used to group and negate patterns analogously to their
@@ -183,7 +173,7 @@
 ;;> }
 
 ;;> For records with more fields it can be helpful to match them by
-;;> name rather than position.  For this you can use the \scheme{_@}
+;;> name rather than position.  For this you can use the \scheme{@}
 ;;> operator, originally a Gauche extension:
 
 ;;> \example{
@@ -194,7 +184,7 @@
 ;;>     (name get-name)
 ;;>     (title get-title))
 ;;>   (match (make-employee "Bob" "Doctor")
-;;>     ((_@ employee (title t) (name n)) (list t n))))
+;;>     ((@ employee (title t) (name n)) (list t n))))
 ;;> }
 
 ;;> The \scheme{set!} and \scheme{get!} operators are used to bind an
@@ -245,18 +235,18 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
-;; 2020/07/06 - adding `__=' and `__*' patterns; fixing ,_@ patterns
+;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
 ;; 2015/05/09 - fixing bug in var extraction of quasiquote patterns
-;; 2014/11/24 - adding Gauche's `_@' pattern for named record field matching
+;; 2014/11/24 - adding Gauche's `@' pattern for named record field matching
 ;; 2012/12/26 - wrapping match-let&co body in lexical closure
 ;; 2012/11/28 - fixing typo s/vetor/vector in largely unused set! code
 ;; 2012/05/23 - fixing combinatorial explosion of code in certain or patterns
 ;; 2011/09/25 - fixing bug when directly matching an identifier repeated in
 ;;              the pattern (thanks to Stefan Israelsson Tampe)
 ;; 2011/01/27 - fixing bug when matching tail patterns against improper lists
-;; 2010/09/26 - adding `__1' patterns (thanks to Ludovic Courtès)
+;; 2010/09/26 - adding `..1' patterns (thanks to Ludovic Courtès)
 ;; 2010/09/07 - fixing identifier extraction in some `...' and `***' patterns
 ;; 2009/11/25 - adding `***' tree search patterns
 ;; 2008/03/20 - fixing bug where (a ...) matched non-lists
@@ -300,19 +290,19 @@
 ;; code below that the binding `v' is a direct variable reference, not
 ;; an expression.
 
-(define-syntax match
+(define-syntax shinn-match
   (syntax-rules ()
-    ((match)
+    ((shinn-match)
      (match-syntax-error "missing match expression"))
-    ((match atom)
+    ((shinn-match atom)
      (match-syntax-error "no match clauses"))
-    ((match (app ...) (pat . body) ...)
+    ((shinn-match (app ...) (pat . body) ...)
      (let ((v (app ...)))
        (match-next v ((app ...) (set! (app ...))) (pat . body) ...)))
-    ((match #(vec ...) (pat . body) ...)
+    ((shinn-match #(vec ...) (pat . body) ...)
      (let ((v #(vec ...)))
        (match-next v (v (set! v)) (pat . body) ...)))
-    ((match atom (pat . body) ...)
+    ((shinn-match atom (pat . body) ...)
      (let ((v atom))
        (match-next v (atom (set! atom)) (pat . body) ...)))
     ))
@@ -371,7 +361,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (__ ___ __1 __= __* *** quote quasiquote ? $ struct _@ object = and or not set! get!)
+  (syntax-rules (_ ___ ..1 ..= ..* *** quote quasiquote ? $ struct @ object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -407,15 +397,15 @@
      (match-extract-vars p (match-gen-search v p q g+s sk fk i) i ()))
     ((match-two v (p *** . q) g+s sk fk i)
      (match-syntax-error "invalid use of ***" (p *** . q)))
-    ((match-two v (p __1) g+s sk fk i)
+    ((match-two v (p ..1) g+s sk fk i)
      (if (pair? v)
          (match-one v (p ___) g+s sk fk i)
          fk))
-    ((match-two v (p __= n . r) g+s sk fk i)
+    ((match-two v (p ..= n . r) g+s sk fk i)
      (match-extract-vars
       p
       (match-gen-ellipsis/range n n v p r g+s sk fk i) i ()))
-    ((match-two v (p __* n m . r) g+s sk fk i)
+    ((match-two v (p ..* n m . r) g+s sk fk i)
      (match-extract-vars
       p
       (match-gen-ellipsis/range n m v p r g+s sk fk i) i ()))
@@ -427,7 +417,7 @@
      (if (is-a? v rec)
          (match-record-refs v rec 0 (p ...) g+s sk fk i)
          fk))
-    ((match-two v (_@ rec p ...) g+s sk fk i)
+    ((match-two v (@ rec p ...) g+s sk fk i)
      (if (is-a? v rec)
          (match-record-named-refs v rec (p ...) g+s sk fk i)
          fk))
@@ -443,9 +433,9 @@
                       fk
                       i))
          fk))
-    ((match-two v #(p ...) g+s . x)
-     (match-vector v 0 () (p ...) . x))
-    ((match-two v __ g+s (sk ...) fk i) (sk ... i))
+;    ((match-two v #(p ...) g+s . x)
+;     (match-vector v 0 () (p ...) . x))
+    ((match-two v _ g+s (sk ...) fk i) (sk ... i))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
@@ -493,11 +483,11 @@
           (match-quasiquote-step x q g+s sk fk depth)
           fk i . depth))
        fk))
-    ((_ v #(elt ...) g+s sk fk i . depth)
-     (if (vector? v)
-       (let ((ls (vector->list v)))
-         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
-       fk))
+;    ((_ v #(elt ...) g+s sk fk i . depth)
+;     (if (vector? v)
+;       (let ((ls (vector->list v)))
+;         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
+;       fk))
     ((_ v x g+s sk fk i . depth)
      (match-one v 'x g+s sk fk i))))
 
@@ -832,14 +822,14 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (__ ___ __1 __= __* *** ? $ struct _@ object = quote quasiquote and or not get! set!)
+  (syntax-rules (_ ___ ..1 ..= ..* *** ? $ struct @ object = quote quasiquote and or not get! set!)
     ((match-extract-vars (? pred . p) . x)
      (match-extract-vars p . x))
     ((match-extract-vars ($ rec . p) . x)
      (match-extract-vars p . x))
     ((match-extract-vars (struct rec . p) . x)
      (match-extract-vars p . x))
-    ((match-extract-vars (_@ rec (f p) ...) . x)
+    ((match-extract-vars (@ rec (f p) ...) . x)
      (match-extract-vars (p ...) . x))
     ((match-extract-vars (object rec (f p) ...) . x)
      (match-extract-vars (p ...) . x))
@@ -864,14 +854,14 @@
       (match-extract-vars p (match-extract-vars-step (q . r) k i v) i ())))
     ((match-extract-vars (p . q) k i v)
      (match-extract-vars p (match-extract-vars-step q k i v) i ()))
-    ((match-extract-vars #(p ...) . x)
-     (match-extract-vars (p ...) . x))
-    ((match-extract-vars __ (k ...) i v)    (k ... v))
+;    ((match-extract-vars #(p ...) . x)
+;     (match-extract-vars (p ...) . x))
+    ((match-extract-vars _ (k ...) i v)    (k ... v))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
-    ((match-extract-vars __1 (k ...) i v)  (k ... v))
-    ((match-extract-vars __= (k ...) i v)  (k ... v))
-    ((match-extract-vars __* (k ...) i v)  (k ... v))
+    ((match-extract-vars ..1 (k ...) i v)  (k ... v))
+    ((match-extract-vars ..= (k ...) i v)  (k ... v))
+    ((match-extract-vars ..* (k ...) i v)  (k ... v))
     ;; This is the main part, the only place where we might add a new
     ;; var if it's an unbound symbol.
     ((match-extract-vars p (k ...) (i ...) v)
@@ -908,8 +898,8 @@
      (match-extract-quasiquote-vars
       x
       (match-extract-quasiquote-vars-step y k i v d) i () d))
-    ((match-extract-quasiquote-vars #(x ...) k i v d)
-     (match-extract-quasiquote-vars (x ...) k i v d))
+;    ((match-extract-quasiquote-vars #(x ...) k i v d)
+;     (match-extract-quasiquote-vars (x ...) k i v d))
     ((match-extract-quasiquote-vars x (k ...) i v d)
      (k ... v))
     ))
@@ -930,7 +920,7 @@
 
 (define-syntax match-lambda
   (syntax-rules ()
-    ((_ (pattern . body) ...) (lambda (expr) (match expr (pattern . body) ...)))))
+    ((_ (pattern . body) ...) (lambda (expr) (shinn-match expr (pattern . body) ...)))))
 
 ;;> Similar to \scheme{match-lambda}.  Creates a procedure of any
 ;;> number of arguments, and matches the argument list against each
@@ -998,11 +988,12 @@
     ((_ () . body)
      (let () . body))
     ((_ ((pat expr) . rest) . body)
-     (match expr (pat (match-let* rest . body))))))
+     (shinn-match expr (pat (match-let* rest . body))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
+
   ;; Portable versions
   ;;
   ;; This is the R7RS version.  For other standards, and
@@ -1049,4 +1040,4 @@
                ((sym? x sk fk) sk)
                ;; otherwise x is a non-symbol datum
                ((sym? y sk fk) fk))))
-         (sym? abracadabra success-k failure-k))))))
+         (sym? abracadabra success-k failure-k)))))
