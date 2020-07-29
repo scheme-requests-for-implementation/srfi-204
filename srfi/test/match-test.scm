@@ -7,7 +7,7 @@
     (define scheme-version-name (string-append "guile-" (version)))
     (include-from-path "./test/match-common.scm"))
   (gauche
-    (import (only (gauche base) gauche-version)
+    (import (only (gauche base) gauche-version is-a? slot-ref slot-set!)
 	    (gauche0.9.6 match)
 	    (scheme base)
 	    (srfi-64))

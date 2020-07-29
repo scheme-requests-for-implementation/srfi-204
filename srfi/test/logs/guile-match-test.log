@@ -676,19 +676,9 @@ Test end:
   actual-value: 6
   expected-value: 6
 Test begin:
-  test-name: "match-letrec"
-  source-file: "test/match-common.scm"
-  source-line: 226
-  source-form: (test-equal "match-letrec" (quote (2 1 1 2)) (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))))
-Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (unbound-variable #f "Unbound variable: ~S" (a) #f)
-  expected-value: (2 1 1 2)
-Test begin:
   test-name: "record positional"
   source-file: "test/match-common.scm"
-  source-line: 232
+  source-line: 231
   source-form: (test-equal "record positional" (quote (1 0)) (match (make-point 0 1) (($ Point x y) (list y x))))
 Test end:
   result-kind: pass
@@ -697,13 +687,11 @@ Test end:
 Test begin:
   test-name: "record named"
   source-file: "test/match-common.scm"
-  source-line: 236
+  source-line: 235
   source-form: (test-equal "record named" (quote (1 0)) (match (make-point 0 1) ((@ Point (x x) (y y)) (list y x))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (wrong-type-arg #f "Wrong type (expecting ~A): ~S" ("exact integer" x) (x))
+  result-kind: pass
+  actual-value: (1 0)
   expected-value: (1 0)
 Group end: guile-match-test
-# of expected passes      76
-# of unexpected failures  2
+# of expected passes      77

@@ -6,12 +6,16 @@
 (define-syntax slot-ref
   (syntax-rules ()
     ((_ rtd rec n)
-     (struct-ref rec n))))
+     (if (integer? n)
+	 (struct-ref rec n)
+	 ((record-accessor rtd n) rec)))))
 
 (define-syntax slot-set!
   (syntax-rules ()
     ((_ rtd rec n value)
-     (struct-set! rec n value))))
+     (if (integer? n)
+	 (struct-set! rec n value)
+	 ((record-modifier rtd n) rec value)))))
 
 (define-syntax is-a?
   (syntax-rules ()
