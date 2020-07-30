@@ -6,7 +6,7 @@
     (define-syntax is-a?
       (syntax-rules ()
 	((_ rec rtd)
-	 (equal? rtd (record-rtd rec)))))
+	 ((rtd-predicate rtd) rec))))
     (define-syntax slot-ref
       (syntax-rules ()
 	((_ rtd rec n)
