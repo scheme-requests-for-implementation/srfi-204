@@ -1,8 +1,8 @@
 (define-module (guile2.2 match)
   #:export (match match-lambda match-lambda* match-let match-letrec match-let*))
 
-;; Support for record matching.
-
+;;; Support for record matching.
+;;;  using low-level 
 (define-syntax slot-ref
   (syntax-rules ()
     ((_ rtd rec n)
