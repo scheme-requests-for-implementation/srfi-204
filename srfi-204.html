@@ -249,7 +249,8 @@ if the value isn't a pair.
 </p><pre><code>(match '(1 . 2) ((= car x) x)) => 1</code></pre><p>
 </p><pre><code>(match 4 ((= square x) x)) => 16</code></pre><p>
 <strong>Note:</strong><em> record introspection is not currently portable,
-	so record operators are an interface whose implementation will not be portable. See the implementation section for more information.</em></p>
+	so record operators are an interface whose implementation will not be portable. This is an optional
+	part of the SRFI. See the implementation section for more information.</em></p>
 <p id="$">
 The record operator <code>$</code> is used as a concise way to match
 records defined by <a href="https://srfi.schemers.org/srfi-9/">SRFI 9</a> (or <a href="https://srfi.schemers.org/srfi-99/">SRFI 99</a>).  The usage is
@@ -319,10 +320,10 @@ used.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; an object (<var>patK</var> matches in slot order)
-    | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*)
-    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; an object (using slot names) (*)
-    | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*)
+    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot order) <b><em>optional</em></b>
+    | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*) <b><em>optional</em></b>
+    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; a record (using slot names) (*) <b><em>optional</em></b>
+    | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*) <b><em>optional</em></b>
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
     | (<b>or</b> <var>pat</var> ...)                 ;; if any of pats match
@@ -411,7 +412,53 @@ To use the <code><b>$,</b></code> <code><b>@,</b></code> <code><b>struct</b></co
 (slot-set! <var>obj</var> <var>slot</var> <var>new-value</var>) If slot is an integer, <var>set! the value at position slot to new-value</var>
                             If slot is a symbol, <var>set! the value named slot to new-value</var>
 </code></pre>
-Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another.
+Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another. This
+is an example from  Gauche, where records are implemented on top of native CLOS-like objects:
+<pre><code>
+(import (only (gauche base) is-a? slot-definition-name class-slots)
+  (scheme base)
+  (rename (gauche base)
+	  (slot-ref gb-slot-ref)
+	  (slot-set! gb-slot-set!)))
+  (begin
+    (define-syntax slot-ref
+      (syntax-rules ()
+        ((_ class inst n)
+         (if (integer? n)
+           (gb-slot-ref inst 
+                        (list-ref (map slot-definition-name (class-slots class)) n))
+           (gb-slot-ref inst n)))))
+    (define-syntax slot-set!
+      (syntax-rules ()
+        ((_ class inst n value)
+         (if (integer? n)
+             (gb-slot-set! inst 
+    	              (list-ref (map slot-definition-name (class-slots class)) n)
+    	              value)
+             (gb-slot-set! inst n value))))))
+</code></pre>
+and this is an example from Larceny, which has SRFI-99:
+<code><pre>
+  (import (scheme base)
+	  (srfi 99 records))
+  (begin
+    (define-syntax is-a?
+      (syntax-rules ()
+	((_ rec rtd)
+	 ((rtd-predicate rtd) rec))))
+    (define-syntax slot-ref
+      (syntax-rules ()
+	((_ rtd rec n)
+	 (if (integer? n)
+	     ((rtd-accessor rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
+	     ((rtd-accessor rtd n) rec)))))
+    (define-syntax slot-set!
+      (syntax-rules ()
+	((_ rtd rec n)
+	 (if (integer? n)
+	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
+	     ((rtd-mutator rtd n) rec))))))
+</pre></code>
 
 <h2>References</h2>
 <p id="SCG">
