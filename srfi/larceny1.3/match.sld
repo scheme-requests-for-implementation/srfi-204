@@ -5,7 +5,7 @@
   (begin
     (define-syntax is-a?
       (syntax-rules ()
-	((_ rec rtd)
+	((_ rec rtd) ;should this be wrapped in (and (rtd? rtd))
 	 ((rtd-predicate rtd) rec))))
     (define-syntax slot-ref
       (syntax-rules ()
