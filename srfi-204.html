@@ -20,6 +20,7 @@
   <li>Draft #1 published: 2020-07-15</li>
   <li>Draft #2 published: 2020-07-18</li>
   <li>Draft #3 published: 2020-07-26</li>
+  <li>Draft #4 published: 2020-08-02</li>
 </ul>
 
 <h2>Abstract</h2>
@@ -436,7 +437,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
              (gb-slot-set! inst n value))))))
 </code></pre>
 and this is an example from Larceny, which has SRFI-99:
-<code><pre>
+<pre><code>
   (import (scheme base)
 	  (srfi 99 records))
   (begin
@@ -456,7 +457,7 @@ and this is an example from Larceny, which has SRFI-99:
 	 (if (integer? n)
 	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
 	     ((rtd-mutator rtd n) rec))))))
-</pre></code>
+</code></pre>
 
 <h2>References</h2>
 <p id="SCG">
