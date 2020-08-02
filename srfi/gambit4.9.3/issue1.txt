@@ -25,4 +25,4 @@ where if there is a set! pattern it percolates down to match like:
      (let ((setter (lambda (x) (s ... x)))) (sk ... i)))
 
 I don't know if there is a way to make Gambit stop rejecting the one arg set!
-or not.
+or not. It looks like this may be related to issues #51, 384, 237 which are all open

@@ -451,11 +451,16 @@ Test end:
   actual-value: 6
   expected-value: 6
 Test begin:
-  test-name: "match-letrec"
+  test-name: "record positional"
 Test end:
-  result-kind: fail
-  actual-value: #f
-  expected-value: (2 1 1 2)
+  result-kind: pass
+  actual-value: (1 0)
+  expected-value: (1 0)
+Test begin:
+  test-name: "record named"
+Test end:
+  result-kind: pass
+  actual-value: (1 0)
+  expected-value: (1 0)
 Group end: larceny-match-tests
-# of expected passes      75
-# of unexpected failures  1
+# of expected passes      77
