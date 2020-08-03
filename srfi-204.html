@@ -19,6 +19,8 @@
   <li>60-day deadline: 2020-09-13</li>
   <li>Draft #1 published: 2020-07-15</li>
   <li>Draft #2 published: 2020-07-18</li>
+  <li>Draft #3 published: 2020-07-26</li>
+  <li>Draft #4 published: 2020-08-02</li>
 </ul>
 
 <h2>Abstract</h2>
@@ -95,14 +97,13 @@ patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, and the experimental tree patterns.
 </p>
 <h3>Form Index</h3>
-<p>
 <pre><code>
 <a href="#match">match</a>		<a href="#match-lambda">match-lambda</a>	<a href="#match-lambda*">match-lambda*</a>
 <a href="#match-let">match-let</a>	<a href="#match-letrec">match-letrec</a>	<a href="#match-let*">match-let*</a>
 </code></pre>
-</p>
+
 <h3>Pattern Operator Index</h3>
-<p>
+
 <pre><code>
 <a href="#$">$</a>		<a href="#$">struct</a>		<a href="#at-sign">@</a>
 <a href="#at-sign">object</a>		<a href="#equal">=</a>		<a href="#bool">and</a>
@@ -111,18 +112,17 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a> 
 <a href="#_">_</a>
 </code></pre>
-</p>
+
 <h3>Literal and Quasipattern Syntax</h3>
-<p>
-<code><pre>
+<pre><code>
 <a href="#quote">quote</a>		<a href="#qquote">quasiquote</a>	<a href="#unquote">unquote</a>
 <a href="#quote">'</a>		<a href="#qquote">`</a>		<a href="#unquote">,</a>
 <a href="#unquote-sp">,@</a>		<a href="#dot">.</a>
 </code></pre>
 Syntax and auxilary syntax used for constructing lists and vector literals hasa meaning similar to that in (scheme base).
-</p>
+
 <h3>Introduction</h3><p>
-Patterns are written to look like the printed representation of
+  <p>Patterns are written to look like the printed representation of
 the objects they match.  The basic usage is
 <code>(match expr (pat body ...) ...)</code>
 where the result of <code>expr</code> is matched against each pattern in
@@ -156,7 +156,7 @@ be used to quote a mostly literally matching object with selected
 parts unquoted.
 </p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre>
 <p id="unquote-sp">Unquote splicing is used to match the part of the list that is not specified:</p>
-<code><pre>
+<pre><code>
 (define ls '(john paul george ringo))
 
 
@@ -165,17 +165,16 @@ parts unquoted.
 (match ls (`(john ,@and-who ringo) and-who)) => (paul george)
 
 (match ls (`(,@and-who george ringo) and-who)) => (john paul)
-</pre></code>
+</code></pre>
 <p id="dot">
 If the unspecified part is at the end of the list, <code>.</code> can also be used to match:
-<code><pre>
+<pre><code>
 (define salad '(lettuce tomatoes onions dressing salt pepper))
 
 
 (match salad (('lettuce . rest) rest)) => (tomatoes onions dressing salt pepper)
-	</pre></code>
+	</code></pre>
 
-</p>
 <p id="...">
 Often you want to match any number of a repeated pattern.  Inside
 a list pattern you can append <code>...</code> after an element to
@@ -438,7 +437,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
              (gb-slot-set! inst n value))))))
 </code></pre>
 and this is an example from Larceny, which has SRFI-99:
-<code><pre>
+<pre><code>
   (import (scheme base)
 	  (srfi 99 records))
   (begin
@@ -458,7 +457,7 @@ and this is an example from Larceny, which has SRFI-99:
 	 (if (integer? n)
 	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
 	     ((rtd-mutator rtd n) rec))))))
-</pre></code>
+</code></pre>
 
 <h2>References</h2>
 <p id="SCG">
