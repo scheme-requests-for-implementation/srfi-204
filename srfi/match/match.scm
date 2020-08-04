@@ -235,6 +235,7 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
+;; 2020/08/03 - added bindings for auxiliary syntax 
 ;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
@@ -259,6 +260,65 @@
 ;; 2007/04/08 - clean up, commenting
 ;; 2006/12/24 - bugfixes
 ;; 2006/12/01 - non-linear patterns, shared variables in OR, get!/set!
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; add bindings for auxiliary syntax
+;;;(define-syntax define-aux-syntax
+;;;  (syntax-rules ()
+;;;    ((_ sym)
+;;;     (define-syntax sym
+;;;       (syntax-rules ()
+;;;       ((sym expr ...)
+;;;	 (syntax-error "use of pattern outside matcher:" 'sym)))))))
+;;;
+;;;(define-syntax define-auxiliaries
+;;;  (syntax-rules ()
+;;;    ((_ aux* ...)
+;;;     (begin (define-aux-syntax aux*) ...))))
+;;;
+;;;(define-auxiliaries ___ ..1 ..= ..* *** ? $ struct @ object get!)
+;;;Well, this doesn't work
+(define-syntax ___
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "___ outside of pattern"))))
+(define-syntax ..1
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "..1 outside of pattern"))))
+(define-syntax ..=
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "..= outside of pattern"))))
+(define-syntax ..*
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "..* outside of pattern"))))
+(define-syntax ***
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "*** outside of pattern"))))
+(define-syntax ?
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "? outside of pattern"))))
+(define-syntax $
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "$ outside of pattern"))))
+(define-syntax struct
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "struct outside of pattern"))))
+(define-syntax object
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "object outside of pattern"))))
+(define-syntax get!
+  (syntax-rules ()
+    ((_ expr ...)
+     (syntax-error "get! outside of pattern"))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; force compile-time syntax errors with useful messages

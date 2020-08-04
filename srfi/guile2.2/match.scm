@@ -1,5 +1,11 @@
 (define-module (guile2.2 match)
-  #:export (match match-lambda match-lambda* match-let match-letrec match-let*))
+  #:export (match
+	     match-lambda
+	     match-lambda*
+	     match-let
+	     match-letrec
+	     match-let*
+	     ___ ..1 ..= ..* *** ? $ struct object get!))
 
 ;;; Support for record matching.
 ;;;  using low-level 
