@@ -9,6 +9,12 @@
 
 ;;; Support for record matching.
 ;;;  using low-level 
+;;;  tried to re-implement using goops got:
+;;;   (is-a? rec rtd) => #f
+;;;   (class-name rtd) => error
+;;;   (is-a? rec (class-of (make-struct/no-tail rtd))) => #t
+;;;   but
+;;;  (class-slots (class-of (make-struct/no-tail rtd))) => ()
 (define-syntax slot-ref
   (syntax-rules ()
     ((_ rtd rec n)
