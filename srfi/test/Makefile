@@ -34,12 +34,13 @@ else
 endif
 endif
 endif
-
+MAKEFILE_LIST = Makefile
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))
 RED := $(shell tput -Txterm setaf 1)
 GREEN := $(shell tput -Txterm setaf 2)
+CYAN := $(shell tput -Txterm setaf 6)
 RESET := $(shell tput sgr0)
 HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 	    | sed '/unexpected/ s/$$/ $(RED)[FAIL]$(RESET)/'\
@@ -47,18 +48,30 @@ HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 ############################################################
 #			   Rules			   #
 ############################################################
-.PHONY: check clean
+.PHONY: check clean help useguile
 
-
-check: $(LOGS)
+help:  ## print this message
+	@grep -E '^[^ :]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+check: $(LOGS)  ## run all tests
 	@echo "tests complete"
 
-clean:
+clean:  ## get rid of log files
 	rm -f *.log
 
-$(NAMES): $(TESTS)
+$(NAMES): $(TESTS) ## the name of a particular test (minus .scm) runs that test
 	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
 
 %.log: %.scm
 	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
 
+useguile: ## set to run tests with guile
+	@export TESTSCHEME=guile
+
+usegosh: ## set to run tests with gosh
+	@export TESTSCHEME=gosh
+
+uselarceny: ## set to run tests with larceny **BROKEN**
+	@export TESTSCHEME=larceny
+
+usechezscheme: ## set to run tests with chezscheme
+	@export TESTSCHEME=chezscheme
