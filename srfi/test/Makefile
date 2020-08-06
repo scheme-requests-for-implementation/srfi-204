@@ -6,17 +6,35 @@
 #     of bash dependency.
 top_srcdir = ..
 SHELL := bash
-SCM = guile
-SCMFLAGS = --no-auto-compile -L $(top_srcdir)
-#SCM = gosh
-#SCMFLAGS = -I $(top_srcdir)
+GUILE = guile
+GUILEFLAGS = --no-auto-compile -L $(top_srcdir)
+GOSH = gosh
+GOSHFLAGS = -I $(top_srcdir)
 #TODO have not found a way to make larceny work from Makefile
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
-#SCM = larceny
-#SCMFLAGS = -r7rs -I $(top_srcdir) --
-#SCM = chezscheme
-#SCMFLAGS = --libdirs $(top_srcdir)/chezscheme9.5 
+LARCENY = larceny
+LARCENYFLAGS = -r7rs -I $(top_srcdir) --
+CHEZSCHEME = chezscheme
+CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5 
+ifeq ($(TESTSCHEME), gosh)
+	SCM = $(GOSH)
+	SCMFLAGS = $(GOSHFLAGS)
+else
+ifeq ($(TESTSCHEME), larceny)
+	SCM = $(LARCENY)
+	SCMFLAGS = $(LARCENYFLAGS)
+else
+ifeq ($(TESTSCHEME), chezscheme)
+	SCM = $(CHEZSCHEME)
+	SCMFLAGS = $(CHEZSCHEMEFLAGS)
+else
+	SCM = $(GUILE)
+	SCMFLAGS = $(GUILEFLAGS)
+endif
+endif
+endif
+
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))
