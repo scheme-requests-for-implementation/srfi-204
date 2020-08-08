@@ -1,4 +1,13 @@
 (cond-expand
+  #|
+  (guile-3
+    (use-modules (guile3.0 match)
+	    (srfi srfi-64)
+	    (rnrs records syntactic))
+    (define test-name "guile-rnrs-match-test")
+    (define scheme-version-name (string-append "guile-" (version)))
+    (include-from-path "./test/match-common.scm"))
+  |#
   (guile
     (import (guile2.2 match)
 	    (srfi srfi-64)

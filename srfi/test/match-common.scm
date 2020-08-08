@@ -1,8 +1,14 @@
-(define-record-type Point
-  (make-point x y)
-  point?
-  (x point-x point-x-set!)
-  (y point-y point-y-set!))
+(cond-expand 
+  #|
+  (guile-3
+    (define-record-type (Point make-point point?) (fields (mutable x) (mutable y))))
+  |#
+  (else
+    (define-record-type Point
+      (make-point x y)
+      point?
+      (x point-x point-x-set!)
+      (y point-y point-y-set!))))
 
 (test-begin test-name)
 ;;;log version
