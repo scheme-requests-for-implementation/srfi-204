@@ -1,11 +1,11 @@
 ## Adding testing for a new implementation
 
 
-1. In Makefile add a variable for the interpreter, and a variable for the flags adding <code>top_srcdir</code> to search path, and setting any other flags needed.
+1. In Makefile add a variable for the repl, and a variable for the flags adding <code>top_srcdir</code> to search path, and setting any other flags needed.
 
-2. Add a new ifeq block to the <code>chose implementation</code> section based on <code>TESTSCHEME</code> environment variable and add a new target at the bottom of the file.
+2. Add a new ifeq block to the <code>chose implementation</code> section based on <code>TESTSCHEME</code> environment variable and save Makefile.
 
-3. <code>make <var>target for TESTSCHEME</var></code>
+3. <code>export TESTSCHEME=<var>repl</var></code>
 
 4. Add a <code>cond-expand</code> block to **hello-test** that imports srfi-64, srfi-9 (if necessary), and defines the values **test-name** [<code> "*implementation*-match-test"</code>] and **scheme-version-name** [<code>(string-append "*implementation*-" (version))</code> or <code>"*implementation*-???"</code> if version number isn't available programatically] and then <code>includes</code> **hello-common.scm**.
 
