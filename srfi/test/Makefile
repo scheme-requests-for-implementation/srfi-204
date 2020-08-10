@@ -1,9 +1,6 @@
 ############################################################
 #			 Variables			   #
 ############################################################
-#TODO refactor so SCM and SCMFLAGS match implementation in
-#     beginning of test name. Should probably also get rid
-#     of bash dependency.
 top_srcdir = ..
 SHELL := bash
 GUILE = guile
