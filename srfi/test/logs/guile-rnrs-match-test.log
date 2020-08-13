@@ -114,9 +114,8 @@ Test begin:
   source-line: 26
   source-form: (test-equal "and double" (quote ok) (match (quote ok) ((and (? symbol?) y) (quote ok))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: ok
   expected-value: ok
 Test begin:
   test-name: "or empty"
@@ -142,9 +141,8 @@ Test begin:
   source-line: 29
   source-form: (test-equal "or double" (quote ok) (match (quote ok) ((or (? symbol? y) y) y)))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (unbound-variable #f "Unbound variable: ~S" (?) #f)
+  result-kind: pass
+  actual-value: ok
   expected-value: ok
 Test begin:
   test-name: "not"
@@ -161,9 +159,8 @@ Test begin:
   source-line: 31
   source-form: (test-equal "pred" (quote ok) (match 28 ((? number?) (quote ok))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: ok
   expected-value: ok
 Test begin:
   test-name: "named pred"
@@ -171,9 +168,8 @@ Test begin:
   source-line: 32
   source-form: (test-equal "named pred" 29 (match 28 ((? number? x) (+ x 1))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: 29
   expected-value: 29
 Test begin:
   test-name: "duplicate symbols pass"
@@ -226,9 +222,8 @@ Test begin:
   source-line: 44
   source-form: (test-equal "ellipses" (quote ((a b c) (1 2 3))) (match (quote ((a . 1) (b . 2) (c . 3))) (((x . y) ___) (list x y))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: ((a b c) (1 2 3))
   expected-value: ((a b c) (1 2 3))
 Test begin:
   test-name: "real ellipses"
@@ -254,9 +249,8 @@ Test begin:
   source-line: 56
   source-form: (test-equal "pred ellipses" (quote (1 2 3)) (match (quote (1 2 3)) (((? odd? n) ___) n) (((? number? n) ___) n)))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "failure continuation"
@@ -291,9 +285,8 @@ Test begin:
   source-line: 72
   source-form: (test-equal "getter car" (quote (1 2)) (match (quote (1 . 2)) (((get! a) . b) (list (a) b))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2)
   expected-value: (1 2)
 Test begin:
   test-name: "getter cdr"
@@ -301,9 +294,8 @@ Test begin:
   source-line: 75
   source-form: (test-equal "getter cdr" (quote (1 2)) (match (quote (1 . 2)) ((a get! b) (list a (b)))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2)
   expected-value: (1 2)
 Test begin:
   test-name: "getter vector"
@@ -311,9 +303,8 @@ Test begin:
   source-line: 78
   source-form: (test-equal "getter vector" (quote (1 2 3)) (match (quote #(1 2 3)) (#((get! a) b c) (list (a) b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "setter car"
@@ -420,9 +411,8 @@ Test begin:
   source-line: 125
   source-form: (test-equal "trivial tree search" (quote (1 2 3)) (match (quote (1 2 3)) ((_ *** (a b c)) (list a b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "simple tree search"
@@ -430,9 +420,8 @@ Test begin:
   source-line: 128
   source-form: (test-equal "simple tree search" (quote (1 2 3)) (match (quote (x (1 2 3))) ((_ *** (a b c)) (list a b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "deep tree search"
@@ -440,9 +429,8 @@ Test begin:
   source-line: 131
   source-form: (test-equal "deep tree search" (quote (1 2 3)) (match (quote (x (x (x (1 2 3))))) ((_ *** (a b c)) (list a b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "non-tail tree search"
@@ -450,9 +438,8 @@ Test begin:
   source-line: 134
   source-form: (test-equal "non-tail tree search" (quote (1 2 3)) (match (quote (x (x (x a b c (1 2 3) d e f)))) ((_ *** (a b c)) (list a b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "restricted tree search"
@@ -460,9 +447,8 @@ Test begin:
   source-line: 137
   source-form: (test-equal "restricted tree search" (quote (1 2 3)) (match (quote (x (x (x a b c (1 2 3) d e f)))) (((quote x) *** (a b c)) (list a b c))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 2 3)
   expected-value: (1 2 3)
 Test begin:
   test-name: "fail restricted tree search"
@@ -479,8 +465,8 @@ Test begin:
   source-line: 145
   source-form: (test-equal "sxml tree search" (quote (((href . "http://synthcode.com/")) ("synthcode"))) (match (quote (p (ul (li a (b c) (a (@ (href . "http://synthcode.com/")) "synthcode") d e f)))) (((or (quote p) (quote ul) (quote li) (quote b)) *** ((quote a) ((quote @) attrs ...) text ...)) (list attrs text)) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: (((href . "http://synthcode.com/")) ("synthcode"))
   expected-value: (((href . "http://synthcode.com/")) ("synthcode"))
 Test begin:
   test-name: "failed sxml tree search"
@@ -497,8 +483,8 @@ Test begin:
   source-line: 160
   source-form: (test-equal "collect tree search" (quote ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))) (match (quote (p (ul (li a (b c) (a (@ (href . "http://synthcode.com/")) "synthcode") d e f)))) (((and tag (or (quote p) (quote ul) (quote li) (quote b))) *** ((quote a) ((quote @) attrs ...) text ...)) (list tag attrs text)) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
   expected-value: ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
 Test begin:
   test-name: "anded tail pattern"
@@ -515,9 +501,8 @@ Test begin:
   source-line: 171
   source-form: (test-equal "anded search pattern" (quote (a b c)) (match (quote (a (b (c d)))) ((and (p *** (quote d)) x) p)))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (a b c)
   expected-value: (a b c)
 Test begin:
   test-name: "joined tail"
@@ -534,9 +519,8 @@ Test begin:
   source-line: 177
   source-form: (test-equal "list ..1" (quote (a b c)) (match (quote (a b c)) ((x ..1) x)))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (a b c)
   expected-value: (a b c)
 Test begin:
   test-name: "list ..1 failed"
@@ -553,9 +537,8 @@ Test begin:
   source-line: 185
   source-form: (test-equal "list ..1 with predicate" (quote (a b c)) (match (quote (a b c)) (((and x (? symbol?)) ..1) x)))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (a b c)
   expected-value: (a b c)
 Test begin:
   test-name: "list ..1 with failed predicate"
@@ -581,8 +564,8 @@ Test begin:
   source-line: 196
   source-form: (test-equal "list ..=" (quote (2 3)) (match (list 1 2 3) ((a b ..= 2) b) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: (2 3)
   expected-value: (2 3)
 Test begin:
   test-name: "list ..= too many"
@@ -599,8 +582,8 @@ Test begin:
   source-line: 200
   source-form: (test-equal "list ..= tail" 4 (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: 4
   expected-value: 4
 Test begin:
   test-name: "list ..= tail fail"
@@ -626,8 +609,8 @@ Test begin:
   source-line: 207
   source-form: (test-equal "list ..* lo" (quote (2 3)) (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: (2 3)
   expected-value: (2 3)
 Test begin:
   test-name: "list ..* hi"
@@ -635,8 +618,8 @@ Test begin:
   source-line: 209
   source-form: (test-equal "list ..* hi" (quote (2 3 4 5)) (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: (2 3 4 5)
   expected-value: (2 3 4 5)
 Test begin:
   test-name: "list ..* too many"
@@ -653,8 +636,8 @@ Test begin:
   source-line: 213
   source-form: (test-equal "list ..* tail" 4 (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: 4
   expected-value: 4
 Test begin:
   test-name: "list ..* tail 2"
@@ -662,8 +645,8 @@ Test begin:
   source-line: 215
   source-form: (test-equal "list ..* tail 2" 5 (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: 5
   expected-value: 5
 Test begin:
   test-name: "list ..* tail"
@@ -671,8 +654,8 @@ Test begin:
   source-line: 217
   source-form: (test-equal "list ..* tail" 6 (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)))
 Test end:
-  result-kind: fail
-  actual-value: #f
+  result-kind: pass
+  actual-value: 6
   expected-value: 6
 Test begin:
   test-name: "list ..* tail fail"
@@ -698,9 +681,8 @@ Test begin:
   source-line: 235
   source-form: (test-equal "record positional" (quote (1 0)) (match (make-point 0 1) (($ Point x y) (list y x))))
 Test end:
-  result-kind: fail
-  actual-value: #f
-  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  result-kind: pass
+  actual-value: (1 0)
   expected-value: (1 0)
 Test begin:
   test-name: "record named"
@@ -712,5 +694,4 @@ Test end:
   actual-value: (1 0)
   expected-value: (1 0)
 Group end: guile-rnrs-match-test
-# of expected passes      50
-# of unexpected failures  27
+# of expected passes      77
