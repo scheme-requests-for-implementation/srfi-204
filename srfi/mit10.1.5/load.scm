@@ -16,7 +16,8 @@
 
 (let ((export-list '(shinn-match
                         match-let* match-named-let match-letrec match-let
-                        match-lambda* match-lambda)))
+                        match-lambda* match-lambda
+			___ ..1 ..= ..* *** ? $ struct object get!)))
   (for-each (lambda (sym)
               (if (eq? sym 'match)
                   (environment-define-macro
