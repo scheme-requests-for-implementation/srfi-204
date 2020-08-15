@@ -20,6 +20,8 @@
 	 (if (integer? n)
 	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
 	     ((rtd-mutator rtd n) rec))))))
+  (include "auxiliary-syntax.scm")
+  (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
   (include "match/match.scm"))
 
 ;;; $larceny -r7rs -I ..

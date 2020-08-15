@@ -34,5 +34,6 @@
     ((_ rec rtd)
      (and (struct? rec)
           (eq? (struct-vtable rec) rtd)))))
-
+(include-from-path "./auxiliary-syntax.scm")
+(define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
 (include-from-path "./match/match.scm")

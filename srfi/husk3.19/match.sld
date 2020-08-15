@@ -1,8 +1,8 @@
 (define-library
   (match)
   (export match match-lambda match-lambda*
-		 match-let match-let* match-letrec
-		 ___ ..1 ..= ..* *** ? $ struct object get!)
+	  match-let match-let* match-letrec
+	  ___ ..1 ..= ..* *** ? $ struct object get!)
   (import (scheme))
   (begin
     #|
@@ -20,4 +20,6 @@
 	   (record-set! rec n value)
 	   ((record-mutator rtd n) rec value))))
     |#
+    (include "../auxiliary-syntax.scm")
+    (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
     (include "../match/match.scm")))

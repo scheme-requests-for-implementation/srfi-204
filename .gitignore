@@ -3,3 +3,4 @@ tags
 .*
 !/.gitignore
 files.*
+srfi/chez9.5/srfi

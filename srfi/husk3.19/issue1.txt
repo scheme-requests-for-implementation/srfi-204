@@ -24,3 +24,5 @@ Which seems like it should match:
     ;; anonymous failure continuation, give it a dummy name
     ((match-next v g+s (pat . body) . rest) ;                <- **HERE**
      (match-next v g+s (pat (=> failure) . body) . rest))))
+
+adding the define-auxiliary-syntax macro gives a similar problem.
