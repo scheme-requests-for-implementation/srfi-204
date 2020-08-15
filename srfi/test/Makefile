@@ -1,8 +1,12 @@
 ############################################################
 #			 Variables			   #
 ############################################################
+
+# environment
 top_srcdir = ..
 SHELL := bash
+
+# interpreters and flags
 GUILE = guile
 GUILE-3 = ../../../../tgzs/guile-3.0.4/meta/guile
 GUILEFLAGS = --no-auto-compile -L $(top_srcdir)
@@ -12,7 +16,7 @@ GOSHFLAGS = -I $(top_srcdir)
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
 LARCENY = larceny
-LARCENYFLAGS = -r7rs -I $(top_srcdir) --
+LARCENYFLAGS = -r7rs -I $(top_srcdir) -program
 CHEZSCHEME = chezscheme
 CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5 
 
@@ -41,10 +45,17 @@ endif
 endif
 endif
 
+# used in help target
 MAKEFILE_LIST = Makefile
+
+# grab all files ending in -test.scm and use them to make targets
+# so tests in example-test.scm can be run with make example-test
 TESTS := $(wildcard *-test.scm)
 NAMES := $(subst .scm,,$(TESTS))
 LOGS := $(addsuffix .log,$(NAMES))
+
+# add red/green [FAIL]/[PASS] to output based on the words
+# unexpected|ERROR/expected
 RED := $(shell tput -Txterm setaf 1)
 GREEN := $(shell tput -Txterm setaf 2)
 RESET := $(shell tput sgr0)
@@ -54,7 +65,7 @@ HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 ############################################################
 #			   Rules			   #
 ############################################################
-.PHONY: check clean help useguile 
+.PHONY: check clean help
 
 help:  ## print this message
 	@grep -E '^[^ :]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -70,18 +81,3 @@ $(NAMES): $(TESTS) ## the name of a particular test (minus .scm) runs that test
 %.log: %.scm
 	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
 
-#targets that set implementation
-useguile: ## set to run tests with guile
-	@export TESTSCHEME=guile
-
-usegosh: ## set to run tests with gosh
-	@export TESTSCHEME=gosh
-
-uselarceny: ## set to run tests with larceny **BROKEN**
-	@export TESTSCHEME=larceny
-
-usechezscheme: ## set to run tests with chezscheme
-	@export TESTSCHEME=chezscheme
-
-useguile-3: ## set to run with guile-3 (local alias)
-	@export TESTSCHEME=guile-3
