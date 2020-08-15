@@ -1,11 +1,11 @@
 (define-library
   (match)
   (export match match-lambda match-lambda*
-		 match-let match-let* match-letrec)
-  (import (scheme)
-	  (scheme base))
+		 match-let match-let* match-letrec
+		 ___ ..1 ..= ..* *** ? $ struct object get!)
+  (import (scheme))
   (begin
-  #|
+    #|
     (define-syntax is-a?
       ((_ rec rtd)
        ((record-predicate rtd) rec)))
