@@ -1,0 +1,12 @@
+
+$ chibi-scheme -I .
+> (import (match-test))
+> (run-match-tests)
+match: .......................................................................
+.....
+76 out of 76 (100.0%) tests passed in 0.011764049530029297 seconds.
+("match" (trailing . #t) (PASS . 76) (count . 76) (skip-group? . #f) (level . 0) (verbos
+e . #f) (parent . #f) (start-time . 1597529983.817179))
+$ chibi-scheme -V
+chibi-scheme 0.9.1 "fluoride" (chibi r7rs ratios complex uvector threads
+full-unicode modules dynamic-loading linux little-endian)

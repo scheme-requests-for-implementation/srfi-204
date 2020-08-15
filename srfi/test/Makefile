@@ -19,6 +19,12 @@ LARCENY = larceny
 LARCENYFLAGS = -r7rs -I $(top_srcdir) -program
 CHEZSCHEME = chezscheme
 CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5 
+#TODO also doesn't work from make, have to use interpreter
+#     $chibi-scheme -I . ;from ../
+#     >(import (match-tests))
+#     >(run-match-tests)
+CHIBISHCEME = chibi-scheme
+CHIBISHCEMEFLAGS = -I $(top_srcdir)
 
 # chose implentation based on TESTSCHEME
 # from environment
@@ -38,8 +44,13 @@ ifeq ($(TESTSCHEME), guile-3)
 	SCM = $(GUILE-3)
 	SCMFLAGS = $(GUILEFLAGS)
 else
+ifeq ($(TESTSCHEME), chibi-scheme)
+	SCM = $(CHIBISHCEME)
+	SCMFLAGS = $(CHIBISHCEMEFLAGS)
+else
 	SCM = $(GUILE)
 	SCMFLAGS = $(GUILEFLAGS)
+endif
 endif
 endif
 endif

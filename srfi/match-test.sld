@@ -1,5 +1,5 @@
-(define-library (chibi match-test)
-  (export run-tests)
+(define-library (match-test)
+  (export run-match-tests)
   (import (except (scheme base) equal?)
           (chibi match)
           (only (chibi test) test-begin test test-end))
@@ -13,7 +13,7 @@
        (y point-y point-y-set!))))
    (else))
   (begin
-    (define (run-tests)
+    (define (run-match-tests)
       (test-begin "match")
 
       (test "any" 'ok (match 'any (_ 'ok)))

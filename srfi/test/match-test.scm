@@ -1,4 +1,7 @@
 (cond-expand
+  (chibi
+    (import (match-test))
+    (run-match-tests))
   (guile-3
     (use-modules (guile3.0 match)
 	    (srfi srfi-64)
