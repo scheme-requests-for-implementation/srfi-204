@@ -63,7 +63,9 @@
 	 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	 ;;; definitions for is-a?, slot-ref, and slot-set!
 	 ;;; for record access.
-	 ;;; Chez uses rnrs records 
+	 ;;; Chez uses rnrs records. Unlike the other implementations, rtd has
+	 ;;; to be passed to record-type-descriptor to be an rtd, otherwise it
+	 ;;; is just an unbound variable? identifier?
 	 (define-syntax is-a?
 	   (syntax-rules ()
 	     ((_ rec rtd)
