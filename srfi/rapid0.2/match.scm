@@ -1,7 +1,8 @@
-(import (scheme base))
+(import (rapid))
 (define-library (rapid0.2 match)
   (import (rapid))
-  (export match match-lambda match-lambda* match-let match-letrec match-let*)
+  (export match match-lambda match-lambda* match-let match-letrec match-let*
+	  ___ ..1 ..= ..* *** ? $ struct object get!)
   (include "match/match.scm"))
 
 (display '(match '(mom dad sis bro)
