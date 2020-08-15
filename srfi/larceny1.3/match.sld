@@ -1,5 +1,6 @@
 (define-library (larceny1.3 match)
-  (export match match-lambda match-lambda* match-let match-letrec match-let*)
+  (export match match-lambda match-lambda* match-let match-letrec match-let*
+	  ___ ..1 ..= ..* *** ? $ struct object get!)
   (import (scheme base)
 	  (srfi 99 records))
   (begin
