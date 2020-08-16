@@ -1,7 +1,6 @@
 (cond-expand
   (chibi
-    (import (match-test))
-    (run-match-tests))
+    (import (match-test)))
   (guile-3
     (use-modules (guile3.0 match)
 	    (srfi srfi-64)
@@ -45,3 +44,6 @@
 	       (((? symbol? (? is-version? sym)) . rest) (symbol->string sym))
 	       ((this . rest) (lp rest)))))
     (include "test/match-common.scm")))
+(cond-expand
+  (chibi
+    (run-match-tests)))
