@@ -5,4 +5,4 @@
   (include "../../auxiliary-syntax.scm")
   (begin
     (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!))
-  (include "../../match/match.scm"))
+  (include "../../srfi-204/srfi-204.scm"))

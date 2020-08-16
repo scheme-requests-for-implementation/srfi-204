@@ -1,5 +1,5 @@
 (define-library
-  (match)
+  (srfi-204)
   (export match match-lambda match-lambda*
 	  match-let match-let* match-letrec
 	  ___ ..1 ..= ..* *** ? $ struct object get!)
@@ -22,4 +22,4 @@
     |#
     (include "../auxiliary-syntax.scm")
     (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
-    (include "../match/match.scm")))
+    (include "../srfi-204/srfi-204.scm")))

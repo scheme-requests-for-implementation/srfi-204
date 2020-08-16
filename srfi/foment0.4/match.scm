@@ -1,4 +1,4 @@
-(define-library (foment0.4  match)
+(define-library (srfi-204)
   (export match match-lambda match-lambda* match-let match-letrec match-let*
   	___ ..1 ..= ..* *** ? $ struct object get!)
   (import (scheme base))

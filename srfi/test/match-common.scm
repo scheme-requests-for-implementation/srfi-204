@@ -1,6 +1,8 @@
 (cond-expand 
+  #| tests rnrs record methods
   (guile-3
     (define-record-type (Point make-point point?) (fields (mutable x) (mutable y))))
+  |#
   (else
     (define-record-type Point
       (make-point x y)

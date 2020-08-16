@@ -6,7 +6,7 @@
   (include "auxiliary-syntax.scm")
   (begin
     (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!))
-  (include "match/match.scm"))
+  (include "srfi-204/srfi-204.scm"))
 
 (display '(match '(mom dad sis bro)
        ((date night . kids-stay-home) (list date night))))

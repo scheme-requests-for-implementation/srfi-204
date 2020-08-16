@@ -9,7 +9,7 @@ SHELL := bash
 # interpreters and flags
 GUILE = guile
 GUILE-3 = ../../../../tgzs/guile-3.0.4/meta/guile
-GUILEFLAGS = --no-auto-compile -L $(top_srcdir)
+GUILEFLAGS = --no-auto-compile -L $(top_srcdir) -x .sld
 GOSH = gosh
 GOSHFLAGS = -I $(top_srcdir)
 #TODO have not found a way to make larceny work from Makefile

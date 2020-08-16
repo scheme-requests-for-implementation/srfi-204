@@ -40,6 +40,6 @@
 	       ((> i len) (error "name not in record" n))
 	       ((eq? n (vector-ref names i)) i)
 	       (else (lp (+ i 1 )))))))))
-    (include-from-path "match/match.scm"))
+    (include-from-path "srfi-204/srfi-204.scm"))
   ;(include "match/match.scm") doesn't work 
   )
