@@ -31,6 +31,7 @@ pre {
   <li>Draft #2 published: 2020-07-18</li>
   <li>Draft #3 published: 2020-07-26</li>
   <li>Draft #4 published: 2020-08-02</li>
+  <li>Draft #5 published: 2020-08-16</li>
 </ul>
 
 <h2>Abstract</h2>
@@ -120,7 +121,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#at-sign">object</a>		<a href="#equal">=</a>		<a href="#bool">and</a>
 <a href="#bool">or</a>		<a href="#bool">not</a>		<a href="#quest">?</a>
 <a href="#set-and-get">set!</a>		<a href="#set-and-get">get!</a>		<a href="#***">***</a>
-<a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a> 
+<a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a>
 <a href="#_">_</a>
 </code></pre>
 All of this syntax not already defined by an implementation is exported by this library.
@@ -331,10 +332,10 @@ used.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot 
+    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot
                                          ;;    order) <b><em>optional</em></b>
     | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*) <b><em>optional</em></b>
-    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; a record (using slot names) (*) 
+    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; a record (using slot names) (*)
                                          ;;    <b><em>optional</em></b>
     | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*) <b><em>optional</em></b>
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
@@ -347,7 +348,7 @@ used.
     | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern (*)
     | `qp                          ;; a quasi-pattern
 
-    (*) extended syntax not originally part of 
+    (*) extended syntax not originally part of
         Wright-Cartwright pattern matcher.
 
 patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
@@ -426,7 +427,7 @@ To use the <code><b>$,</b></code> <code><b>@,</b></code> <code><b>struct</b></co
                     if slot is a symbol, <var>value named slot</var>
 
 (slot-set! <var>rtd</var> <var>rec</var> <var>slot</var> <var>new-value</var>) If slot is an integer, <var>set! the value at
-                            position slot to new-value</var>. If slot is a symbol, 
+                            position slot to new-value</var>. If slot is a symbol,
                             <var>set! the value named slot to new-value</var>
 </code></pre>
 Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another. This
@@ -442,16 +443,16 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
       (syntax-rules ()
         ((_ class inst n)
          (if (integer? n)
-           (gb-slot-ref inst 
-                        (list-ref (map slot-definition-name 
-			               (class-slots class)) 
+           (gb-slot-ref inst
+                        (list-ref (map slot-definition-name
+			               (class-slots class))
 				  n))
            (gb-slot-ref inst n)))))
     (define-syntax slot-set!
       (syntax-rules ()
         ((_ class inst n value)
          (if (integer? n)
-             (gb-slot-set! inst 
+             (gb-slot-set! inst
     	              (list-ref (map slot-definition-name
 		                     (class-slots class))
 				n)
