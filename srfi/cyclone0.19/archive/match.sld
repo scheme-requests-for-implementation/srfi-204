@@ -1,4 +1,4 @@
-(define-library (cyclone0.19 archive  match)
+(define-library (match)
   (export match match-lambda match-lambda* match-let match-letrec match-let*)
   (cond-expand
    (chibi (import (chibi)))

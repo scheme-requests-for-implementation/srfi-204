@@ -1,16 +1,10 @@
-#|
-(define-record-type Point
-  (make-point x y)
-  point?
-  (x point-x point-x-set!)
-  (y point-y point-y-set!))
-|#
+(define-record-type (Point make-point point?) (fields (mutable x) (mutable y)))
 
 (test-begin test-name)
 ;;;log version
 (test-equal scheme-version-name 1 1)
 
-(test-equal "any" 'ok (match 'any (_ 'ok)))
+(test-equal "any" 'ok (match 'any (:_ 'ok)))
 (test-equal "symbol" 'ok (match 'ok (x x)))
 (test-equal "number" 'ok (match 28 (28 'ok)))
 (test-equal "string" 'ok (match "good" ("bad" 'fail) ("good" 'ok)))
@@ -18,7 +12,7 @@
 (test-equal "null" 'ok (match '() (() 'ok)))
 (test-equal "pair" 'ok (match '(ok) ((x) x)))
 (test-equal "vector" 'ok (match '#(ok) (#(x) x)))
-(test-equal "any doubled" 'ok (match '(1 2) ((_ _) 'ok)))
+(test-equal "any doubled" 'ok (match '(1 2) ((:_ :_) 'ok)))
 (test-equal "and empty" 'ok (match '(o k) ((and) 'ok)))
 (test-equal "and single" 'ok (match 'ok ((and x) x)))
 (test-equal "and double" 'ok (match 'ok ((and (? symbol?) y) 'ok)))
@@ -35,9 +29,9 @@
 (test-equal "duplicate symbols samth" 'ok
       (match '(ok . ok) ((x . 'bad) x) (('ok . x) x)))
 (test-equal "duplicate symbols bound" 3
-      (let ((a '(1 2))) (match a ((and (a 2) (1 b)) (+ a b)) (_ #f))))
+      (let ((a '(1 2))) (match a ((and (a 2) (1 b)) (+ a b)) (:_ #f))))
 (test-equal "duplicate quasiquote" 'ok
-      (match '(a b) ((or `(a ,x) `(,x b)) 'ok) (_ #f)))
+      (match '(a b) ((or `(a ,x) `(,x b)) 'ok) (:_ #f)))
 
 (test-equal "ellipses" '((a b c) (1 2 3))
       (match '((a . 1) (b . 2) (c . 3))
@@ -121,16 +115,16 @@
       (match '(a b c e) (`(a ,@ls d) ls) (else #f)))
 
 (test-equal "trivial tree search" '(1 2 3)
-      (match '(1 2 3) ((_ *** (a b c)) (list a b c))))
+      (match '(1 2 3) ((:_ *** (a b c)) (list a b c))))
 
 (test-equal "simple tree search" '(1 2 3)
-      (match '(x (1 2 3)) ((_ *** (a b c)) (list a b c))))
+      (match '(x (1 2 3)) ((:_ *** (a b c)) (list a b c))))
 
 (test-equal "deep tree search" '(1 2 3)
-      (match '(x (x (x (1 2 3)))) ((_ *** (a b c)) (list a b c))))
+      (match '(x (x (x (1 2 3)))) ((:_ *** (a b c)) (list a b c))))
 
 (test-equal "non-tail tree search" '(1 2 3)
-      (match '(x (x (x a b c (1 2 3) d e f))) ((_ *** (a b c)) (list a b c))))
+      (match '(x (x (x a b c (1 2 3) d e f))) ((:_ *** (a b c)) (list a b c))))
 
 (test-equal "restricted tree search" '(1 2 3)
       (match '(x (x (x a b c (1 2 3) d e f))) (('x *** (a b c)) (list a b c))))
@@ -225,13 +219,13 @@
 		       sum
 		       (loop rest sum)))))
 
-(test-equal "match-letrec" '(2 1 1 2)
+'(test-equal "match-letrec" '(2 1 1 2)
        (match-letrec (((x y) (list 1 (lambda () (list a x))))
 		      ((a b) (list 2 (lambda () (list x a)))))
 		     (append (y) (b))))
 
 (cond-expand
-  (is-a?
+  (chezscheme
     (test-equal "record positional"
 		'(1 0)
 		(match (make-point 0 1)
@@ -239,7 +233,7 @@
     (test-equal "record named"
 		'(1 0)
 		(match (make-point 0 1)
-		       ((@ Point (x x) (y y)) (list y x))))
+		       ((_@ Point (x x) (y y)) (list y x))))
     (test-end test-name) )
   (else
     (test-end test-name)))

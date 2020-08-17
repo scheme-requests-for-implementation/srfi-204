@@ -20,4 +20,4 @@
 ;;; test-match-letrec.scm:15:41: warning: possibly unbound variable `x'
 ;;; test-match-letrec.scm:15:41: warning: possibly unbound variable `a'
 
-;;; 
+;;;this test passes in gosh using (util match). 

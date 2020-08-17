@@ -2,33 +2,5 @@ Chez Scheme Version 9.5
 Copyright 1984-2017 Cisco Systems, Inc.
 
 %%%% Starting test chez-match-test
-FAIL any doubled
-FAIL and double
-FAIL or double
-FAIL pred
-FAIL named pred
-FAIL ellipses
-FAIL pred ellipses
-FAIL getter car
-FAIL getter cdr
-FAIL getter vector
-FAIL trivial tree search
-FAIL simple tree search
-FAIL deep tree search
-FAIL non-tail tree search
-FAIL restricted tree search
-FAIL sxml tree search
-FAIL collect tree search
-FAIL anded search pattern
-FAIL list __1
-FAIL list __1 with predicate
-FAIL list __=
-FAIL list __= tail
-FAIL list __* lo
-FAIL list __* hi
-FAIL list __* tail
-FAIL list __* tail 2
-FAIL list __* tail
-FAIL match-letrec
-# of expected passes      48
-# of unexpected failures  28
+# of expected passes      77
+> 

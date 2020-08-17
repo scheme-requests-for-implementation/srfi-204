@@ -1,4 +1,14 @@
 (cond-expand
+  (chibi
+    ;;export TEST_VERBOSE=true to get verbose output 
+    (import (match-test)))
+  (guile-3
+    (use-modules (srfi-204)
+	    (srfi srfi-64)
+	    (srfi srfi-9))
+    (define test-name "guile-match-test")
+    (define scheme-version-name (string-append "guile-" (version)))
+    (include-from-path "./test/match-common.scm"))
   (guile
     (import (guile2.2 match)
 	    (srfi srfi-64)
@@ -8,7 +18,7 @@
     (include-from-path "./test/match-common.scm"))
   (gauche
     (import (only (gauche base) gauche-version)
-	    (gauche0.9.6 match)
+	    (srfi-204)
 	    (scheme base)
 	    (srfi-64))
     (define test-name "gauche-match-test")
@@ -19,7 +29,7 @@
     ;; $rlwrap larceny -r7rs -I ..
     ;; > (include "test/match-test.scm")
     (import (scheme base)
-	    (larceny1.3 match)
+	    ;(srfi-204) doesn't work
 	    (srfi 64)
 	    (srfi 115))
     (define (is-version? sym)
@@ -33,4 +43,11 @@
 	       (() "larceny-???")
 	       (((? symbol? (? is-version? sym)) . rest) (symbol->string sym))
 	       ((this . rest) (lp rest)))))
-    (include "test/match-common.scm")))
+    (begin
+      (include "srfi-204.sld")
+      (import (srfi-204))
+      (include "test/match-common.scm"))))
+(cond-expand
+  (chibi
+    (run-match-tests))
+  (else))

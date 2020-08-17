@@ -1,5 +1,6 @@
 (define-library (larceny1.3 match)
-  (export match match-lambda match-lambda* match-let match-letrec match-let*)
+  (export match match-lambda match-lambda* match-let match-letrec match-let*
+	  ___ ..1 ..= ..* *** ? $ struct object get!)
   (import (scheme base)
 	  (srfi 99 records))
   (begin
@@ -19,6 +20,8 @@
 	 (if (integer? n)
 	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
 	     ((rtd-mutator rtd n) rec))))))
+  (include "auxiliary-syntax.scm")
+  (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
   (include "match/match.scm"))
 
 ;;; $larceny -r7rs -I ..

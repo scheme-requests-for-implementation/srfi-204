@@ -1,11 +1,24 @@
-(define-library (chibi match-test)
-  (export run-tests)
+(define-library (srfi match-test)
+  (export run-match-tests)
   (import (except (scheme base) equal?)
-          (chibi match)
-          (only (chibi test) test-begin test test-end))
+	  (scheme write)
+          (srfi srfi-204)
+	  (only (chibi process) process->string)
+	  (srfi 115)
+          (only (chibi test)
+		test-begin
+		test
+		test-end))
   (cond-expand
    (chibi
     (begin
+      (define (version)
+        (let ((re '(: bow (+ (or num "."))))
+	      (process-string (process->string '(chibi-scheme "-V"))))
+          (string-append "chibi-"
+			 (car (regexp-extract re process-string)))))
+      (display (version))
+      (newline)
       (define-record-type Point
        (make-point x y)
        point?
@@ -13,9 +26,8 @@
        (y point-y point-y-set!))))
    (else))
   (begin
-    (define (run-tests)
+    (define (run-match-tests)
       (test-begin "match")
-
       (test "any" 'ok (match 'any (_ 'ok)))
       (test "symbol" 'ok (match 'ok (x x)))
       (test "number" 'ok (match 28 (28 'ok)))

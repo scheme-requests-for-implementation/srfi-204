@@ -5,6 +5,16 @@
     <title>SRFI 204: Wright-Cartwright-Shinn Pattern Matcher</title>
     <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
     <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css" type="text/css">
+    <!-- highlight over-runs in pre-formatted zones
+<style>
+code {
+	background-color:aliceblue
+}
+pre {
+	background-color:aliceblue
+}
+</style>
+-->
     <meta name="viewport" content="width=device-width, initial-scale=1"></head>
   <body>
     <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI logo" /></a>204: Wright-Cartwright-Shinn Pattern Matcher</h1>
@@ -25,19 +35,20 @@
 
 <h2>Abstract</h2>
 
-<p>Pattern matching is a way of decomposing a compound data structure
-into its component parts and assigning those parts to variables. This
-SRFI describes a pattern-matching library which is already in use by
+<p>Pattern matching decomposes a compound data structure
+into component parts and assigns those parts of interest to variables. This
+SRFI describes a pattern-matching library already in use by
 several scheme implementations which is able to match many common
 compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
-	<li>For Guile 2.2, letrec and named-record tests fail</li>
-	<li>For Gauche 0.9.6, letrec positional-record and named-record tests fail</li>
-	<li>Need to change Makefile so $(SCM) and $(SCMFLAGS) match implementation (this issue may be solved
-	if it is not necessary to run tests for all implementations in one go).</li>
-	<li>Remove bash dependency from Makefile if possible (uses |&amp;) and necessary.</li>
+	<li>Crashes Foment</li>
+	<li>Not working with Gambit</li>
+	<li>Not working with Gerbil</li>
+	<li>Not working with MIT-Scheme</li>
+	<li>Not working with Rapid-Scheme</li>
+	<li>Not working with Husk</li>
 </ul>
 
 <h2>Rationale</h2>
@@ -45,10 +56,10 @@ compound data structures.</p>
 <p>
 Scheme has come with its own pattern-matching language since R4RS, as
 part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
-matcher that does not involve using macros to make pattern matching
+matcher that does not involve writing macros to make pattern matching
 available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
 statement, which does match, but does not bind its key. Bigloo<sup><a href="#Bigloo">1</a></sup>, STklos<sup><a href="#STklos">2</a></sup>
-and (s7<sup><a href="#s7">3</a></sup>) all use an extended <code>case</code> statements for pattern
+and s7<sup><a href="#s7">3</a></sup> all use extended <code>case</code> statements for pattern
 matching.
 </p>
 <p>
@@ -56,15 +67,15 @@ Currently, the pattern-matching facilities that have been implemented
   by SRFIs are procedures of variable arity (<a href="https://srfi.schemers.org/srfi-16/">SRFI 16</a>) and S-expressions
 (<a href="https://srfi.schemers.org/srfi-200/">SRFI 200</a>). The focus of SRFI 200 is both consensus and clarity. That is,
 it aims to provide a pattern syntax that is both widely shared and easily
-read without requiring knowledge of any notation that is not ordinary Scheme. So the
-aim of SRFI 200 is twofold: to provide not only an implementation, but also a portable, readable way of using
+read without requiring knowledge of any notation that is not ordinary Scheme.
+SRFI 200 also aims to provide a portable, readable way of using
 the pattern matchers already available in many implementations.
 </p>
 <p>
 This SRFI aims to take one pattern matcher that has a matching syntax beyond
 S-expressions and provide a sample implementation, documentation, and
 tests.
-It is based on apattern matcher originated by Andrew K. Wright and
+It is based on a pattern matcher originated by Andrew K. Wright and
 Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120], using procedures and defmacros.
 Using a technique developed by Oleg Kiselyov [<a href="#Oleg">Kiselyov</a>] Alex Shinn converted the pattern matcher to pure syntax-rules.
 This pattern-matching library (WCS) is already in
@@ -112,6 +123,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a> 
 <a href="#_">_</a>
 </code></pre>
+All of this syntax not already defined by an implementation is exported by this library.
 
 <h3>Literal and Quasipattern Syntax</h3>
 <pre><code>
@@ -119,7 +131,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#quote">'</a>		<a href="#qquote">`</a>		<a href="#unquote">,</a>
 <a href="#unquote-sp">,@</a>		<a href="#dot">.</a>
 </code></pre>
-Syntax and auxilary syntax used for constructing lists and vector literals hasa meaning similar to that in (scheme base).
+Syntax and auxilary syntax used for constructing lists and vector literals has a meaning similar to that in (scheme base).
 
 <h3>Introduction</h3><p>
   <p>Patterns are written to look like the printed representation of
@@ -169,10 +181,10 @@ parts unquoted.
 <p id="dot">
 If the unspecified part is at the end of the list, <code>.</code> can also be used to match:
 <pre><code>
-(define salad '(lettuce tomatoes onions dressing salt pepper))
+(define salad '(lettuce tomatoes onions salt pepper))
 
 
-(match salad (('lettuce . rest) rest)) => (tomatoes onions dressing salt pepper)
+(match salad (('lettuce . rest) rest)) => (tomatoes onions salt pepper)
 	</code></pre>
 
 <p id="...">
@@ -319,9 +331,11 @@ used.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot order) <b><em>optional</em></b>
+    | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot 
+                                         ;;    order) <b><em>optional</em></b>
     | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*) <b><em>optional</em></b>
-    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; a record (using slot names) (*) <b><em>optional</em></b>
+    | (<b>@</b> <var>record-type</var> (<var>slot1</var> <var>pat1</var>) ...)   ;; a record (using slot names) (*) 
+                                         ;;    <b><em>optional</em></b>
     | (<b>object</b> <var>struct-type</var> (<var>slot1</var> <var>pat1</var>) ...) ;; ditto (*) <b><em>optional</em></b>
     | (<b>=</b> <var>proc</var> <var>pat</var>)                 ;; apply proc, match the result to pat
     | (<b>and</b> <var>pat</var> ...)                ;; if all of pats match
@@ -333,7 +347,8 @@ used.
     | (<var>pat1</var> <b>***</b> <var>pat2</var>)              ;; tree subpattern (*)
     | `qp                          ;; a quasi-pattern
 
-    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
+    (*) extended syntax not originally part of 
+        Wright-Cartwright pattern matcher.
 
 patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>..1</b>, <b>..=</b>, <b>..*</b>.
@@ -343,10 +358,13 @@ ooo : <b>...</b>                          ;; zero or more
     | <b>..1</b>                          ;; one or more
     | <b>..= <i>k</i></b>                        ;; exactly <i>k</i> where <i>k</i> is an integer. (*)
                                    ;;   Example: <b>..= 1</b>, <b>..= 2</b> ...
-    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are integers. (*)
-                                   ;;   Example: <b>..* 3 4</b>, match 3 or 4 of a pattern <b>..* 1 5</b> match from 1 to 5 of a pattern
+    | <b>..* <i>k j</i></b>                      ;; between <i>k</i> and <i>j</i>, where <i>k</i> and <i>j</i> are (*)
+                                   ;;   integers. Example: <b>..* 3 4</b>, match 3
+                                   ;;   or 4 of a pattern <b>..* 1 5</b> match from
+				   ;;   1 to 5 of a pattern
 
-    (*) extended syntax not originally part of Wright-Cartwright pattern matcher.
+    (*) extended syntax not originally part of
+        Wright-Cartwright pattern matcher.
 
 qp  : ()                           ;; the empty list
     | #t                           ;; #t
@@ -402,14 +420,14 @@ is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-2
 <p>
 To use the <code><b>$,</b></code> <code><b>@,</b></code> <code><b>struct</b></code>, and <code><b>object</b></code> syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
 <pre><code>
-(is-a? <var>obj</var> <var>type</var>) => <var>#t if type of obj matches type, #f otherwise</var>
-                    [this may be less general; it may only compare record types.]
+(is-a? <var>rec</var> <var>rtd</var>) => <var>#t if type of rec matches rtd, #f otherwise</var>
 
-(slot-ref <var>obj</var> <var>slot</var>) => If slot is an integer, <var>value at position slot</var>,
+(slot-ref <var>rtd</var> <var>rec</var> <var>slot</var>) => If slot is an integer, <var>value at position slot</var>,
                     if slot is a symbol, <var>value named slot</var>
 
-(slot-set! <var>obj</var> <var>slot</var> <var>new-value</var>) If slot is an integer, <var>set! the value at position slot to new-value</var>
-                            If slot is a symbol, <var>set! the value named slot to new-value</var>
+(slot-set! <var>rtd</var> <var>rec</var> <var>slot</var> <var>new-value</var>) If slot is an integer, <var>set! the value at
+                            position slot to new-value</var>. If slot is a symbol, 
+                            <var>set! the value named slot to new-value</var>
 </code></pre>
 Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another. This
 is an example from  Gauche, where records are implemented on top of native CLOS-like objects:
@@ -425,38 +443,74 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
         ((_ class inst n)
          (if (integer? n)
            (gb-slot-ref inst 
-                        (list-ref (map slot-definition-name (class-slots class)) n))
+                        (list-ref (map slot-definition-name 
+			               (class-slots class)) 
+				  n))
            (gb-slot-ref inst n)))))
     (define-syntax slot-set!
       (syntax-rules ()
         ((_ class inst n value)
          (if (integer? n)
              (gb-slot-set! inst 
-    	              (list-ref (map slot-definition-name (class-slots class)) n)
+    	              (list-ref (map slot-definition-name
+		                     (class-slots class))
+				n)
     	              value)
              (gb-slot-set! inst n value))))))
 </code></pre>
-and this is an example from Larceny, which has SRFI-99:
+this is an example from Larceny, which has SRFI-99:
 <pre><code>
-  (import (scheme base)
-	  (srfi 99 records))
-  (begin
-    (define-syntax is-a?
-      (syntax-rules ()
-	((_ rec rtd)
-	 ((rtd-predicate rtd) rec))))
-    (define-syntax slot-ref
-      (syntax-rules ()
-	((_ rtd rec n)
-	 (if (integer? n)
-	     ((rtd-accessor rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
-	     ((rtd-accessor rtd n) rec)))))
-    (define-syntax slot-set!
-      (syntax-rules ()
-	((_ rtd rec n)
-	 (if (integer? n)
-	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
-	     ((rtd-mutator rtd n) rec))))))
+(import (scheme base)
+	(srfi 99 records))
+(begin
+  (define-syntax is-a?
+    (syntax-rules ()
+      ((_ rec rtd)
+       ((rtd-predicate rtd) rec))))
+  (define-syntax slot-ref
+    (syntax-rules ()
+      ((_ rtd rec n)
+       (if (integer? n)
+           ((rtd-accessor rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
+           ((rtd-accessor rtd n) rec)))))
+  (define-syntax slot-set!
+    (syntax-rules ()
+      ((_ rtd rec n)
+       (if (integer? n)
+           ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
+           ((rtd-mutator rtd n) rec))))))
+</code></pre>
+and this is an example from Loko and Chez, which use forms from
+<code><b>(rnrs records procedural)</b></code> and <code><b>(rnrs records inspection)</b></code>:
+<pre><code>
+(define-syntax is-a?
+  (syntax-rules ()
+    ((_ rec rtd)
+     ((record-predicate (record-type-descriptor rtd)) rec))))
+(define-syntax slot-ref
+  (syntax-rules ()
+    ((_ rtd rec n)
+     (let ((rtd (record-type-descriptor rtd)))
+       (if (integer? n)
+	   ((record-accessor rtd n) rec)
+	   ((record-accessor rtd (name-&gt;idx rtd n)) rec))))))
+(define-syntax slot-set!
+  (syntax-rules ()
+    ((_ rtd rec n value)
+     (let ((rtd (record-type-descriptor rtd)))
+       (if (integer? n)
+	   ((record-mutator rtd n) rec value)
+	   ((record-mutator rtd (name-&gt;idx rtd n)) rec value))))))
+(define-syntax name-&gt;idx
+  (syntax-rules ()
+	((_ rtd n)
+	 (let* ((names (record-type-field-names rtd))
+		(len (vector-length names)))
+	   (let lp ((i 0))
+	     (cond
+	       ((&gt; i len) (error "name not in record" n))
+	       ((eq? n (vector-ref names i)) i)
+	       (else (lp (+ i 1 )))))))))
 </code></pre>
 
 <h2>References</h2>

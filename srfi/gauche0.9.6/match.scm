@@ -1,11 +1,14 @@
 (define-library (gauche0.9.6  match)
-  (export match match-lambda match-lambda* match-let match-letrec match-let*)
+  (export match match-lambda match-lambda* match-let match-letrec match-let*
+	  ___ ..1 ..= ..* *** ? struct object get!)
   (import (only (gauche base) is-a? slot-definition-name class-slots)
 	  (scheme base)
 	  (rename (gauche base)
 		  (slot-ref gb-slot-ref)
 		  (slot-set! gb-slot-set!)))
+  (include "auxiliary-syntax.scm")
   (begin
+    (define-auxiliary-keywords ___ ..1 ..= ..* *** ? struct object get!)
     (define-syntax slot-ref
       (syntax-rules ()
 	((_ class inst n)

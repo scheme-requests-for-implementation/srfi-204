@@ -22,7 +22,7 @@ implementation of pattern matching
 
 **Wright-Cartwright-Pattern-Matching-for-Scheme.ps** documentation of Wright-Cartwright matcher
 
-**match.sld** Chibi pattern matching library definition
+**srfi-204.sld** Chibi, Gauche, Guile and Larceny pattern matching library definitions.
 
 **match-test.sld** Chibi pattern matching tests
 
@@ -34,16 +34,22 @@ implementation of pattern matching
 ## ./&lt;ImplementationVersion&gt;:
 files needed to make match work in a particular implementation of scheme, and a record of any issues.
 
-## ./match:
+## ./srfi-204:
 
-**match.scm** Chibi pattern matching library, used as basis for others.
+**srfi-204.scm** Chibi pattern matching library, used as basis for others.
+
+**srfi-204-r6rs.scm** above library, with adjustments for r6rs.
 
 
 ## ./test:
 
-**match-tests.scm** match-test-sld tests re-written to use srfi-64 (may also import srfi-9)
+**match-tests.scm** implementation-specific parts of match tests
 
-**match-common.scm** implementation-specific parts of match tests
+**match-common.scm** match-test.sld tests re-written to use srfi-64 
+
+**loko-match-test.scm** 
+
+**match-common-r6rs.scm** match-common.scm rewritten for r6rs
 
 **hello-test.scm** <code>cond-expand</code> to run tests in hello common. Used to check <code>SCM</code>, <code>SCMFLAGS</code> and <code>cond-expand</code> before adding <code>cond-expand</code> to **match-tests.scm**
 
@@ -51,7 +57,7 @@ files needed to make match work in a particular implementation of scheme, and a 
 
 **README.md** testing how-to
 
-**Makefile** make check runs all tests
+**Makefile** make \*-test runs that test using interpreter from TESTSCHEME environment variable
 
 ## ./test/logs
 **\*.log** test results
