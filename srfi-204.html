@@ -48,7 +48,6 @@ compound data structures.</p>
 	<li>Not working with Gerbil</li>
 	<li>Not working with MIT-Scheme</li>
 	<li>Not working with Rapid-Scheme</li>
-	<li>Not working with Cyclone</li>
 	<li>Not working with Husk</li>
 </ul>
 
@@ -124,6 +123,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#...">...</a>		<a href="#___">___</a>		<a href="#..1">..1</a> 
 <a href="#_">_</a>
 </code></pre>
+All of this syntax not already defined by an implementation is exported by this library.
 
 <h3>Literal and Quasipattern Syntax</h3>
 <pre><code>
@@ -131,7 +131,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#quote">'</a>		<a href="#qquote">`</a>		<a href="#unquote">,</a>
 <a href="#unquote-sp">,@</a>		<a href="#dot">.</a>
 </code></pre>
-Syntax and auxilary syntax used for constructing lists and vector literals hasa meaning similar to that in (scheme base).
+Syntax and auxilary syntax used for constructing lists and vector literals has a meaning similar to that in (scheme base).
 
 <h3>Introduction</h3><p>
   <p>Patterns are written to look like the printed representation of
@@ -458,7 +458,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
     	              value)
              (gb-slot-set! inst n value))))))
 </code></pre>
-and this is an example from Larceny, which has SRFI-99:
+this is an example from Larceny, which has SRFI-99:
 <pre><code>
 (import (scheme base)
 	(srfi 99 records))
@@ -479,6 +479,38 @@ and this is an example from Larceny, which has SRFI-99:
        (if (integer? n)
            ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
            ((rtd-mutator rtd n) rec))))))
+</code></pre>
+and this is an example from Loko and Chez, which use forms from
+<code><b>(rnrs records procedural)</b></code> and <code><b>(rnrs records inspection)</b></code>:
+<pre><code>
+(define-syntax is-a?
+  (syntax-rules ()
+    ((_ rec rtd)
+     ((record-predicate (record-type-descriptor rtd)) rec))))
+(define-syntax slot-ref
+  (syntax-rules ()
+    ((_ rtd rec n)
+     (let ((rtd (record-type-descriptor rtd)))
+       (if (integer? n)
+	   ((record-accessor rtd n) rec)
+	   ((record-accessor rtd (name-&gt;idx rtd n)) rec))))))
+(define-syntax slot-set!
+  (syntax-rules ()
+    ((_ rtd rec n value)
+     (let ((rtd (record-type-descriptor rtd)))
+       (if (integer? n)
+	   ((record-mutator rtd n) rec value)
+	   ((record-mutator rtd (name-&gt;idx rtd n)) rec value))))))
+(define-syntax name-&gt;idx
+  (syntax-rules ()
+	((_ rtd n)
+	 (let* ((names (record-type-field-names rtd))
+		(len (vector-length names)))
+	   (let lp ((i 0))
+	     (cond
+	       ((&gt; i len) (error "name not in record" n))
+	       ((eq? n (vector-ref names i)) i)
+	       (else (lp (+ i 1 )))))))))
 </code></pre>
 
 <h2>References</h2>
