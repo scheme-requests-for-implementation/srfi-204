@@ -20,8 +20,8 @@
 	     ((rtd-accessor rtd n) rec)))))
     (define-syntax slot-set!
       (syntax-rules ()
-	((_ rtd rec n)
+	((_ rtd rec n value)
 	 (if (integer? n)
-	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
-	     ((rtd-mutator rtd n) rec))))))
-  (include "../match/match.scm"))
+	     ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
+	     ((rtd-mutator rtd n) rec value))))))
+  (include "../srfi-204/srfi-204.scm"))
