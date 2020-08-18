@@ -257,4 +257,3 @@
 	      (match-let (((@ Point (x a) (y b)) p))
 			 (list a b))))
 (test-end test-name)
-
