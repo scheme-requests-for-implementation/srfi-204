@@ -476,10 +476,10 @@ this is an example from Larceny, which has SRFI-99:
            ((rtd-accessor rtd n) rec)))))
   (define-syntax slot-set!
     (syntax-rules ()
-      ((_ rtd rec n)
+      ((_ rtd rec n value)
        (if (integer? n)
-           ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec)
-           ((rtd-mutator rtd n) rec))))))
+           ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
+           ((rtd-mutator rtd n) rec value))))))
 </code></pre>
 and this is an example from Loko and Chez, which use forms from
 <code><b>(rnrs records procedural)</b></code> and <code><b>(rnrs records inspection)</b></code>:
