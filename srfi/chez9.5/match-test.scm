@@ -1,6 +1,6 @@
 (import (scheme)
-	(srfi %3a0)
-	(srfi %3a64)
+	(srfi :0)
+	(srfi :64)
 	(match))
 (define test-name "chez-match-test")
 (define scheme-version-name (scheme-version))
