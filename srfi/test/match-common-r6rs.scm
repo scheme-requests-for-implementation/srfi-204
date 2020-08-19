@@ -232,5 +232,18 @@
 	    '(1 0)
 	    (match (make-point 0 1)
 		   ((@ Point (x x) (y y)) (list y x))))
+(test-equal "setter record positional"
+	    '(7 1)
+	    (let ((p (make-point 0 1)))
+	      (match p
+		   ((struct Point (set! x) y) (x 7)))
+	      (match-let ((($ Point a b) p))
+			 (list a b))))
+(test-equal "setter record named"
+	    '(7 1)
+	    (let ((p (make-point 0 1)))
+	      (match p
+		   ((object Point (x (set! x))) (x 7)))
+	      (match-let (((@ Point (x a) (y b)) p))
+			 (list a b))))
 (test-end test-name)
-
