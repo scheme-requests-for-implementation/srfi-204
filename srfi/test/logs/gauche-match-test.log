@@ -462,5 +462,17 @@ Test end:
   result-kind: pass
   actual-value: (1 0)
   expected-value: (1 0)
+Test begin:
+  test-name: "setter record positional"
+Test end:
+  result-kind: pass
+  actual-value: (7 1)
+  expected-value: (7 1)
+Test begin:
+  test-name: "setter record named"
+Test end:
+  result-kind: pass
+  actual-value: (7 1)
+  expected-value: (7 1)
 Group end: gauche-match-test
-# of expected passes      77
+# of expected passes      79

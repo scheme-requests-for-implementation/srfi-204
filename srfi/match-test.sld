@@ -1,8 +1,8 @@
-(define-library (srfi match-test)
+(define-library (match-test)
   (export run-match-tests)
   (import (except (scheme base) equal?)
 	  (scheme write)
-          (srfi srfi-204)
+          (srfi-204)
 	  (only (chibi process) process->string)
 	  (srfi 115)
           (only (chibi test)
@@ -249,15 +249,30 @@
                         (append (y) (b))))
 
       (cond-expand
-       (chibi
-        (test "record positional"
-            '(1 0)
-          (match (make-point 0 1)
-            (($ Point x y) (list y x))))
-        (test "record named"
-            '(1 0)
-          (match (make-point 0 1)
-            ((@ Point (x x) (y y)) (list y x)))))
-       (else))
+	(chibi
+	  (test "record positional"
+		'(1 0)
+		(match (make-point 0 1)
+		       (($ Point x y) (list y x))))
+	  (test "record named"
+		'(1 0)
+		(match (make-point 0 1)
+		       ((@ Point (x x) (y y)) (list y x))))
+	  (test "setter record positional"
+		      '(7 1)
+		      (let ((p (make-point 0 1)))
+			(match p
+			       ((struct Point (set! x) y) (x 7)))
+			(match-let ((($ Point a b) p))
+				   (list a b))))
+	  (test "setter record named"
+		      '(7 1)
+		      (let ((p (make-point 0 1)))
+			(match p
+			       ((object Point (x (set! x))) (x 7)))
+			(match-let (((@ Point (x a) (y b)) p))
+				   (list a b))))
+	  )
+	(else))
 
       (test-end))))

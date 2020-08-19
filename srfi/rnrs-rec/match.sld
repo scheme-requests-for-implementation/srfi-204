@@ -1,6 +1,7 @@
-;;;match using rnrs recoords
-;;;r6rs style, with Chez all calls on rtd have to be
-;;;replaced with calls on (record-type-descriptor rtd),
+;;; match using rnrs records
+;;; r6rs style, with Chez and Loko all calls on rtd have to be
+;;; replaced with calls on (record-type-descriptor rtd),
+;;; with Guile this module works as is
 (library (match)
 	 (export match
 		 match-lambda
