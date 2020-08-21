@@ -13,10 +13,11 @@
    (chibi
     (begin
       (define (version)
-        (let ((re '(: bow (+ (or num "."))))
-	      (process-string (process->string '(chibi-scheme "-V"))))
-          (string-append "chibi-"
-			 (car (regexp-extract re process-string)))))
+	"get version string"
+        (let* ((version-re '(: bow (+ (or num "."))))
+	      (process-string (process->string '(chibi-scheme "-V")))
+	      (matches (regexp-extract version-re process-string)))
+          (string-append "chibi-" (car matches))))
       (display (version))
       (newline)
       (define-record-type Point
@@ -28,6 +29,7 @@
   (begin
     (define (run-match-tests)
       (test-begin "match")
+      (newline)
       (test "any" 'ok (match 'any (_ 'ok)))
       (test "symbol" 'ok (match 'ok (x x)))
       (test "number" 'ok (match 28 (28 'ok)))
@@ -243,7 +245,7 @@
                 sum
                 (loop rest sum)))))
 
-      '(test "match-letrec" '(2 1 1 2)
+      (test "match-letrec" '(2 1 1 2)
           (match-letrec (((x y) (list 1 (lambda () (list a x))))
                          ((a b) (list 2 (lambda () (list x a)))))
                         (append (y) (b))))

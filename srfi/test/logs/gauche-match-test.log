@@ -451,6 +451,12 @@ Test end:
   actual-value: 6
   expected-value: 6
 Test begin:
+  test-name: "match-letrec"
+Test end:
+  result-kind: pass
+  actual-value: (2 1 1 2)
+  expected-value: (2 1 1 2)
+Test begin:
   test-name: "record positional"
 Test end:
   result-kind: pass
@@ -475,4 +481,4 @@ Test end:
   actual-value: (7 1)
   expected-value: (7 1)
 Group end: gauche-match-test
-# of expected passes      79
+# of expected passes      80

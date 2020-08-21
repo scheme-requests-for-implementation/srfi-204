@@ -78,7 +78,7 @@ S-expressions and provide a sample implementation, documentation, and
 tests.
 It is based on a pattern matcher originated by Andrew K. Wright and
 Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120], using procedures and defmacros.
-Using a technique developed by Oleg Kiselyov [<a href="#Oleg">Kiselyov</a>] Alex Shinn converted the pattern matcher to pure syntax-rules.
+Using a technique developed by Oleg Kiselyov [<a href="#Oleg2003">Kiselyov, 2003</a>] Alex Shinn converted the pattern matcher to pure syntax-rules.
 This pattern-matching library (WCS) is already in
 use (at least in part) in several Scheme implementations. Aside from
 S-expressions, it also matches vectors and records. It has the
@@ -407,7 +407,7 @@ the body with all match variables in scope.  Raises an error if
 any of the expressions fail to match.  Syntax analogous to named
 let can also be used for recursive functions which match on their
 arguments as in <code>match-lambda*</code>.</p><h4 id="match-letrec"><code>(match-letrec ((var value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
-matches and binds the variables with all match variables in scope.</p><h4 id="match-let*"><code>(match-let* ((var value) ...) body ...)</code></h4><p>
+matches and binds the variables with all match variables in scope. Uses the technique described in [<a href="#Oleg2013">Kiselyov, 2013</a>].</p><h4 id="match-let*"><code>(match-let* ((var value) ...) body ...)</code></h4><p>
 Similar to <code>match-let</code>, but analogously to <code>let*</code>
 matches and binds the variables in sequence, with preceding match
 variables in scope.</p>
@@ -524,9 +524,11 @@ Bill Schottstaedt. 2020 <cite>s7 case.scm.</cite> Retrieved from <a href="https:
 <p id="WC">
 Andrew K. Wright & Robert Cartwright. <cite>ACM Transactions on Programming Languages and Systems.</cite> Vol. 19, No. 1. January 1997. Pages 87-152. Retrieved on July 15, 2020 from <a href="https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf">https://www.iro.umontreal.ca/~feeley/cours/ift6232/doc/pres2/practical-soft-type-system-for-scheme.pdf</a>.
 </p>
-<p id="Oleg">
+<p id="Oleg2003">
 Kiselyov, Oleg 2003 "How to write symbol? with syntax rules" comp.lang.scheme Retrieved from <a href="http://okmij.org/ftp/Scheme/macro-symbol-p.txt">http://okmij.org/ftp/Scheme/macro-symbol-p.txt</a>
 </p>
+<p id="Oleg2013">
+Kiselyov, Oleg 2013 "How to Write Seemingly Unhygenic and Referentially Opaque Macros with Syntax-rules*" Retrieved from <a href="http://okmij.org/ftp/Scheme/Dirty-Macros.pdf">http://okmij.org/ftp/Scheme/Dirty-Macros.pdf</a>
 <p id="Chibi">
 Alex Shinn. 2020. <cite>(chibi match).</cite> Retrieved from <a href="http://synthcode.com/scheme/chibi/lib/chibi/match.html">http://synthcode.com/scheme/chibi/lib/chibi/match.html</a>.
 </p>

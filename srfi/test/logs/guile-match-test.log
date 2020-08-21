@@ -676,6 +676,15 @@ Test end:
   actual-value: 6
   expected-value: 6
 Test begin:
+  test-name: "match-letrec"
+  source-file: "test/match-common.scm"
+  source-line: 232
+  source-form: (test-equal "match-letrec" (quote (2 1 1 2)) (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))))
+Test end:
+  result-kind: pass
+  actual-value: (2 1 1 2)
+  expected-value: (2 1 1 2)
+Test begin:
   test-name: "record positional"
   source-file: "test/match-common.scm"
   source-line: 237
@@ -697,19 +706,19 @@ Test begin:
   test-name: "setter record positional"
   source-file: "test/match-common.scm"
   source-line: 245
-  source-form: (test-equal "setter record positional" (make-point 7 1) (let ((p (make-point 0 1))) (match p ((struct Point (set! x)) (x 7) p))))
+  source-form: (test-equal "setter record positional" (quote (7 1)) (let ((p (make-point 0 1))) (match p ((struct Point (set! x) y) (x 7))) (match-let ((($ Point a b) p)) (list a b))))
 Test end:
   result-kind: pass
-  actual-value: #<Point x: 7 y: 1>
-  expected-value: #<Point x: 7 y: 1>
+  actual-value: (7 1)
+  expected-value: (7 1)
 Test begin:
   test-name: "setter record named"
   source-file: "test/match-common.scm"
-  source-line: 251
-  source-form: (test-equal "setter record named" (make-point 7 1) (let ((p (make-point 0 1))) (match p ((object Point (x (set! x))) (x 7) p))))
+  source-line: 252
+  source-form: (test-equal "setter record named" (quote (7 1)) (let ((p (make-point 0 1))) (match p ((object Point (x (set! x))) (x 7))) (match-let (((@ Point (x a) (y b)) p)) (list a b))))
 Test end:
   result-kind: pass
-  actual-value: #<Point x: 7 y: 1>
-  expected-value: #<Point x: 7 y: 1>
+  actual-value: (7 1)
+  expected-value: (7 1)
 Group end: guile-match-test
-# of expected passes      79
+# of expected passes      80
