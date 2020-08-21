@@ -1,5 +1,5 @@
+(import (srfi :0))
 (import (scheme)
-	(srfi :0)
 	(srfi :64)
 	(match))
 (define test-name "chez-match-test")

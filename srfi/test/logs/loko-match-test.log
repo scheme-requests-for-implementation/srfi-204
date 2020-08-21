@@ -1,0 +1,14 @@
+$ export LOKO_LIBRARY_PATH=..:$LOKO_LIBRARY_PATH
+$ rlwrap loko
+Loko Scheme 0.5.0
+Copyright © 2020 Göran Weinholt
+See <https://scheme.fail/> for source code and new releases.
+License AGPLv3+: GNU Affero GPL version 3 or later
+  <https://www.gnu.org/licenses/agpl.html>
+There is NO WARRANTY, to the extent permitted by law. This is
+free software: you are free to change and redistribute it under
+certain conditions.
+> (include "loko-match-test.scm")
+%%%% Starting test loko-match-test
+# of expected passes      80
+> 
