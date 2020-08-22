@@ -1,3 +1,0 @@
-Using rnrs records makes 27 tests fail.
-With module in guile2.2, using guile-3, all
-tests pass.

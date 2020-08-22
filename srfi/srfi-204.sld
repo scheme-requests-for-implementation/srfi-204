@@ -41,35 +41,33 @@
 		 (gb-slot-set! inst n value))))))
       (include "srfi-204/srfi-204.scm")))
   (guile
-    (define-library ;chibi won't load if I use define-module
-      (srfi-204); it chokes on #:export
-      (export match match-lambda match-lambda* match-let match-let*
-	      match-letrec
-	      ___ ..1 ..= ..* *** ? $ struct object get!)
-      (import (guile))
-      (begin
-	(include-from-path "auxiliary-syntax.scm")
-	(define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
-	(define-syntax slot-ref
-	  (syntax-rules ()
-	    ((_ rtd rec n)
-	     (if (integer? n)
-		 (struct-ref rec n)
-		 ((record-accessor rtd n) rec)))))
+    (define-module (srfi-204))
+    (export match match-lambda match-lambda* match-let match-let*
+	    match-letrec
+	    ___ ..1 ..= ..* *** ? $ struct object get!)
+    (import (guile))
+    (define-syntax slot-ref
+      (syntax-rules ()
+	((_ rtd rec n)
+	 (if (integer? n)
+	     (struct-ref rec n)
+	     ((record-accessor rtd n) rec)))))
 
-	(define-syntax slot-set!
-	  (syntax-rules ()
-	    ((_ rtd rec n value)
-	     (if (integer? n)
-		 (struct-set! rec n value)
-		 ((record-modifier rtd n) rec value)))))
+    (define-syntax slot-set!
+      (syntax-rules ()
+	((_ rtd rec n value)
+	 (if (integer? n)
+	     (struct-set! rec n value)
+	     ((record-modifier rtd n) rec value)))))
 
-	(define-syntax is-a?
-	  (syntax-rules ()
-	    ((_ rec rtd)
-	     (and (struct? rec)
-		  (eq? (struct-vtable rec) rtd)))))
-	(include-from-path "srfi-204/srfi-204.scm"))))
+    (define-syntax is-a?
+      (syntax-rules ()
+	((_ rec rtd)
+	 (and (struct? rec)
+	      (eq? (struct-vtable rec) rtd)))))
+    (include-from-path "auxiliary-syntax.scm")
+    (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
+    (include-from-path "srfi-204/srfi-204.scm"))
   (larceny
     (define-library (srfi-204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*

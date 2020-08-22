@@ -2,15 +2,8 @@
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output 
     (import (match-test)))
-  (guile-3
-    (use-modules (srfi-204)
-	    (srfi srfi-64)
-	    (srfi srfi-9))
-    (define test-name "guile-match-test")
-    (define scheme-version-name (string-append "guile-" (version)))
-    (include-from-path "./test/match-common.scm"))
   (guile
-    (import (guile2.2 match)
+    (use-modules (srfi-204)
 	    (srfi srfi-64)
 	    (srfi srfi-9))
     (define test-name "guile-match-test")
