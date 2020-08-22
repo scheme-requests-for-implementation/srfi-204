@@ -242,6 +242,7 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
+;; 2020/08/21 - handle underscores separately, not as literals
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
 ;; 2020/08/03 - added bindings for auxiliary syntax 
 ;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
