@@ -1,5 +1,5 @@
 (library
-  (loko0.5 match)
+  (chez9.5 match)
   (export match
 	  match-lambda
 	  match-lambda*
@@ -17,7 +17,7 @@
 	  
 	  object
 	  get!)
-  (import (except (loko) define-record-type)
+  (import (chezscheme)
 	  (srfi :0))
   (begin
     (include "../auxiliary-syntax.scm")
