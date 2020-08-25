@@ -4,7 +4,7 @@
 	(loko))
 (define scheme-version-name (string-append "loko" (loko-version)))
 (define test-name "loko-match-test")
-(include "match-common-r6rs.scm")
+(include "match-common.scm")
 
 ;;; like larceny:
 ;;; (but library directory set through environment)
