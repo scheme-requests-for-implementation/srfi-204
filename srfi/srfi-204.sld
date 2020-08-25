@@ -2,16 +2,16 @@
   (chibi
     (define-library (srfi-204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ ..1 ..= ..* *** ? $ struct object get!)
+	      ___ **1 =.. *.. *** ? $ struct object get!)
       (import (chibi))
-      (include "feature/srfi-204-r6rs.scm")
+      (include  "srfi-204/srfi-204.scm")
       (include "auxiliary-syntax.scm")
       (begin
-	(define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ @ struct object get!))))
+	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))))
   (gauche
     (define-library (srfi-204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ ..1 ..= ..* *** ? struct object get!)
+	      ___ **1 =.. *.. *** ? struct object get!)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
 	      (scheme base)
 	      (rename (gauche base)
@@ -19,7 +19,7 @@
 		      (slot-set! gb-slot-set!)))
       (include "auxiliary-syntax.scm")
       (begin
-	(define-auxiliary-keywords ___ ..1 ..= ..* *** ? struct object get!)
+	(define-auxiliary-keywords ___ **1 =.. *.. *** ? struct object get!)
 	(define-syntax slot-ref
 	  (syntax-rules ()
 	    ((_ class inst n)
@@ -44,7 +44,7 @@
     (define-module (srfi-204))
     (export match match-lambda match-lambda* match-let match-let*
 	    match-letrec
-	    ___ ..1 ..= ..* *** ? $ struct object get!)
+	    ___ **1 =.. *.. *** ? $ struct object get!)
     (import (guile))
     (define-syntax slot-ref
       (syntax-rules ()
@@ -66,12 +66,12 @@
 	 (and (struct? rec)
 	      (eq? (struct-vtable rec) rtd)))))
     (include-from-path "auxiliary-syntax.scm")
-    (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
+    (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
     (include-from-path "srfi-204/srfi-204.scm"))
   (larceny
     (define-library (srfi-204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ ..1 ..= ..* *** ? $ struct object get!)
+	      ___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)
 	      (srfi 99 records))
       (begin
@@ -92,6 +92,6 @@
 		 ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
 		 ((rtd-mutator rtd n) rec value))))))
       (include "auxiliary-syntax.scm")
-      (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!)
+      (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
       (include "srfi-204/srfi-204.scm")))
   (else))

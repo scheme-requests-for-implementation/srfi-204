@@ -7,21 +7,21 @@
 	  match-letrec
 	  match-let*
 	  ___
-	  ..1
-	  ..=
-	  ..*
+	  **1
+	  =..
+	  *..
 	  ***
 	  ?
 	  $
 	  struct
-	  @
+	  
 	  object
 	  get!)
   (import (except (loko) define-record-type)
 	  (srfi :0))
   (begin
     (include "../auxiliary-syntax.scm")
-    (define-auxiliary-keywords ___ ..1 ..= ..* @ *** ? $ struct object get!)
+    (define-auxiliary-keywords ___ **1 =.. *..  *** ? $ struct object get!)
     (define-syntax is-a?
       (syntax-rules ()
 	((_ rec rtd)
@@ -50,4 +50,4 @@
 	       ((> i len) (error "name not in record" n))
 	       ((eq? n (vector-ref names i)) i)
 	       (else (lp (+ i 1 )))))))))
-    (include "../feature/srfi-204-r6rs.scm")))
+    (include "../srfi-204/srfi-204.scm")))
