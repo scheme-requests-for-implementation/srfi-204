@@ -122,6 +122,7 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#bool">or</a>		<a href="#bool">not</a>		<a href="#quest">?</a>
 <a href="#set-and-get">set!</a>		<a href="#set-and-get">get!</a>		<a href="#***">***</a>
 <a href="#...">...</a>		<a href="#___">___</a>		<a href="#**1">**1</a>
+<a href="#=..">=..</a>		<a href="#*..">*..</a>
 
 </code></pre>
 All of this syntax not already defined by an implementation is exported by this library.
@@ -217,8 +218,44 @@ inconvenient to use the ellipsis (as in a syntax-rules template).
 The <code>**1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c **1) c))</code></pre><code>ERROR: match: "no matching pattern"
-</code><p>
-</p><pre><code>(match (list 1 2 3) ((a b c **1) c)) => (3)</code></pre><p id="bool">
+	
+</code>
+<pre><code>(match (list 1 2 3) ((a b c **1) c)) => (3)</code></pre>
+<p>
+<p id="=..">
+The <code>=.. <var>k</var></code> syntax matches exactly <var>k</var> of a pattern:
+</p>
+<pre><code>
+(match '((a b) (c d) (e f)) 
+       (((x y) =.. 3) (list x y)) 
+       (_ 'fail))
+=> ((a c e) (b d f))
+
+(match '((a b) (c d) (e f) (g h))
+       (((x y) =.. 3) (list x y))
+       (_ 'fail))
+=> fail
+</code></pre>
+<p id="*..">
+The <code>*.. <var>k j</var></code> syntax matches between <var>k</var> and <var>j</var> of a pattern:
+</p>
+<pre><code>
+(match '((a b) (c d) (e f))
+        (((x y) *.. 2 4) (list x y))
+	(_ 'fail))
+=> ((a c e) (b d f))
+
+(match '((a b) (c d) (e f) (g h))
+       (((x y) *.. 2 4) (list x y))
+       (_ 'fail))
+=> ((a c e g) (b d f h))
+
+(match '((a b) (c d) (e f) (g h) (i j))
+       (((x y) *.. 2 4) (list x y))
+       (_ 'fail))
+=> fail
+</code></pre>
+</p><p id="bool">
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
 can be used to group and negate patterns analogously to their
 Scheme counterparts.
