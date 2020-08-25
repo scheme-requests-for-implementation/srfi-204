@@ -32,6 +32,7 @@ pre {
   <li>Draft #3 published: 2020-07-26</li>
   <li>Draft #4 published: 2020-08-02</li>
   <li>Draft #5 published: 2020-08-16</li>
+  <li>Draft #6 published: 2020-08-23</li>
 </ul>
 
 <h2>Abstract</h2>
@@ -218,7 +219,7 @@ inconvenient to use the ellipsis (as in a syntax-rules template).
 The <code>**1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c **1) c))</code></pre><code>ERROR: match: "no matching pattern"
-	
+
 </code>
 <pre><code>(match (list 1 2 3) ((a b c **1) c)) => (3)</code></pre>
 <p>
@@ -226,8 +227,8 @@ that it matches one or more repetitions (like a regexp "+").
 The <code>=.. <var>k</var></code> syntax matches exactly <var>k</var> of a pattern:
 </p>
 <pre><code>
-(match '((a b) (c d) (e f)) 
-       (((x y) =.. 3) (list x y)) 
+(match '((a b) (c d) (e f))
+       (((x y) =.. 3) (list x y))
        (_ 'fail))
 => ((a c e) (b d f))
 
@@ -255,7 +256,7 @@ The <code>*.. <var>k j</var></code> syntax matches between <var>k</var> and <var
        (_ 'fail))
 => fail
 </code></pre>
-</p><p id="bool">
+<p id="bool">
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
 can be used to group and negate patterns analogously to their
 Scheme counterparts.
