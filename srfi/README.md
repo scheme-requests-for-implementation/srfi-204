@@ -12,33 +12,35 @@
 
 ## .:
 
-**gauche-grammar** the syntax description from Gauche's documentation
+**auxiliary-syntax.scm** macros to export auxiliary syntax
 
 **match-implementations.md** all the documentation and implementation
 for scheme pattern matching I could find.
-
-**chibi-match-help.html** the documentation that goes with the Chibi Scheme
-implementation of pattern matching
-
-**Wright-Cartwright-Pattern-Matching-for-Scheme.ps** documentation of Wright-Cartwright matcher
 
 **srfi-204.sld** Chibi, Gauche, Guile and Larceny pattern matching library definitions.
 
 **match-test.sld** Chibi pattern matching tests
 
-**quasiquote-grammar-guile.txt** quasiquote grammar from Guile's documentation
-
 **README.md** this file
 
+## ./examples:
+files that show how library is implemented in particular use cases (ie srfi-99 records vs rnrs records)
+
+## ./feature:
+files for in-development features
 
 ## ./&lt;ImplementationVersion&gt;:
 files needed to make match work in a particular implementation of scheme, and a record of any issues.
 
+## ./not-working:
+failed attempts to make module work with GNU/MIT, Rapid, Husk, Foment, Gambit, and Gerbil.
+
+## ./ref
+files used for reference.
+
 ## ./srfi-204:
 
-**srfi-204.scm** Chibi pattern matching library, used as basis for others.
-
-**srfi-204-r6rs.scm** above library, with adjustments for r6rs.
+**srfi-204.scm** modified Chibi pattern matching library.
 
 
 ## ./test:
