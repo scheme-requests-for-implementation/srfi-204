@@ -218,7 +218,7 @@ inconvenient to use the ellipsis (as in a syntax-rules template).
 The <code>**1</code> syntax is exactly like the <code>...</code> except
 that it matches one or more repetitions (like a regexp "+").
 </p><pre><code>(match (list 1 2) ((a b c **1) c))</code></pre><code>ERROR: match: "no matching pattern"
-	
+
 </code>
 <pre><code>(match (list 1 2 3) ((a b c **1) c)) => (3)</code></pre>
 <p>
@@ -226,8 +226,8 @@ that it matches one or more repetitions (like a regexp "+").
 The <code>=.. <var>k</var></code> syntax matches exactly <var>k</var> of a pattern:
 </p>
 <pre><code>
-(match '((a b) (c d) (e f)) 
-       (((x y) =.. 3) (list x y)) 
+(match '((a b) (c d) (e f))
+       (((x y) =.. 3) (list x y))
        (_ 'fail))
 => ((a c e) (b d f))
 
