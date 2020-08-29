@@ -4,6 +4,14 @@
 	 (() l)
 	 ((a b c d . r) (cons (list a b c d) (chunk-4 r)))
 	 (a (list a))))
+
+(define (chunk-4-v2 l)
+  (let lp ((l l) (acc '()))
+    (match l
+      (() (reverse acc))
+      ((a b c d . r) (lp r (cons (list a b c d) acc)))
+      (a (reverse (cons (list a) acc))))))
+
 #|
 scheme@(guile-user)> (include-from-path "../srfi-204.sld")
 scheme@(srfi-204)> ,time (let ((a (chunk-4 (iota 10000000)))) (car a))
