@@ -4,7 +4,7 @@
       (export match match-lambda match-lambda* match-let match-letrec match-let*
 	      ___ **1 =.. *.. *** ? $ struct object get!)
       (import (chibi))
-      (include  "srfi-204/srfi-204.scm")
+      (include  "feature/srfi-204-new.scm")
       (include "auxiliary-syntax.scm")
       (begin
 	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))))
