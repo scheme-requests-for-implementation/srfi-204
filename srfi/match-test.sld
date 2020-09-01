@@ -45,6 +45,7 @@
       (test "or empty" 'ok (match '(o k) ((or) 'fail) (else 'ok)))
       (test "or single" 'ok (match 'ok ((or x) 'ok)))
       (test "or double" 'ok (match 'ok ((or (? symbol? y) y) y)))
+      (test "or unbalanced" 1  (match 1 ((or (and 1 x) (and 2 y)) x)))
       (test "not" 'ok (match 28 ((not (a . b)) 'ok)))
       (test "pred" 'ok (match 28 ((? number?) 'ok)))
       (test "named pred" 29 (match 28 ((? number? x) (+ x 1))))
@@ -52,6 +53,8 @@
       (test "duplicate symbols pass" 'ok (match '(ok . ok) ((x . x) x)))
       (test "duplicate symbols fail" 'ok
         (match '(ok . bad) ((x . x) 'bad) (else 'ok)))
+      (test "duplicate symbols fail 2" 'ok
+        (match '(ok bad) ((x x) 'bad) (else 'ok)))
       (test "duplicate symbols samth" 'ok
         (match '(ok . ok) ((x . 'bad) x) (('ok . x) x)))
       (test "duplicate symbols bound" 3
@@ -118,6 +121,9 @@
       (test "single tail 2" '((a b) (1 2) 3)
         (match '((a . 1) (b . 2) 3)
           (((x . y) ... last) (list x y last))))
+
+      (test "single duplicate tail" #f
+        (match '(1 2) ((foo ... foo) foo) (_ #f)))
 
       (test "multiple tail" '((a b) (1 2) (c . 3) (d . 4) (e . 5))
         (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5))
@@ -249,6 +255,16 @@
           (match-letrec (((x y) (list 1 (lambda () (list a x))))
                          ((a b) (list 2 (lambda () (list x a)))))
                         (append (y) (b))))
+      (test "match-letrec quote" #t
+        (match-letrec (((x 'x) (list #t 'x))) x))
+      (let-syntax
+        ((foo
+          (syntax-rules ()
+            ((foo x)
+             (match-letrec (((x y) (list 1 (lambda () (list a x))))
+                            ((a b) (list 2 (lambda () (list x a)))))
+                           (append (y) (b)))))))
+        (test "match-letrec mnieper" '(2 1 1 2) (foo a)))
 
       (cond-expand
 	(chibi

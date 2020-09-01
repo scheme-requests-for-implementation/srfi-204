@@ -50,4 +50,4 @@
 	       ((> i len) (error "name not in record" n))
 	       ((eq? n (vector-ref names i)) i)
 	       (else (lp (+ i 1 )))))))))
-    (include "../feature/srfi-204-new.scm")))
+    (include "../srfi-204/srfi-204.scm")))

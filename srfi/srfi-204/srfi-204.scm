@@ -557,7 +557,8 @@
 (define-syntax match-gen-or
   (syntax-rules ()
     ((_ v p g+s (sk ...) fk (i ...) ((id id-ls) ...))
-     (let ((sk2 (lambda (id ...) (sk ... (i ... id ...)))))
+     (let ((sk2 (lambda (id ...) (sk ... (i ... id ...))))
+           (id (if #f #f)) ...)
        (match-gen-or-step v p g+s (match-drop-ids (sk2 id ...)) fk (i ...))))))
 
 (define-syntax match-gen-or-step
@@ -606,7 +607,7 @@
                          fk i)))
            (else
             fk)))))
-    ((_ v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ v p r g+s sk fk (i ...) ((id id-ls) ...))
      ;; general case, trailing patterns to match, keep track of the
      ;; remaining list length so we don't need any backtracking
      (match-verify-no-ellipsis
@@ -620,14 +621,14 @@
               (cond
                 ((= n tail-len)
                  (let ((id (reverse id-ls)) ...)
-                   (match-one ls r (#f #f) (sk ...) fk i)))
+                   (match-one ls r (#f #f) sk fk (i ... id ...))))
                 ((pair? ls)
                  (let ((w (car ls)))
                    (match-one w p ((car ls) (set-car! ls))
                               (match-drop-ids
                                (loop (cdr ls) (- n 1) (cons id id-ls) ...))
                               fk
-                              i)))
+                              (i ...))))
                 (else
                  fk)))))))))
 
@@ -635,7 +636,7 @@
 
 (define-syntax match-gen-ellipsis/qq
   (syntax-rules ()
-    ((_ v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ v p r g+s (sk ...) fk (i ...) ((id id-ls) ...))
      (match-verify-no-ellipsis
       r
       (let* ((tail-len (length 'r))
@@ -647,14 +648,14 @@
               (cond
                ((= n tail-len)
                 (let ((id (reverse id-ls)) ...)
-                  (match-quasiquote ls r g+s (sk ...) fk i)))
+                  (match-quasiquote ls r g+s (sk ...) fk (i ... id ...))))
                ((pair? ls)
                 (let ((w (car ls)))
                   (match-one w p ((car ls) (set-car! ls))
                              (match-drop-ids
                               (loop (cdr ls) (- n 1) (cons id id-ls) ...))
                              fk
-                             i)))
+                             (i ...))))
                (else
                 fk)))))))))
 
@@ -664,7 +665,7 @@
 
 (define-syntax match-gen-ellipsis/range
   (syntax-rules ()
-    ((_ %lo %hi v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ %lo %hi v p r g+s (sk ...) fk (i ...) ((id id-ls) ...))
      ;; general case, trailing patterns to match, keep track of the
      ;; remaining list length so we don't need any backtracking
      (match-verify-no-ellipsis
@@ -679,14 +680,14 @@
               (cond
                 ((= j len)
                  (let ((id (reverse id-ls)) ...)
-                   (match-one ls r (#f #f) (sk ...) fk i)))
+                   (match-one ls r (#f #f) (sk ...) fk (i ... id ...))))
                 ((pair? ls)
                  (let ((w (car ls)))
                    (match-one w p ((car ls) (set-car! ls))
                               (match-drop-ids
                                (loop (cdr ls) (+ j 1) (cons id id-ls) ...))
                               fk
-                              i)))
+                              (i ...))))
                 (else
                  fk)))
             fk))))))
@@ -1080,7 +1081,9 @@
 ;; macros using syntax-rules" sent to comp.lang.scheme in Nov 2001.
 
 (define-syntax match-rewrite
-  (syntax-rules ()
+  (syntax-rules (quote)
+    ((match-rewrite (quote x) ids (k ...))
+     (k ... (quote x)))
     ((match-rewrite (p . q) ids k)
      (match-rewrite p ids (match-rewrite2 q ids (match-cons k))))
     ((match-rewrite () ids (k ...))
@@ -1088,7 +1091,7 @@
     ((match-rewrite p () (k ...))
      (k ... p))
     ((match-rewrite p ((id tmp) . rest) (k ...))
-     (match-identifier=? p id (k ... tmp) (match-rewrite p rest (k ...))))
+     (match-bound-identifier=? p id (k ... tmp) (match-rewrite p rest (k ...))))
     ))
 
 (define-syntax match-rewrite2
@@ -1118,10 +1121,10 @@
        (if (identifier? (cadr expr))
            (car (cddr expr))
            (cadr (cddr expr))))))
-  (define-syntax match-identifier=?
+  (define-syntax match-bound-identifier=?
     (er-macro-transformer
      (lambda (expr rename compare)
-       (if (compare (cadr expr) (car (cddr expr)))
+       (if (eq? (cadr expr) (car (cddr expr)))
            (cadr (cddr expr))
            (car (cddr (cddr expr))))))))
 
@@ -1138,10 +1141,10 @@
        (if (and (symbol? (cadr expr)) (not (keyword? (cadr expr))))
            (car (cddr expr))
            (cadr (cddr expr))))))
-  (define-syntax match-identifier=?
+  (define-syntax match-bound-identifier=?
     (er-macro-transformer
      (lambda (expr rename compare)
-       (if (compare (cadr expr) (car (cddr expr)))
+       (if (eq? (cadr expr) (car (cddr expr)))
            (cadr (cddr expr))
            (car (cddr (cddr expr))))))))
 
@@ -1196,11 +1199,12 @@
 
   ;; This check is inlined in some cases above, but included here for
   ;; the convenience of match-rewrite.
-  (define-syntax match-identifier=?
+  (define-syntax match-bound-identifier=?
     (syntax-rules ()
-      ((match-identifier=? a b sk fk)
-       (let-syntax ((eq (syntax-rules (b)
-                          ((eq b) sk)
-                          ((eq _) fk))))
-         (eq a)))))
+      ((match-bound-identifier=? a b sk fk)
+       (let-syntax ((b (syntax-rules ())))
+         (let-syntax ((eq (syntax-rules (b)
+                            ((eq b) sk)
+                            ((eq _) fk))))
+           (eq a))))))
   ))

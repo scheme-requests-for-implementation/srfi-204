@@ -97,6 +97,12 @@ Test end:
   actual-value: ok
   expected-value: ok
 Test begin:
+  test-name: "or unbalanced"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
   test-name: "not"
 Test end:
   result-kind: pass
@@ -122,6 +128,12 @@ Test end:
   expected-value: ok
 Test begin:
   test-name: "duplicate symbols fail"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "duplicate symbols fail 2"
 Test end:
   result-kind: pass
   actual-value: ok
@@ -235,6 +247,12 @@ Test end:
   actual-value: ((a b) (1 2) 3)
   expected-value: ((a b) (1 2) 3)
 Test begin:
+  test-name: "single duplicate tail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
   test-name: "multiple tail"
 Test end:
   result-kind: pass
@@ -343,103 +361,103 @@ Test end:
   actual-value: (1 2)
   expected-value: (1 2)
 Test begin:
-  test-name: "list ..1"
+  test-name: "list **1"
 Test end:
   result-kind: pass
   actual-value: (a b c)
   expected-value: (a b c)
 Test begin:
-  test-name: "list ..1 failed"
+  test-name: "list **1 failed"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..1 with predicate"
+  test-name: "list **1 with predicate"
 Test end:
   result-kind: pass
   actual-value: (a b c)
   expected-value: (a b c)
 Test begin:
-  test-name: "list ..1 with failed predicate"
+  test-name: "list **1 with failed predicate"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..= too few"
+  test-name: "list =.. too few"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..="
+  test-name: "list =.."
 Test end:
   result-kind: pass
   actual-value: (2 3)
   expected-value: (2 3)
 Test begin:
-  test-name: "list ..= too many"
+  test-name: "list =.. too many"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..= tail"
+  test-name: "list =.. tail"
 Test end:
   result-kind: pass
   actual-value: 4
   expected-value: 4
 Test begin:
-  test-name: "list ..= tail fail"
+  test-name: "list =.. tail fail"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..* too few"
+  test-name: "list *.. too few"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..* lo"
+  test-name: "list *.. lo"
 Test end:
   result-kind: pass
   actual-value: (2 3)
   expected-value: (2 3)
 Test begin:
-  test-name: "list ..* hi"
+  test-name: "list *.. hi"
 Test end:
   result-kind: pass
   actual-value: (2 3 4 5)
   expected-value: (2 3 4 5)
 Test begin:
-  test-name: "list ..* too many"
+  test-name: "list *.. too many"
 Test end:
   result-kind: pass
   actual-value: #f
   expected-value: #f
 Test begin:
-  test-name: "list ..* tail"
+  test-name: "list *.. tail"
 Test end:
   result-kind: pass
   actual-value: 4
   expected-value: 4
 Test begin:
-  test-name: "list ..* tail 2"
+  test-name: "list *.. tail 2"
 Test end:
   result-kind: pass
   actual-value: 5
   expected-value: 5
 Test begin:
-  test-name: "list ..* tail"
+  test-name: "list *.. tail"
 Test end:
   result-kind: pass
   actual-value: 6
   expected-value: 6
 Test begin:
-  test-name: "list ..* tail fail"
+  test-name: "list *.. tail fail"
 Test end:
   result-kind: pass
   actual-value: #f
@@ -452,6 +470,18 @@ Test end:
   expected-value: 6
 Test begin:
   test-name: "match-letrec"
+Test end:
+  result-kind: pass
+  actual-value: (2 1 1 2)
+  expected-value: (2 1 1 2)
+Test begin:
+  test-name: "match-letrec quote"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "match-letrec mnieper"
 Test end:
   result-kind: pass
   actual-value: (2 1 1 2)
@@ -481,4 +511,4 @@ Test end:
   actual-value: (7 1)
   expected-value: (7 1)
 Group end: larceny-match-tests
-# of expected passes      80
+# of expected passes      85
