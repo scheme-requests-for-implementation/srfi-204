@@ -1,25 +1,11 @@
-(define-library (match-test)
-  (export run-match-tests)
+(define-library (chibi match-test)
+  (export run-tests)
   (import (except (scheme base) equal?)
-	  (scheme write)
-          (srfi-204)
-	  (only (chibi process) process->string)
-	  (srfi 115)
-          (only (chibi test)
-		test-begin
-		test
-		test-end))
+          (chibi match)
+          (only (chibi test) test-begin test test-end))
   (cond-expand
    (chibi
     (begin
-      (define (version)
-	"get version string"
-        (let* ((version-re '(: bow (+ (or num "."))))
-	      (process-string (process->string '(chibi-scheme "-V")))
-	      (matches (regexp-extract version-re process-string)))
-          (string-append "chibi-" (car matches))))
-      (display (version))
-      (newline)
       (define-record-type Point
        (make-point x y)
        point?
@@ -27,9 +13,9 @@
        (y point-y point-y-set!))))
    (else))
   (begin
-    (define (run-match-tests)
+    (define (run-tests)
       (test-begin "match")
-      (newline)
+
       (test "any" 'ok (match 'any (_ 'ok)))
       (test "symbol" 'ok (match 'ok (x x)))
       (test "number" 'ok (match 28 (28 'ok)))
@@ -198,50 +184,50 @@
       (test "joined tail" '(1 2)
         (match '(1 2 3) ((and (a ... b) x) a)))
 
-      (test "list **1" '(a b c)
-        (match '(a b c) ((x **1) x)))
+      (test "list ..1" '(a b c)
+        (match '(a b c) ((x ..1) x)))
 
-      (test "list **1 failed" #f
+      (test "list ..1 failed" #f
         (match '()
-          ((x **1) x)
+          ((x ..1) x)
           (else #f)))
 
-      (test "list **1 with predicate" '(a b c)
+      (test "list ..1 with predicate" '(a b c)
         (match '(a b c)
-          (((and x (? symbol?)) **1) x)))
+          (((and x (? symbol?)) ..1) x)))
 
-      (test "list **1 with failed predicate" #f
+      (test "list ..1 with failed predicate" #f
         (match '(a b 3)
-          (((and x (? symbol?)) **1) x)
+          (((and x (? symbol?)) ..1) x)
           (else #f)))
 
-      (test "list =.. too few" #f
-        (match (list 1 2) ((a b =.. 2) b) (else #f)))
-      (test "list =.." '(2 3)
-        (match (list 1 2 3) ((a b =.. 2) b) (else #f)))
-      (test "list =.. too many" #f
-        (match (list 1 2 3 4) ((a b =.. 2) b) (else #f)))
-      (test "list =.. tail" 4
-        (match (list 1 2 3 4) ((a b =.. 2 c) c) (else #f)))
-      (test "list =.. tail fail" #f
-        (match (list 1 2 3 4 5 6) ((a b =.. 2 c) c) (else #f)))
+      (test "list ..= too few" #f
+        (match (list 1 2) ((a b ..= 2) b) (else #f)))
+      (test "list ..=" '(2 3)
+        (match (list 1 2 3) ((a b ..= 2) b) (else #f)))
+      (test "list ..= too many" #f
+        (match (list 1 2 3 4) ((a b ..= 2) b) (else #f)))
+      (test "list ..= tail" 4
+        (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)))
+      (test "list ..= tail fail" #f
+        (match (list 1 2 3 4 5 6) ((a b ..= 2 c) c) (else #f)))
 
-      (test "list *.. too few" #f
-        (match (list 1 2) ((a b *.. 2 4) b) (else #f)))
-      (test "list *.. lo" '(2 3)
-        (match (list 1 2 3) ((a b *.. 2 4) b) (else #f)))
-      (test "list *.. hi" '(2 3 4 5)
-        (match (list 1 2 3 4 5) ((a b *.. 2 4) b) (else #f)))
-      (test "list *.. too many" #f
-        (match (list 1 2 3 4 5 6) ((a b *.. 2 4) b) (else #f)))
-      (test "list *.. tail" 4
-        (match (list 1 2 3 4) ((a b *.. 2 4 c) c) (else #f)))
-      (test "list *.. tail 2" 5
-        (match (list 1 2 3 4 5) ((a b *.. 2 4 c d) d) (else #f)))
-      (test "list *.. tail" 6
-        (match (list 1 2 3 4 5 6) ((a b *.. 2 4 c) c) (else #f)))
-      (test "list *.. tail fail" #f
-        (match (list 1 2 3 4 5 6 7) ((a b *.. 2 4 c) c) (else #f)))
+      (test "list ..* too few" #f
+        (match (list 1 2) ((a b ..* 2 4) b) (else #f)))
+      (test "list ..* lo" '(2 3)
+        (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)))
+      (test "list ..* hi" '(2 3 4 5)
+        (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)))
+      (test "list ..* too many" #f
+        (match (list 1 2 3 4 5 6) ((a b ..* 2 4) b) (else #f)))
+      (test "list ..* tail" 4
+        (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)))
+      (test "list ..* tail 2" 5
+        (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)))
+      (test "list ..* tail" 6
+        (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)))
+      (test "list ..* tail fail" #f
+        (match (list 1 2 3 4 5 6 7) ((a b ..* 2 4 c) c) (else #f)))
 
       (test "match-named-let" 6
         (match-let loop (((x . rest) '(1 2 3))
@@ -267,30 +253,15 @@
         (test "match-letrec mnieper" '(2 1 1 2) (foo a)))
 
       (cond-expand
-	(chibi
-	  (test "record positional"
-		'(1 0)
-		(match (make-point 0 1)
-		       (($ Point x y) (list y x))))
-	  (test "record named"
-		'(1 0)
-		(match (make-point 0 1)
-		       ((object Point (x x) (y y)) (list y x))))
-	  (test "setter record positional"
-		      '(7 1)
-		      (let ((p (make-point 0 1)))
-			(match p
-			       ((struct Point (set! x) y) (x 7)))
-			(match-let ((($ Point a b) p))
-				   (list a b))))
-	  (test "setter record named"
-		      '(7 1)
-		      (let ((p (make-point 0 1)))
-			(match p
-			       ((object Point (x (set! x))) (x 7)))
-			(match-let (((object Point (x a) (y b)) p))
-				   (list a b))))
-	  )
-	(else))
+       (chibi
+        (test "record positional"
+            '(1 0)
+          (match (make-point 0 1)
+            (($ Point x y) (list y x))))
+        (test "record named"
+            '(1 0)
+          (match (make-point 0 1)
+            ((@ Point (x x) (y y)) (list y x)))))
+       (else))
 
       (test-end))))

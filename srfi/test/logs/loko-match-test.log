@@ -1,4 +1,4 @@
-$ export LOKO_LIBRARY_PATH=..:$LOKO_LIBRARY_PATH
+
 $ rlwrap loko
 Loko Scheme 0.5.0
 Copyright © 2020 Göran Weinholt
@@ -10,5 +10,5 @@ free software: you are free to change and redistribute it under
 certain conditions.
 > (include "loko-match-test.scm")
 %%%% Starting test loko-match-test
-# of expected passes      80
+# of expected passes      85
 > 

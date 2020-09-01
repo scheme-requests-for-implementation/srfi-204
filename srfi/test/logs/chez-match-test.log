@@ -1,28 +1,8 @@
-$ ~/.akku/env #
-$ chezscheme --libdirs .:$CHEZSCHEMELIBDIRS match-test.scm
+
+$ chezscheme --libdirs ..:$CHEZSCHEMELIBDIRS match-test.scm 
 Chez Scheme Version 9.5
 Copyright 1984-2017 Cisco Systems, Inc.
 
 %%%% Starting test chez-match-test
-> (test-runner-current)
-#[#{test-runner co2fva440fhn2vaqdqwr1c-21}
-80 0 0 0 0
-() () #t (()) (())
-("chez-match-test")
-#<procedure test-on-test-begin-simple>
-#<procedure test-on-test-end-simple>
-#<procedure test-on-group-begin-simple>
-#<procedure test-on-group-end-simple>
-#<procedure test-on-final-simple>
-#<procedure test-on-bad-count-simple>
-#<procedure test-on-bad-end-name-simple>
-80 ((0 . #f))
-((result-kind . pass)
- (actual-value 7 1)
- (expected-value 7 1)
- (test-name . "setter record named")
- (source-form let ((p (make-point 0 1)))
-                (match p ((object Point (x (set! x))) (x 7)))
-                (match-let (((_@ Point (x a) (y b)) p)) (list a b))))
-#<void>]
->;passes all 80 tests 
+# of expected passes      85
+> 

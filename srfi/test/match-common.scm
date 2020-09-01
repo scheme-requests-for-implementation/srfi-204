@@ -27,6 +27,7 @@
 (test-equal "or empty" 'ok (match '(o k) ((or) 'fail) (else 'ok)))
 (test-equal "or single" 'ok (match 'ok ((or x) 'ok)))
 (test-equal "or double" 'ok (match 'ok ((or (? symbol? y) y) y)))
+(test-equal "or unbalanced" 1  (match 1 ((or (and 1 x) (and 2 y)) x)))
 (test-equal "not" 'ok (match 28 ((not (a . b)) 'ok)))
 (test-equal "pred" 'ok (match 28 ((? number?) 'ok)))
 (test-equal "named pred" 29 (match 28 ((? number? x) (+ x 1))))
@@ -34,6 +35,8 @@
 (test-equal "duplicate symbols pass" 'ok (match '(ok . ok) ((x . x) x)))
 (test-equal "duplicate symbols fail" 'ok
 	    (match '(ok . bad) ((x . x) 'bad) (else 'ok)))
+(test-equal "duplicate symbols fail 2" 'ok
+      (match '(ok bad) ((x x) 'bad) (else 'ok)))
 (test-equal "duplicate symbols samth" 'ok
 	    (match '(ok . ok) ((x . 'bad) x) (('ok . x) x)))
 (test-equal "duplicate symbols bound" 3
@@ -100,6 +103,9 @@
 (test-equal "single tail 2" '((a b) (1 2) 3)
 	    (match '((a . 1) (b . 2) 3)
 		   (((x . y) ... last) (list x y last))))
+
+(test-equal "single duplicate tail" #f
+      (match '(1 2) ((foo ... foo) foo) (_ #f)))
 
 (test-equal "multiple tail" '((a b) (1 2) (c . 3) (d . 4) (e . 5))
 	    (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5))
@@ -231,6 +237,17 @@
 	     (match-letrec (((x y) (list 1 (lambda () (list a x))))
 			    ((a b) (list 2 (lambda () (list x a)))))
 			   (append (y) (b))))
+
+(test-equal "match-letrec quote" #t
+      (match-letrec (((x 'x) (list #t 'x))) x))
+(let-syntax
+  ((foo
+     (syntax-rules ()
+       ((foo x)
+	(match-letrec (((x y) (list 1 (lambda () (list a x))))
+		       ((a b) (list 2 (lambda () (list x a)))))
+		      (append (y) (b)))))))
+  (test-equal "match-letrec mnieper" '(2 1 1 2) (foo a)))
 
 (test-equal "record positional"
 	    '(1 0)
