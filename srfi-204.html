@@ -560,7 +560,7 @@ where:
 
 &lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)+
 </code></pre>
-</p>
+
 <h3>Side Effects</h3>
 <p>There are two types of patterns where the issue of side-effects is prominent:
 <ul>
@@ -572,7 +572,7 @@ where:
 <p>
 <h3>Errors</h3>
 The following is a list of examples of the erroneous conditions, and the message given by the current implementation:
-<ul><pre>
+<ul>
 	<li><code>(match)                                  "missing match expression"</code></li>
 	<li><code>(match (list 1 2 3))                     "no match clauses"</code></li>
 	<li><code>(match (list 1 2 3) ((a b)))             "no matching pattern"</code></li>
@@ -581,7 +581,7 @@ The following is a list of examples of the erroneous conditions, and the message
 	<li><code>(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
-	</pre></ul>
+	</ul>
 
 A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
 <h2>Implementation</h2>
