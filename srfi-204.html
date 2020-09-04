@@ -45,12 +45,11 @@ compound data structures.</p>
 
 <h2>Issues</h2>
 <ul>
-	<li>Crashes Foment</li>
-	<li>Not working with Gambit</li>
-	<li>Not working with Gerbil</li>
-	<li>Not working with MIT-Scheme</li>
-	<li>Not working with Rapid-Scheme</li>
-	<li>Not working with Husk</li>
+	<li>fix or delete srfi/not-working</li>
+	<li>get all SRFI-64 tests on same runner</li>
+	<li>integrate Chez into testing framework</li>
+	<li>clarify specification</li>
+	<li>refactor for SRFI-206</li>
 </ul>
 
 <h2>Rationale</h2>
@@ -107,8 +106,11 @@ package by Andrew Wright, written in fully portable <code>syntax-rules</code>
 and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
-times, tail patterns after an ellipsis, and the experimental tree patterns.
+times, tail patterns after an ellipsis, the experimental tree patterns &mdash; and
+the availability of matched identifiers for subsequent predicate and field 
+patterns.
 </p>
+
 <h3>Form Index</h3>
 <pre><code>
 <a href="#match">match</a>		<a href="#match-lambda">match-lambda</a>	<a href="#match-lambda*">match-lambda*</a>
@@ -126,8 +128,14 @@ times, tail patterns after an ellipsis, and the experimental tree patterns.
 <a href="#=..">=..</a>		<a href="#*..">*..</a>
 
 </code></pre>
-All of this syntax not already defined by an implementation is exported by this library.
+<p>
+All of this syntax not already defined by an implementation is exported by this library using SRFI-206.
+</p>
+A pattern variable may be any identifier except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
+         <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>
+	 <b>unquote</b>, <b>unquote-splicing</b>.
 
+<p>
 <h3>Literal and Quasipattern Syntax</h3>
 <pre><code>
 <a href="#quote">quote</a>		<a href="#qquote">quasiquote</a>	<a href="#unquote">unquote</a>
@@ -157,7 +165,8 @@ will match anything, but subsequent instances must match a value
 which is <code>equal?</code> to the first.
 </p><pre><code>(match (list 1 2 1)
   ((a a b) 1)
-  ((a b a) 2))</code></pre><code>=> 2</code><p id="_">
+  ((a b a) 2))</code></pre><code>=> 2</code>
+<p id="_">
 The special identifier <code>_</code> matches anything, no matter how
 many times it is used, and does not bind the result in the body.
 </p><pre><code>(match (list 1 2 1)
@@ -170,7 +179,7 @@ Analogous to its normal usage in scheme, <code id="unquote">quasiquote</code> ca
 be used to quote a mostly literally matching object with selected
 parts unquoted.
 </p><pre><code>(match (list 1 2 3) (`(1 ,b ,c) (list b c))) => (2 3)</code></pre>
-<p id="unquote-sp">Unquote splicing is used to match the part of the list that is not specified:</p>
+<p id="unquote-sp">Unquote-splicing is used to match the part of the list that is not specified:</p>
 <pre><code>
 (define ls '(john paul george ringo))
 
@@ -182,7 +191,8 @@ parts unquoted.
 (match ls (`(,@and-who george ringo) and-who)) => (john paul)
 </code></pre>
 <p id="dot">
-If the unspecified part is at the end of the list, <code>.</code> can also be used to match:
+If the unspecified part is at the end of the list, tail patterns can also be used to match:
+</p>
 <pre><code>
 (define salad '(lettuce tomatoes onions salt pepper))
 
@@ -367,9 +377,17 @@ used.
     | (<var>pat1</var> ... <var>patN</var> . <var>patN+1</var>)     ;; list of n or more
     | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)   ;; list of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
+    | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)   
+                                   ;; list of m or more, every element between the
+				   ;; nth and the (m or more - n)th must match
+				   ;; <var>patN+1</var>.
     | #(<var>pat1</var> ... <var>patN</var>)             ;; vector of n elements
     | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)  ;; vector of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
+    | #(<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)
+                                   ;; vector of m or more, every element between the
+				   ;; nth and the (m or more - n)th must match
+				   ;; <var>patN+1</var>.
     | (<b>$</b> <var>record-type</var> <var>pat1</var> ... <var>patN</var>)      ;; a record (<var>patK</var> matches in slot
                                          ;;    order) <b><em>optional</em></b>
     | (<b>struct</b> <var>struct-type</var> <var>pat1</var> ... <var>patN</var>) ;; ditto (*) <b><em>optional</em></b>
@@ -388,8 +406,9 @@ used.
     (*) extended syntax not originally part of
         Wright-Cartwright pattern matcher.
 
-patvar : a symbol except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
-         <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>.
+patvar : an identifier except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
+         <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>
+	 <b>unquote</b>, <b>unquote-splicing</b>.
 
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
@@ -403,6 +422,8 @@ ooo : <b>...</b>                          ;; zero or more
 
     (*) extended syntax not originally part of
         Wright-Cartwright pattern matcher.
+    <b>Note: </b> a list can contain only one ellipsis pattern which includes the
+             patterns above, tail patterns and unquote-splicing patterns.
 
 qp  : ()                           ;; the empty list
     | #t                           ;; #t
@@ -437,18 +458,110 @@ processing at the next <code>pattern</code>.  If no <code>pattern</code> matches
 an error is signalled. If <a href="https://srfi.schemers.org/srfi-201/">SRFI 201</a> is used, this is the only procedure needed.</p>
 <h4 id="match-lambda"><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
-clause.</p><h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
+clause.</p>
+<pre><code>
+(define-record-type &lt;checkable&gt;
+  (make-checkable pred value)
+  checkable?
+  (pred checkable-pred)
+  (value checkable-value))
+
+(define check
+  (match-lambda (($ &lt;checkable&gt; pred (? pred ok)) ok)
+                (($ &lt;checkable&gt;) 'bad-data)))
+</code></pre>
+<h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
 number of arguments, and matches the argument list against each
-clause.</p><h4 id="match-let"><code>(match-let ((var value) ...) . body)<br>(match-let loop ((var init) ...) . body)</code></h4><p>Matches each var to the corresponding expression, and evaluates
+clause.</p>
+<pre><code>
+(define zero-to-three-cycle
+  (match-lambda ((and c (= car c)) 0)
+		((and c (= cdr c)) 1)
+		((and c (= cddr c)) 2)
+		((and c (= cdddr c)) 3)
+		(_ 'fail)))
+
+(define l3 (list 1 2 3))
+(set-cdr! (cddr l3) l3)
+(zero-to-three-cycle l3) => 3
+
+(define fibby
+  (match-lambda* ((a b) #t)
+                 ((a) #t)
+                 (() #t)
+		 ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
+		  (apply fibby (cons b (cons c rest))))
+		 (_ #f)))
+
+(fibby 4 7 11 18 29 47) => #t
+</code></pre>
+<p><b>Note:</b> these examples and the previous one demonstrate the use of pattern variables in predicates and fields.</p>
+<h4 id="match-let"><code>(match-let ((pattern value) ...) . body)<br>(match-let loop ((pattern init) ...) . body)</code></h4><p>Matches each pattern to the corresponding expression, and evaluates
 the body with all match variables in scope.  Raises an error if
 any of the expressions fail to match.  Syntax analogous to named
 let can also be used for recursive functions which match on their
-arguments as in <code>match-lambda*</code>.</p><h4 id="match-letrec"><code>(match-letrec ((var value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
-matches and binds the variables with all match variables in scope. Uses the technique described in [<a href="#Oleg2013">Kiselyov, 2013</a>].</p><h4 id="match-let*"><code>(match-let* ((var value) ...) body ...)</code></h4><p>
+arguments as in <code>match-lambda*</code>.</p>
+<pre><code>
+(define (fact n)
+  (if (zero? n)
+      1
+      (match-let loop (((a . rest) (cdr (iota (+ n 1))))
+                       (out 1))
+		      (if (null? rest) (* a out) (loop rest (* a out))))))
+</code></pre>
+<p><b>Note:</b> as this example shows, since each binding takes one pattern, if an init value may not match its pattern (as in <code>(cdr (iota (+ 0 1))) => ()</code>) that has to be handled some other way.</p>
+<h4 id="match-letrec"><code>(match-letrec ((pattern value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
+matches and binds the patterns with all match patterns in scope.</p>
+<h4 id="match-let*"><code>(match-let* ((pattern value) ...) body ...)</code></h4><p>
 Similar to <code>match-let</code>, but analogously to <code>let*</code>
-matches and binds the variables in sequence, with preceding match
-variables in scope.</p>
+matches and binds the patterns in sequence, with preceding match
+patterns in scope.</p>
+<h3>Tail Contexts</h3>
+<p>
+If a pattern matcher is in tail context, expressions marked as tail-bodies below will be in tail context.
+<pre><code>
+(match &lt;expression&gt; <b>&lt;match-clause&gt;</b>+)
 
+(match-lambda <b>&lt;match-clause&gt;</b>+)
+
+(match-lambda* <b>&lt;match-clause&gt;</b>+)
+
+(match-let ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+
+(match-letrec ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+
+(match-let &lt;variable&gt; ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+
+(match-let* ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+
+where:
+
+&lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)+
+</code></pre>
+</p>
+<h3>Side Effects</h3>
+<p>There are two types of patterns where the issue of side-effects is prominent:
+<ul>
+	<li>predicate patterns, which may be applied repeatedly and to non-matches,
+		so should not have side effects</li>
+	<li>set! patterns, which are intended have side effects when they are used
+	in the </li>
+</ul>
+<p>
+<h3>Errors</h3>
+The following is a list of examples of the erroneous conditions, and the message given by the current implementation:
+<ul><pre>
+	<li><code>(match)                                  "missing match expression"</code></li>
+	<li><code>(match (list 1 2 3))                     "no match clauses"</code></li>
+	<li><code>(match (list 1 2 3) ((a b)))             "no matching pattern"</code></li>
+	<li><code>(match (list 1 2 3) ((a *** . 3) a))     "invalid use of ***"</code></li>
+	<li><code>(match '(1 1 1 2 2 2) ((a ... b ...) b)) "multiple ellipsis patterns not allowed at same level"</code></li>
+	<li><code>(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b)) ditto</code></li>
+	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
+	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
+	</pre></ul>
+
+A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
 <h2>Implementation</h2>
 
 <p>
@@ -550,6 +663,8 @@ and this is an example from Loko and Chez, which use forms from
 	       ((eq? n (vector-ref names i)) i)
 	       (else (lp (+ i 1 )))))))))
 </code></pre>
+
+<code>match-letrec</code> uses the technique described in [<a href="#Oleg2013">Kiselyov, 2013</a>]. This form gets used the least by users, so it may be a useful exercise for for implementors to look for internal defines and other items that can be translated into match-letrec to build up a testing library.
 
 <h2>References</h2>
 <p id="SCG">
