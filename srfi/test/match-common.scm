@@ -1,4 +1,4 @@
-(cond-expand  
+(cond-expand
   ((and r6rs (not r7rs))
     (define-record-type (Point make-point point?) (fields (mutable x) (mutable y))))
   (else

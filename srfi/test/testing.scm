@@ -370,7 +370,7 @@
     (cond-expand
      (srfi-23 (error msg))
      (else (display msg) (newline)))))
-  
+
 
 (define (%test-final-report1 value label port)
   (if (> value 0)
@@ -602,7 +602,7 @@
     (syntax-rules ()
       ((%test-evaluate-with-catch test-expression)
        test-expression)))))
-	    
+
 (cond-expand
  ((or kawa mzscheme)
   (cond-expand
@@ -977,7 +977,7 @@
 	      (if (not ((car l) runner))
 		  (set! result #f))
 	      (loop (cdr l))))))))
-  
+
 (define-syntax test-match-all
   (syntax-rules ()
     ((test-match-all pred ...)
@@ -993,7 +993,7 @@
 	      (if ((car l) runner)
 		  (set! result #t))
 	      (loop (cdr l))))))))
-  
+
 (define-syntax test-match-any
   (syntax-rules ()
     ((test-match-any pred ...)

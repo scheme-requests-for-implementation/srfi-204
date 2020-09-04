@@ -245,7 +245,7 @@
 ;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
 ;; 2020/08/21 - handle underscores separately, not as literals
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
-;; 2020/08/03 - added bindings for auxiliary syntax 
+;; 2020/08/03 - added bindings for auxiliary syntax
 ;; 2020/07/06 - adding `=..' and `*..' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
@@ -355,7 +355,7 @@
      (match-underscore . x))))
 
 ;; Helper functions
-;; this may need to be changed, I've had trouble with cond-expand and 
+;; this may need to be changed, I've had trouble with cond-expand and
 ;; R6RS
 (cond-expand
   (r7rs

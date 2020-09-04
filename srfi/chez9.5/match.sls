@@ -14,7 +14,7 @@
 	  ?
 	  $
 	  struct
-	  
+
 	  object
 	  get!)
   (import (chezscheme)

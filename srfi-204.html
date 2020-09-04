@@ -33,6 +33,7 @@ pre {
   <li>Draft #4 published: 2020-08-02</li>
   <li>Draft #5 published: 2020-08-16</li>
   <li>Draft #6 published: 2020-08-24</li>
+  <li>Draft #7 published: 2020-09-04</li>
 </ul>
 
 <h2>Abstract</h2>
@@ -107,7 +108,7 @@ and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, the experimental tree patterns &mdash; and
-the availability of matched identifiers for subsequent predicate and field 
+the availability of matched identifiers for subsequent predicate and field
 patterns.
 </p>
 
@@ -129,7 +130,7 @@ patterns.
 
 </code></pre>
 <p>
-All of this syntax not already defined by an implementation is exported by this library using SRFI-206.
+All of this syntax not already defined by an implementation is exported by this library using <a href="https://srfi.schemers.org/srfi-206/">SRFI 206</a>.
 </p>
 A pattern variable may be any identifier except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>
@@ -377,7 +378,7 @@ used.
     | (<var>pat1</var> ... <var>patN</var> . <var>patN+1</var>)     ;; list of n or more
     | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)   ;; list of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)   
+    | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)
                                    ;; list of m or more, every element between the
 				   ;; nth and the (m or more - n)th must match
 				   ;; <var>patN+1</var>.
@@ -548,19 +549,19 @@ If a pattern matcher is in tail context, expressions marked as tail-bodies below
 
 (match-lambda* <b>&lt;match-clause&gt;</b>+)
 
-(match-let ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-letrec ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-letrec ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-let &lt;variable&gt; ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let &lt;variable&gt; ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-let* ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let* ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
 where:
 
 &lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)+
 </code></pre>
-</p>
+
 <h3>Side Effects</h3>
 <p>There are two types of patterns where the issue of side-effects is prominent:
 <ul>
@@ -572,7 +573,7 @@ where:
 <p>
 <h3>Errors</h3>
 The following is a list of examples of the erroneous conditions, and the message given by the current implementation:
-<ul><pre>
+<ul>
 	<li><code>(match)                                  "missing match expression"</code></li>
 	<li><code>(match (list 1 2 3))                     "no match clauses"</code></li>
 	<li><code>(match (list 1 2 3) ((a b)))             "no matching pattern"</code></li>
@@ -581,7 +582,7 @@ The following is a list of examples of the erroneous conditions, and the message
 	<li><code>(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
-	</pre></ul>
+	</ul>
 
 A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
 <h2>Implementation</h2>
@@ -631,7 +632,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
     	              value)
              (gb-slot-set! inst n value))))))
 </code></pre>
-this is an example from Larceny, which has SRFI-99:
+this is an example from Larceny, which has SRFI 99:
 <pre><code>
 (import (scheme base)
 	(srfi 99 records))

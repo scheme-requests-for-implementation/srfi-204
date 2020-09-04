@@ -15,7 +15,7 @@
      and 1, respectively.] **fixed** added info and examples about patvars in
      fields and predicates.
    - figure out how to handle match-letrec/match-letrec* in specification
-      - leave as is 
+      - leave as is
       - make optional, refer to use of internal define + match-lambda/match-lambda*
         or named match-let by vast majority of users
    - srfi should give implementors more guidance

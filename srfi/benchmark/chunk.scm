@@ -69,7 +69,7 @@ $8 = (0 1 2 3)
 scheme@(guile-user)> ,time (let ((a (chunk-4 (iota 10000000)))) (car a))
 $9 = (0 1 2 3)
 ;; 0.694322s real time, 0.701682s run time.  0.253721s spent in GC.
-scheme@(guile-user)> 
+scheme@(guile-user)>
 
 to a first approximation, anyway, it doesn't look like the underscore
 macros had a big effect on the code.

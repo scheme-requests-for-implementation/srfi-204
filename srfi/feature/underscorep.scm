@@ -48,7 +48,7 @@
 ;;    ((match-extract-vars _ (k ...) i v) (k ... v))
 ;; match-extract-vars-step
 ;; match-extract-quasiquote-vars
-;; match-letrec-one 
+;; match-letrec-one
 
 ;; and then change their calls to match-extract-vars to
 (define-syntax match-extract-underscore
