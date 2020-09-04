@@ -115,7 +115,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; the behavior of cyclic literals has been a long-running
 ;; topic, the following is one matcher that acts on cyclic
-;; literals (this uses constructed lists because not all
+;; lists (this uses constructed lists because not all
 ;; implementations handle cyclic literals correctly)
 
 (define l3 (list 1 2 3))
@@ -127,7 +127,17 @@
 		((and c (= cdddr c)) 3)
 		(_ 'fail)))
 (define l0 (list (list)))
-(set-car! l0 l0) ;; '#0= (#0#)
+(set-car! l0 l0) ;; '#0=(#0#)
 
 (zero-to-three-cycle l0) ; => 0
 (zero-to-three-cycle l3) ; => 3
+
+;;;another example using pattern variables in the predicate
+
+(define fibby
+  (match-lambda* ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
+		  (apply fibby (cons b (cons c rest))))
+                 ((a b) #t)
+                 ((a) #t)
+                 (() #t)
+		 (_ #f)))

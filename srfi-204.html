@@ -456,6 +456,28 @@ of the entire <code>match</code>.  If a <code>failure</code> is provided,
 then it is bound to a procedure of no arguments which continues
 processing at the next <code>pattern</code>.  If no <code>pattern</code> matches,
 an error is signalled. If <a href="https://srfi.schemers.org/srfi-201/">SRFI 201</a> is used, this is the only procedure needed.</p>
+<pre><code>
+;;; a simple match pattern:
+
+(match '(1 1 1) ((a =.. 3) 'ok) (_ 'fail)) => ok
+
+;;; the same pattern with failure
+
+(match '(1 1 1)
+        ((a =.. 3) (=> fail)
+	 (if (= (car a) 1) (fail) 'ok))
+	(_ 'fail))
+=> fail
+
+;;; a passing pattern
+
+(match '(2 1 1)
+        ((a =.. 3) (=> fail)
+	 (if (= (car a) 1) (fail) 'ok))
+	(_ 'fail))
+=> ok
+
+</code></pre>
 <h4 id="match-lambda"><code>(match-lambda (pattern . body) ...)</code></h4><p>Shortcut for <code>lambda</code> + <code>match</code>.  Creates a
 procedure of one argument, and matches that argument against each
 clause.</p>

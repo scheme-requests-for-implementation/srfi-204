@@ -19,4 +19,5 @@
       - make optional, refer to use of internal define + match-lambda/match-lambda*
         or named match-let by vast majority of users
    - srfi should give implementors more guidance
+   - find and show example of match with failure -does this figure into call/cc (escape continuations,etc?)? **fixed**
 - refactor for srfi-206
