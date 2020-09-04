@@ -129,7 +129,7 @@ patterns.
 
 </code></pre>
 <p>
-All of this syntax not already defined by an implementation is exported by this library using SRFI-206.
+All of this syntax not already defined by an implementation is exported by this library using <a href="https://srfi.schemers.org/srfi-206/">SRFI 206</a>.
 </p>
 A pattern variable may be any identifier except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>
@@ -631,7 +631,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
     	              value)
              (gb-slot-set! inst n value))))))
 </code></pre>
-this is an example from Larceny, which has SRFI-99:
+this is an example from Larceny, which has SRFI 99:
 <pre><code>
 (import (scheme base)
 	(srfi 99 records))
