@@ -11,4 +11,4 @@ certain conditions.
 > (include "loko-match-test.scm")
 %%%% Starting test loko-match-test
 # of expected passes      85
-> 
+>

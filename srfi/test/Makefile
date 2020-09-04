@@ -18,7 +18,7 @@ GOSHFLAGS = -I $(top_srcdir)
 LARCENY = larceny
 LARCENYFLAGS = -r7rs -I $(top_srcdir) -program
 CHEZSCHEME = chezscheme
-CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5 
+CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
 

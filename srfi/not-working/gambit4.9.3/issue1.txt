@@ -4,16 +4,16 @@ $ gsi -:r7rs .
 Gambit v4.9.3-1228-g1f19fb05
 
 > (import (scheme base)(match match))
-> (match '(1 2 3 4) ((a b c d) b))   
+> (match '(1 2 3 4) ((a b c d) b))
 *** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
 (set! '(1 2 3 4))
 > (match '(1 2 3 4) ((a b ...) b))
 *** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
 (set! '(1 2 3 4))
-> (match (1 2 3 4) ((a b ...) b)) 
+> (match (1 2 3 4) ((a b ...) b))
 *** ERROR IN "../match/match.scm"@301.33 -- Ill-formed special form
 (set! (1 2 3 4))
-> 
+>
 
 line 301 is passing in the getter and setter to the next macro:
     ((match (app ...) (pat . body) ...)

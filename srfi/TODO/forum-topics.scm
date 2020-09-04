@@ -60,7 +60,7 @@
 ;; scheme@(guile-user) [5]> ,time (let ((l (iota-2-2 100_000_000))) (car l))
 ;; $28 = 0
 ;; ;; 24.418649s real time, 25.026579s run time.  15.652399s spent in GC.
-;; scheme@(guile-user) [5]> 
+;; scheme@(guile-user) [5]>
 ;; difference between iota-2-2 and iota-2-3 starts to show up ~10 million
 ;; at 1 billion both are killed.
 

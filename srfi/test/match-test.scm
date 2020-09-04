@@ -1,6 +1,6 @@
 (cond-expand
   (chibi
-    ;;export TEST_VERBOSE=true to get verbose output 
+    ;;export TEST_VERBOSE=true to get verbose output
     (import (match-test)))
   (guile
     (use-modules (srfi-204)

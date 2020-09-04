@@ -27,7 +27,7 @@
 		((record-mutator rtd n) rec value)
 		((record-mutator rtd (name->idx rtd n)) rec value))))
 	 (define-syntax name->idx
-	   (syntax-rules () 
+	   (syntax-rules ()
 	     ((_ rtd n)
 	      (let ((names (record-type-field-names rtd))
 		    (len (vector-length names)))
@@ -69,7 +69,7 @@
 		  ((record-mutator rtd n) rec value)
 		  ((record-mutator rtd (name->idx rtd n)) rec value))))
 	   (define-syntax name->idx
-	     (syntax-rules () 
+	     (syntax-rules ()
 	       ((_ rtd n)
 		(let ((names (record-type-field-names rtd))
 		      (len (vector-length names)))

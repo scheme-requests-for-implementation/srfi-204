@@ -47,9 +47,9 @@ files used for reference.
 
 **match-tests.scm** implementation-specific parts of match tests
 
-**match-common.scm** match-test.sld tests re-written to use srfi-64 
+**match-common.scm** match-test.sld tests re-written to use srfi-64
 
-**loko-match-test.scm** 
+**loko-match-test.scm**
 
 **match-common-r6rs.scm** match-common.scm rewritten for r6rs
 

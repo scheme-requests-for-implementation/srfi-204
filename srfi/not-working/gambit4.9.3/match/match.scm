@@ -235,7 +235,7 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
-;; 2020/08/03 - added bindings for auxiliary syntax 
+;; 2020/08/03 - added bindings for auxiliary syntax
 ;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)

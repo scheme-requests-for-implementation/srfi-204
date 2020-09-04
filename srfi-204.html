@@ -107,7 +107,7 @@ and thus preserving hygiene.
 The most notable extensions are the ability to use <em>non-linear</em>
 patterns &mdash; patterns in which the same identifier occurs multiple
 times, tail patterns after an ellipsis, the experimental tree patterns &mdash; and
-the availability of matched identifiers for subsequent predicate and field 
+the availability of matched identifiers for subsequent predicate and field
 patterns.
 </p>
 
@@ -377,7 +377,7 @@ used.
     | (<var>pat1</var> ... <var>patN</var> . <var>patN+1</var>)     ;; list of n or more
     | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo)   ;; list of n or more, each element
                                    ;;   of remainder must match <var>patN+1</var>
-    | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)   
+    | (<var>pat1</var> ... <var>patN</var> <var>patN+1</var> ooo patN+2 ... patM)
                                    ;; list of m or more, every element between the
 				   ;; nth and the (m or more - n)th must match
 				   ;; <var>patN+1</var>.
@@ -548,13 +548,13 @@ If a pattern matcher is in tail context, expressions marked as tail-bodies below
 
 (match-lambda* <b>&lt;match-clause&gt;</b>+)
 
-(match-let ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-letrec ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-letrec ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-let &lt;variable&gt; ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let &lt;variable&gt; ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
-(match-let* ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+) 
+(match-let* ((&lt;pattern&gt; &lt;expression&gt;)) <b>&lt;tail-body&gt;</b>+)
 
 where:
 
