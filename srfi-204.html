@@ -508,15 +508,15 @@ clause.</p>
 (set-cdr! (cddr l3) l3)
 (zero-to-three-cycle l3) => 3
 
-(define fibby
+(define fibby?
   (match-lambda* ((a b) #t)
                  ((a) #t)
                  (() #t)
 		 ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
-		  (apply fibby (cons b (cons c rest))))
+		  (apply fibby? (cons b (cons c rest))))
 		 (_ #f)))
 
-(fibby 4 7 11 18 29 47) => #t
+(fibby? 4 7 11 18 29 47) => #t
 </code></pre>
 <p><b>Note:</b> these examples and the previous one demonstrate the use of pattern variables in predicates and fields.</p>
 <h4 id="match-let"><code>(match-let ((pattern value) ...) . body)<br>(match-let loop ((pattern init) ...) . body)</code></h4><p>Matches each pattern to the corresponding expression, and evaluates
@@ -559,7 +559,7 @@ If a pattern matcher is in tail context, expressions marked as tail-bodies below
 
 where:
 
-&lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)+
+&lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)
 </code></pre>
 
 <h3>Side Effects</h3>
@@ -585,6 +585,30 @@ The following is a list of examples of the erroneous conditions, and the message
 	</ul>
 
 A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
+<h3>Using in Other Macros</h3>
+<p>Other macros that use the pattern matcher will be subject to the same constraints, in particular with respect to names. For example:
+<pre><code>
+(define-syntax make-chunker
+  (syntax-rules ()
+    ((_ s ...)
+     (lambda (l)
+       (let lp ((l l))
+	 (match l (() '())
+		  ((s ... . rest) (cons (list s ...) (lp rest)))
+		  (end (list end))))))))
+
+((make-chunker a b c d) (iota 20))
+=> ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+
+((make-chunker a b c _) (iota 20))
+=> ERROR on line 16: invalid use of syntax as value: _
+
+((make-chunker a b c ___) (iota 20))
+=> ERROR on line 715 of file ./srfi-204/srfi-204.scm:
+     no expansion for:
+       (match-syntax-error "dotted tail not allowed after ellipsis" rest)
+</code></pre>
+</p>
 <h2>Implementation</h2>
 
 <p>
