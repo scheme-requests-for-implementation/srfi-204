@@ -3,3 +3,6 @@ got new module to compile, and got tests to run.
    match-letrec
    match-letrec mnieper
    setter record named
+
+not keeping c files in repo since they distort composition
+of project.
