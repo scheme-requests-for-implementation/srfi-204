@@ -307,6 +307,14 @@ to generate a new value to match against <code>pat</code>.
 Thus the pattern <code>(and (= car x) (= cdr y))</code> is equivalent
 to <code>(x . y)</code>, except it will result in an immediate error
 if the value isn't a pair.
+In contrast to the predicate operator, the field operator succeeds
+when its value is false. Compare:
+<pre><code>
+  
+(match 1 ((and n (? even?)) n) (_ 'fail)) => fail
+
+(match 1 ((and n (= even? r)) (list n r)) (_ 'fail)) => (1 #f)
+</pre></code>
 </p><pre><code>(match '(1 . 2) ((= car x) x)) => 1</code></pre><p>
 </p><pre><code>(match 4 ((= square x) x)) => 16</code></pre><p>
 <strong>Note:</strong><em> record introspection is not currently portable,
