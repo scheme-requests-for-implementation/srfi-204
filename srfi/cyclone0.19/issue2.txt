@@ -1,0 +1,5 @@
+got new module to compile, and got tests to run.
+3 are failing:
+   match-letrec
+   match-letrec mnieper
+   setter record named

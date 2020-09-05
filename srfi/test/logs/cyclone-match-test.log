@@ -1,0 +1,19 @@
+;;; could not get to compile or to run with TEST_VERBOSE=true
+;;; here are the test results from the interpreter:
+
+
+cyclone> (run-match-tests)
+match: 
+.......................................................................
+......!.!...!
+81 out of 84 (96.4%) tests passed in 0.0 seconds.
+3 errors (3.6%).
+no source in: ((exception "Unbound variable" p-ls) (name$56945 . "match-letrec") (source $56947 match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () ( list x a))))) (append (y) (b))) (var-names$56948) (var-values$56949))
+ERROR: test-84
+    ("Unbound variable" p-ls)ERROR: match-letrec mnieper
+    ("Unbound variable" p-ls)(foo a)
+no source in: ((exception "Invalid type: expected number, found " x) (name$62006 . "setter record named") (source$62008 let ((p (make-point 0 1))) (match p ((object Point (x (set! x))) (x 7))) (match-let (((object Point (x a) (y b)) p)) (list a b))) (var-names$62009) (var-values$62010))
+ERROR: test-84
+    ("Invalid type: expected number, found " x)("match" (failures ("    " ERROR ((exception "Invalid type: expected number, found " x) (gen-name . "test-84") (name$62006 . "setter record named") (source$62008 let ((p (make-point 0 1))) (match p ((object Point (x (set! x))) (x 7))) (match-let (((object Point (x a) (y b)) p)) (list a b))) (var-names$62009) (var-values$62010))) ("    " ERROR ((exception "Unbound variable" p-ls) (name . "match-letrec mnieper") (source foo a) (var-names) (var-values))) ("    " ERROR ((exception "Unbound variable" p-ls) (gen-name . "test-84") (name$56945 . "match-letrec") (source$56947 match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) (var-names$56948) (var-values$56949)))) (ERROR . 3) (trailing . #t) (PASS . 81) (count . 84) (skip-group? . #f) (level . 0) (verbose . #f) (parent. #f) (start-time . 1599310110.0))
+cyclone> (features)
+(cyclone version-0.19 linux r7rs ieee-float full-unicode posix)
