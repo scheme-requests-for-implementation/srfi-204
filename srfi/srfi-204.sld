@@ -40,6 +40,15 @@
 			       value)
 		 (gb-slot-set! inst n value))))))
       (include "srfi-204/srfi-204.scm")))
+  (gerbil
+    (define-library (srfi-204)
+      (export match match-lambda match-lambda* match-let match-letrec match-let*
+	      ___ **1 =.. *.. *** ? $ struct object get!)
+      (import (scheme base))
+      (include "auxiliary-syntax.scm")
+      (begin
+	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))
+      (include "srfi-204/srfi-204.scm")))
   (guile
     (define-module (srfi-204))
     (export match match-lambda match-lambda* match-let match-let*
