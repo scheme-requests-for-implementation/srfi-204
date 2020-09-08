@@ -17,6 +17,8 @@
     (define test-name "gauche-match-test")
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
     (include "match-common.scm"))
+  (gerbil
+    (include "../gerbil-test.ss")) ; doesn't work
   (larceny
     ;;NOTE run like:
     ;; $rlwrap larceny -r7rs -I ..

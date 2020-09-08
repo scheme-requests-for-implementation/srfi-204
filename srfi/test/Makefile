@@ -21,6 +21,8 @@ CHEZSCHEME = chezscheme
 CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
+GXI = gxi
+GXIFLAGS = --lang r7rs
 
 # chose implentation based on TESTSCHEME
 # from environment
@@ -44,8 +46,13 @@ ifeq ($(TESTSCHEME), chibi-scheme)
 	SCM = $(CHIBISHCEME)
 	SCMFLAGS = $(CHIBISHCEMEFLAGS)
 else
+ifeq ($(TESTSCHEME), gxi)
+	SCM = $(GXI)
+	SCMFLAGS = $(GXIFLAGS)
+else
 	SCM = $(GUILE)
 	SCMFLAGS = $(GUILEFLAGS)
+endif
 endif
 endif
 endif

@@ -20,3 +20,5 @@ outputs 5040 and then returns to command line.
 but when I try to do match.scm I get
 2.2-15: error: identifier ‘define-library’ not bound
 11.11-15: error: identifier ‘match’ not bound
+
+same issue with updated module

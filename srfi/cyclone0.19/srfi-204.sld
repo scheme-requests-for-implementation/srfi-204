@@ -1,3 +1,68 @@
+;;;; Cyclone Scheme
+;;;; https://github.com/justinethier/cyclone
+;;;; https://github.com/scheme-requests-for-implementation/srfi-204
+;;;;
+;;;; This module provides a hygienic pattern matcher based on
+;;;; code from Chibi Scheme's (chibi match) library. Which in
+;;;; turn was built using Alex Shinn's match.scm.
+;;;;
+(define-library (cyclone0.19 srfi-204)
+  (import
+    (scheme base)
+    ;(scheme write)
+  )
+  ;(export match match-lambda match-lambda* match-let match-letrec match-let*)
+  (export
+    match-syntax-error
+    match
+    match-next
+    match-one
+    match-underscore
+    match-two
+    match-quasiquote
+    match-quasiquote-step
+    match-drop-ids
+    match-tuck-ids
+    match-drop-first-arg
+    match-gen-or
+    match-gen-or-step
+    match-gen-ellipsis/qq
+    match-gen-ellipsis/range
+    match-gen-ellipsis
+    match-verify-no-ellipsis
+    match-gen-search
+    match-vector
+    match-vector-two
+    match-vector-step
+    match-gen-vector-ellipsis
+    match-vector-tail
+    match-vector-tail-two
+    match-record-refs
+    match-record-named-refs
+    match-extract-underscore
+    match-extract-vars
+    match-extract-vars-step
+    match-extract-quasiquote-vars
+    match-extract-quasiquote-vars-step
+    match-lambda
+    match-lambda*
+    match-let
+    match-letrec
+    match-let/aux
+    match-named-let
+    match-let*
+    match-letrec-one
+    match-letrec-two
+    match-letrec-two-step
+    match-rewrite
+    match-rewrite2
+    match-cons
+    match-check-identifier
+    match-check-ellipsis
+    match-bound-identifier=?
+  )
+  (begin
+
 ;;;; match.scm -- portable hygienic pattern matcher -*- coding: utf-8 -*-
 ;;
 ;; This code is written by Alex Shinn and placed in the
@@ -86,19 +151,26 @@
 ;;> \scheme{___} is provided as an alias for \scheme{...} when it is
 ;;> inconvenient to use the ellipsis (as in a syntax-rules template).
 
-;;> The \scheme{..1} syntax is exactly like the \scheme{...} except
+;;> The \scheme{**1} syntax is exactly like the \scheme{...} except
 ;;> that it matches one or more repetitions (like a regexp "+").
 
-;;> \example{(match (list 1 2) ((a b c ..1) c))}
-;;> \example{(match (list 1 2 3) ((a b c ..1) c))}
+;;> \example{(match (list 1 2) ((a b c **1) c))}
+;;> \example{(match (list 1 2 3) ((a b c **1) c))}
 
-;;> The \scheme{..=} syntax is like \scheme{...} except that it takes
-;;> a tailing integer \scheme{<n>} and requires the pattern to match
-;;> exactly \scheme{<n>} times.
+;;> The \scheme{*..} syntax is like \scheme{...} except that it takes
+;;> two trailing integers \scheme{<n>} and \scheme{<m>}, and requires
+;;> the pattern to match from \scheme{<n>} times.
 
-;;> \example{(match (list 1 2) ((a b ..= 2) b))}
-;;> \example{(match (list 1 2 3) ((a b ..= 2) b))}
-;;> \example{(match (list 1 2 3 4) ((a b ..= 2) b))}
+;;> \example{(match (list 1 2 3) ((a b *.. 2 4) b))}
+;;> \example{(match (list 1 2 3 4 5 6) ((a b *.. 2 4) b))}
+;;> \example{(match (list 1 2 3 4) ((a b *.. 2 4 c) c))}
+
+;;> The \scheme{(<expr> =.. <n>)} syntax is a shorthand for
+;;> \scheme{(<expr> *.. <n> <n>)}.
+
+;;> \example{(match (list 1 2) ((a b =.. 2) b))}
+;;> \example{(match (list 1 2 3) ((a b =.. 2) b))}
+;;> \example{(match (list 1 2 3 4) ((a b =.. 2) b))}
 
 ;;> The boolean operators \scheme{and}, \scheme{or} and \scheme{not}
 ;;> can be used to group and negate patterns analogously to their
@@ -235,7 +307,11 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
-;; 2020/07/06 - adding `..=' and `..*' patterns; fixing ,@ patterns
+;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
+;; 2020/08/21 - handle underscores separately, not as literals
+;; 2020/08/21 - fixing match-letrec with unhygienic insertion
+;; 2020/08/03 - added bindings for auxiliary syntax
+;; 2020/07/06 - adding `=..' and `*..' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
 ;; 2015/05/09 - fixing bug in var extraction of quasiquote patterns
@@ -246,7 +322,7 @@
 ;; 2011/09/25 - fixing bug when directly matching an identifier repeated in
 ;;              the pattern (thanks to Stefan Israelsson Tampe)
 ;; 2011/01/27 - fixing bug when matching tail patterns against improper lists
-;; 2010/09/26 - adding `..1' patterns (thanks to Ludovic Courtès)
+;; 2010/09/26 - adding `**1' patterns (thanks to Ludovic Courtès)
 ;; 2010/09/07 - fixing identifier extraction in some `...' and `***' patterns
 ;; 2009/11/25 - adding `***' tree search patterns
 ;; 2008/03/20 - fixing bug where (a ...) matched non-lists
@@ -290,19 +366,19 @@
 ;; code below that the binding `v' is a direct variable reference, not
 ;; an expression.
 
-(define-syntax shinn-match
+(define-syntax match
   (syntax-rules ()
-    ((shinn-match)
+    ((match)
      (match-syntax-error "missing match expression"))
-    ((shinn-match atom)
+    ((match atom)
      (match-syntax-error "no match clauses"))
-    ((shinn-match (app ...) (pat . body) ...)
+    ((match (app ...) (pat . body) ...)
      (let ((v (app ...)))
        (match-next v ((app ...) (set! (app ...))) (pat . body) ...)))
-    ((shinn-match #(vec ...) (pat . body) ...)
+    ((match #(vec ...) (pat . body) ...)
      (let ((v #(vec ...)))
        (match-next v (v (set! v)) (pat . body) ...)))
-    ((shinn-match atom (pat . body) ...)
+    ((match atom (pat . body) ...)
      (let ((v atom))
        (match-next v (atom (set! atom)) (pat . body) ...)))
     ))
@@ -327,7 +403,7 @@
      (match-next v g+s (pat (=> failure) . body) . rest))))
 
 ;; MATCH-ONE first checks for ellipsis patterns, otherwise passes on to
-;; MATCH-TWO.
+;; MATCH-UNDERSCORE.
 
 (define-syntax match-one
   (syntax-rules ()
@@ -337,11 +413,39 @@
     ((match-one v (p q . r) g+s sk fk i)
      (match-check-ellipsis
       q
-      (match-extract-vars p (match-gen-ellipsis v p r  g+s sk fk i) i ())
-      (match-two v (p q . r) g+s sk fk i)))
+      (match-extract-underscore p (match-gen-ellipsis v p r  g+s sk fk i) i ())
+      (match-underscore v (p q . r) g+s sk fk i)))
     ;; Go directly to MATCH-TWO.
     ((match-one . x)
-     (match-two . x))))
+     (match-underscore . x))))
+
+;; Helper functions
+;; this may need to be changed, I've had trouble with cond-expand and
+;; R6RS
+(cond-expand
+  (r7rs
+    (define-syntax underscore?
+      (syntax-rules (_)
+	((_ _ kt kf) kt)
+	((_ x kt kf) kf))))
+  (r6rs
+    ;some r7rs's don't like #' syntax
+    (import (srfi-204 underscore)))
+  (else
+    (define-syntax underscore?
+      (syntax-rules (_)
+	((_ _ kt kf) kt)
+	((_ x kt kf) kf)))))
+
+;; MATCH-UNDERSCORE first checks for underscore patterns, otherwise passes
+;; on to MATCH-TWO.
+
+(define-syntax match-underscore
+  (syntax-rules ()
+    ((match-underscore v p g+s (sk ...) fk i)
+     (underscore? p
+		  (sk ... i)
+		  (match-two v p g+s (sk ...) fk i)))))
 
 ;; This is the guts of the pattern matcher.  We are passed a lot of
 ;; information in the form:
@@ -361,7 +465,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (_ ___ ..1 ..= ..* *** quote quasiquote ? $ struct @ object = and or not set! get!)
+  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -375,7 +479,7 @@
     ((match-two v (or p) . x)
      (match-one v p . x))
     ((match-two v (or p ...) g+s sk fk i)
-     (match-extract-vars (or p ...) (match-gen-or v (p ...) g+s sk fk i) i ()))
+     (match-extract-underscore (or p ...) (match-gen-or v (p ...) g+s sk fk i) i ()))
     ((match-two v (not p) g+s (sk ...) fk i)
      (match-one v p g+s (match-drop-ids fk) (sk ... i) i))
     ((match-two v (get! getter) (g s) (sk ...) fk i)
@@ -387,26 +491,26 @@
     ((match-two v (= proc p) . x)
      (let ((w (proc v))) (match-one w p . x)))
     ((match-two v (p ___ . r) g+s sk fk i)
-     (match-extract-vars p (match-gen-ellipsis v p r g+s sk fk i) i ()))
+     (match-extract-underscore p (match-gen-ellipsis v p r g+s sk fk i) i ()))
     ((match-two v (p) g+s sk fk i)
      (if (and (pair? v) (null? (cdr v)))
          (let ((w (car v)))
            (match-one w p ((car v) (set-car! v)) sk fk i))
          fk))
     ((match-two v (p *** q) g+s sk fk i)
-     (match-extract-vars p (match-gen-search v p q g+s sk fk i) i ()))
+     (match-extract-underscore p (match-gen-search v p q g+s sk fk i) i ()))
     ((match-two v (p *** . q) g+s sk fk i)
      (match-syntax-error "invalid use of ***" (p *** . q)))
-    ((match-two v (p ..1) g+s sk fk i)
+    ((match-two v (p **1) g+s sk fk i)
      (if (pair? v)
          (match-one v (p ___) g+s sk fk i)
          fk))
-    ((match-two v (p ..= n . r) g+s sk fk i)
-     (match-extract-vars
+    ((match-two v (p =.. n . r) g+s sk fk i)
+     (match-extract-underscore
       p
       (match-gen-ellipsis/range n n v p r g+s sk fk i) i ()))
-    ((match-two v (p ..* n m . r) g+s sk fk i)
-     (match-extract-vars
+    ((match-two v (p *.. n m . r) g+s sk fk i)
+     (match-extract-underscore
       p
       (match-gen-ellipsis/range n m v p r g+s sk fk i) i ()))
     ((match-two v ($ rec p ...) g+s sk fk i)
@@ -416,10 +520,6 @@
     ((match-two v (struct rec p ...) g+s sk fk i)
      (if (is-a? v rec)
          (match-record-refs v rec 0 (p ...) g+s sk fk i)
-         fk))
-    ((match-two v (@ rec p ...) g+s sk fk i)
-     (if (is-a? v rec)
-         (match-record-named-refs v rec (p ...) g+s sk fk i)
          fk))
     ((match-two v (object rec p ...) g+s sk fk i)
      (if (is-a? v rec)
@@ -433,9 +533,8 @@
                       fk
                       i))
          fk))
-;    ((match-two v #(p ...) g+s . x)
-;     (match-vector v 0 () (p ...) . x))
-    ((match-two v _ g+s (sk ...) fk i) (sk ... i))
+    ((match-two v #(p ...) g+s . x)
+     (match-vector v 0 () (p ...) . x))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
@@ -466,7 +565,7 @@
     ((_ v ((unquote-splicing p) . rest) g+s sk fk i)
      ;; TODO: it is an error to have another unquote-splicing in rest,
      ;; check this and signal explicitly
-     (match-extract-vars
+     (match-extract-underscore
       p
       (match-gen-ellipsis/qq v p rest g+s sk fk i) i ()))
     ((_ v (quasiquote p) g+s sk fk i . depth)
@@ -483,11 +582,11 @@
           (match-quasiquote-step x q g+s sk fk depth)
           fk i . depth))
        fk))
-;    ((_ v #(elt ...) g+s sk fk i . depth)
-;     (if (vector? v)
-;       (let ((ls (vector->list v)))
-;         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
-;       fk))
+    ((_ v #(elt ...) g+s sk fk i . depth)
+     (if (vector? v)
+       (let ((ls (vector->list v)))
+         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
+       fk))
     ((_ v x g+s sk fk i . depth)
      (match-one v 'x g+s sk fk i))))
 
@@ -523,7 +622,8 @@
 (define-syntax match-gen-or
   (syntax-rules ()
     ((_ v p g+s (sk ...) fk (i ...) ((id id-ls) ...))
-     (let ((sk2 (lambda (id ...) (sk ... (i ... id ...)))))
+     (let ((sk2 (lambda (id ...) (sk ... (i ... id ...))))
+           (id (if #f #f)) ...)
        (match-gen-or-step v p g+s (match-drop-ids (sk2 id ...)) fk (i ...))))))
 
 (define-syntax match-gen-or-step
@@ -572,7 +672,7 @@
                          fk i)))
            (else
             fk)))))
-    ((_ v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ v p r g+s sk fk (i ...) ((id id-ls) ...))
      ;; general case, trailing patterns to match, keep track of the
      ;; remaining list length so we don't need any backtracking
      (match-verify-no-ellipsis
@@ -586,14 +686,14 @@
               (cond
                 ((= n tail-len)
                  (let ((id (reverse id-ls)) ...)
-                   (match-one ls r (#f #f) (sk ...) fk i)))
+                   (match-one ls r (#f #f) sk fk (i ... id ...))))
                 ((pair? ls)
                  (let ((w (car ls)))
                    (match-one w p ((car ls) (set-car! ls))
                               (match-drop-ids
                                (loop (cdr ls) (- n 1) (cons id id-ls) ...))
                               fk
-                              i)))
+                              (i ...))))
                 (else
                  fk)))))))))
 
@@ -601,7 +701,7 @@
 
 (define-syntax match-gen-ellipsis/qq
   (syntax-rules ()
-    ((_ v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ v p r g+s (sk ...) fk (i ...) ((id id-ls) ...))
      (match-verify-no-ellipsis
       r
       (let* ((tail-len (length 'r))
@@ -613,14 +713,14 @@
               (cond
                ((= n tail-len)
                 (let ((id (reverse id-ls)) ...)
-                  (match-quasiquote ls r g+s (sk ...) fk i)))
+                  (match-quasiquote ls r g+s (sk ...) fk (i ... id ...))))
                ((pair? ls)
                 (let ((w (car ls)))
                   (match-one w p ((car ls) (set-car! ls))
                              (match-drop-ids
                               (loop (cdr ls) (- n 1) (cons id id-ls) ...))
                              fk
-                             i)))
+                             (i ...))))
                (else
                 fk)))))))))
 
@@ -630,7 +730,7 @@
 
 (define-syntax match-gen-ellipsis/range
   (syntax-rules ()
-    ((_ %lo %hi v p r g+s (sk ...) fk i ((id id-ls) ...))
+    ((_ %lo %hi v p r g+s (sk ...) fk (i ...) ((id id-ls) ...))
      ;; general case, trailing patterns to match, keep track of the
      ;; remaining list length so we don't need any backtracking
      (match-verify-no-ellipsis
@@ -645,14 +745,14 @@
               (cond
                 ((= j len)
                  (let ((id (reverse id-ls)) ...)
-                   (match-one ls r (#f #f) (sk ...) fk i)))
+                   (match-one ls r (#f #f) (sk ...) fk (i ... id ...))))
                 ((pair? ls)
                  (let ((w (car ls)))
                    (match-one w p ((car ls) (set-car! ls))
                               (match-drop-ids
                                (loop (cdr ls) (+ j 1) (cons id id-ls) ...))
                               fk
-                              i)))
+                              (i ...))))
                 (else
                  fk)))
             fk))))))
@@ -778,7 +878,7 @@
 (define-syntax match-vector-tail
   (syntax-rules ()
     ((_ v p n len sk fk i)
-     (match-extract-vars p (match-vector-tail-two v p n len sk fk i) i ()))))
+     (match-extract-underscore p (match-vector-tail-two v p n len sk fk i) i ()))))
 
 (define-syntax match-vector-tail-two
   (syntax-rules ()
@@ -809,6 +909,16 @@
     ((_ v rec () g+s (sk ...) fk i)
      (sk ... i))))
 
+;; Extract underscore in a pattern, otherwise pass on to
+;; MATCH-EXTRACT-VARS
+
+(define-syntax match-extract-underscore
+  (syntax-rules ()
+    ((match-extract-underscore p (k ...) i v)
+     (underscore? p
+		  (k ... v)
+		  (match-extract-vars p (k ...) i v)))))
+
 ;; Extract all identifiers in a pattern.  A little more complicated
 ;; than just looking for symbols, we need to ignore special keywords
 ;; and non-pattern forms (such as the predicate expression in ?
@@ -822,46 +932,43 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (_ ___ ..1 ..= ..* *** ? $ struct @ object = quote quasiquote and or not get! set!)
+  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set!)
     ((match-extract-vars (? pred . p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars ($ rec . p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars (struct rec . p) . x)
-     (match-extract-vars p . x))
-    ((match-extract-vars (@ rec (f p) ...) . x)
-     (match-extract-vars (p ...) . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars (object rec (f p) ...) . x)
-     (match-extract-vars (p ...) . x))
+     (match-extract-underscore (p ...) . x))
     ((match-extract-vars (= proc p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars (quote x) (k ...) i v)
      (k ... v))
     ((match-extract-vars (quasiquote x) k i v)
      (match-extract-quasiquote-vars x k i v (#t)))
     ((match-extract-vars (and . p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars (or . p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ((match-extract-vars (not . p) . x)
-     (match-extract-vars p . x))
+     (match-extract-underscore p . x))
     ;; A non-keyword pair, expand the CAR with a continuation to
     ;; expand the CDR.
     ((match-extract-vars (p q . r) k i v)
      (match-check-ellipsis
       q
-      (match-extract-vars (p . r) k i v)
-      (match-extract-vars p (match-extract-vars-step (q . r) k i v) i ())))
+      (match-extract-underscore (p . r) k i v)
+      (match-extract-underscore p (match-extract-vars-step (q . r) k i v) i ())))
     ((match-extract-vars (p . q) k i v)
-     (match-extract-vars p (match-extract-vars-step q k i v) i ()))
-;    ((match-extract-vars #(p ...) . x)
-;     (match-extract-vars (p ...) . x))
-    ((match-extract-vars _ (k ...) i v)    (k ... v))
+     (match-extract-underscore p (match-extract-vars-step q k i v) i ()))
+    ((match-extract-vars #(p ...) . x)
+     (match-extract-underscore (p ...) . x))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
-    ((match-extract-vars ..1 (k ...) i v)  (k ... v))
-    ((match-extract-vars ..= (k ...) i v)  (k ... v))
-    ((match-extract-vars ..* (k ...) i v)  (k ... v))
+    ((match-extract-vars **1 (k ...) i v)  (k ... v))
+    ((match-extract-vars =.. (k ...) i v)  (k ... v))
+    ((match-extract-vars *.. (k ...) i v)  (k ... v))
     ;; This is the main part, the only place where we might add a new
     ;; var if it's an unbound symbol.
     ((match-extract-vars p (k ...) (i ...) v)
@@ -881,7 +988,7 @@
 (define-syntax match-extract-vars-step
   (syntax-rules ()
     ((_ p k i v ((v2 v2-ls) ...))
-     (match-extract-vars p k (v2 ... . i) ((v2 v2-ls) ... . v)))
+     (match-extract-underscore p k (v2 ... . i) ((v2 v2-ls) ... . v)))
     ))
 
 (define-syntax match-extract-quasiquote-vars
@@ -891,15 +998,15 @@
     ((match-extract-quasiquote-vars (unquote-splicing x) k i v d)
      (match-extract-quasiquote-vars (unquote x) k i v d))
     ((match-extract-quasiquote-vars (unquote x) k i v (#t))
-     (match-extract-vars x k i v))
+     (match-extract-underscore x k i v))
     ((match-extract-quasiquote-vars (unquote x) k i v (#t . d))
      (match-extract-quasiquote-vars x k i v d))
     ((match-extract-quasiquote-vars (x . y) k i v d)
      (match-extract-quasiquote-vars
       x
       (match-extract-quasiquote-vars-step y k i v d) i () d))
-;    ((match-extract-quasiquote-vars #(x ...) k i v d)
-;     (match-extract-quasiquote-vars (x ...) k i v d))
+    ((match-extract-quasiquote-vars #(x ...) k i v d)
+     (match-extract-quasiquote-vars (x ...) k i v d))
     ((match-extract-quasiquote-vars x (k ...) i v d)
      (k ... v))
     ))
@@ -920,7 +1027,7 @@
 
 (define-syntax match-lambda
   (syntax-rules ()
-    ((_ (pattern . body) ...) (lambda (expr) (shinn-match expr (pattern . body) ...)))))
+    ((_ (pattern . body) ...) (lambda (expr) (match expr (pattern . body) ...)))))
 
 ;;> Similar to \scheme{match-lambda}.  Creates a procedure of any
 ;;> number of arguments, and matches the argument list against each
@@ -939,34 +1046,24 @@
 (define-syntax match-let
   (syntax-rules ()
     ((_ ((var value) ...) . body)
-     (match-let/helper let () () ((var value) ...) . body))
+     (match-let/aux () () ((var value) ...) . body))
     ((_ loop ((var init) ...) . body)
      (match-named-let loop () ((var init) ...) . body))))
 
-;;> Similar to \scheme{match-let}, but analogously to \scheme{letrec}
-;;> matches and binds the variables with all match variables in scope.
-
-(define-syntax match-letrec
+(define-syntax match-let/aux
   (syntax-rules ()
-    ((_ ((var value) ...) . body)
-     (match-let/helper letrec () () ((var value) ...) . body))))
-
-(define-syntax match-let/helper
-  (syntax-rules ()
-    ((_ let ((var expr) ...) () () . body)
+    ((_ ((var expr) ...) () () . body)
      (let ((var expr) ...) . body))
-    ((_ let ((var expr) ...) ((pat tmp) ...) () . body)
+    ((_ ((var expr) ...) ((pat tmp) ...) () . body)
      (let ((var expr) ...)
        (match-let* ((pat tmp) ...)
          . body)))
-    ((_ let (v ...) (p ...) (((a . b) expr) . rest) . body)
-     (match-let/helper
-      let (v ... (tmp expr)) (p ... ((a . b) tmp)) rest . body))
-    ((_ let (v ...) (p ...) ((#(a ...) expr) . rest) . body)
-     (match-let/helper
-      let (v ... (tmp expr)) (p ... (#(a ...) tmp)) rest . body))
-    ((_ let (v ...) (p ...) ((a expr) . rest) . body)
-     (match-let/helper let (v ... (a expr)) (p ...) rest . body))))
+    ((_ (v ...) (p ...) (((a . b) expr) . rest) . body)
+     (match-let/aux (v ... (tmp expr)) (p ... ((a . b) tmp)) rest . body))
+    ((_ (v ...) (p ...) ((#(a ...) expr) . rest) . body)
+     (match-let/aux (v ... (tmp expr)) (p ... (#(a ...) tmp)) rest . body))
+    ((_ (v ...) (p ...) ((a expr) . rest) . body)
+     (match-let/aux (v ... (a expr)) (p ...) rest . body))))
 
 (define-syntax match-named-let
   (syntax-rules ()
@@ -988,16 +1085,140 @@
     ((_ () . body)
      (let () . body))
     ((_ ((pat expr) . rest) . body)
-     (shinn-match expr (pat (match-let* rest . body))))))
+     (match expr (pat (match-let* rest . body))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Challenge stage - unhygienic insertion.
+;;
+;; It's possible to implement match-letrec without unhygienic
+;; insertion by building the let+set! logic directly into the match
+;; code above (passing a parameter to distinguish let vs letrec).
+;; However, it makes the code much more complicated, so we religate
+;; the complexity here.
+
+;;> Similar to \scheme{match-let}, but analogously to \scheme{letrec}
+;;> matches and binds the variables with all match variables in scope.
+
+(define-syntax match-letrec
+  (syntax-rules ()
+    ((_ ((pat val) ...) . body)
+     (match-letrec-one (pat ...) (((pat val) ...) . body) ()))))
+
+;; 1: extract all ids in all patterns
+(define-syntax match-letrec-one
+  (syntax-rules ()
+    ((_ (pat . rest) expr ((id tmp) ...))
+     (match-extract-underscore
+      pat (match-letrec-one rest expr) (id ...) ((id tmp) ...)))
+    ((_ () expr ((id tmp) ...))
+     (match-letrec-two expr () ((id tmp) ...)))))
+
+;; 2: rewrite ids
+(define-syntax match-letrec-two
+  (syntax-rules ()
+    ((_ (() . body) ((var2 val2) ...) ((id tmp) ...))
+     ;; We know the ids, their tmp names, and the renamed patterns
+     ;; with the tmp names - expand to the classic letrec pattern of
+     ;; let+set!.  That is, we bind the original identifiers written
+     ;; in the source with let, run match on their renamed versions,
+     ;; then set! the originals to the matched values.
+     (let ((id (if #f #f)) ...)
+       (match-let ((var2 val2) ...)
+          (set! id tmp) ...
+          . body)))
+    ((_ (((var val) . rest) . body) ((var2 val2) ...) ids)
+     (match-rewrite
+      var
+      ids
+      (match-letrec-two-step (rest . body) ((var2 val2) ...) ids val)))))
+
+(define-syntax match-letrec-two-step
+  (syntax-rules ()
+    ((_ next (rewrites ...) ids val var)
+     (match-letrec-two next (rewrites ... (var val)) ids))))
+
+;; This is where the work is done.  To rewrite all occurrences of any
+;; id with its tmp, we need to walk the expression, using CPS to
+;; restore the original structure.  We also need to be careful to pass
+;; the tmp directly to the macro doing the insertion so that it
+;; doesn't get renamed.  This trick was originally found by Al*
+;; Petrofsky in a message titled "How to write seemingly unhygienic
+;; macros using syntax-rules" sent to comp.lang.scheme in Nov 2001.
+
+(define-syntax match-rewrite
+  (syntax-rules (quote)
+    ((match-rewrite (quote x) ids (k ...))
+     (k ... (quote x)))
+    ((match-rewrite (p . q) ids k)
+     (match-rewrite p ids (match-rewrite2 q ids (match-cons k))))
+    ((match-rewrite () ids (k ...))
+     (k ... ()))
+    ((match-rewrite p () (k ...))
+     (k ... p))
+    ((match-rewrite p ((id tmp) . rest) (k ...))
+     (match-bound-identifier=? p id (k ... tmp) (match-rewrite p rest (k ...))))
+    ))
+
+(define-syntax match-rewrite2
+  (syntax-rules ()
+    ((match-rewrite2 q ids (k ...) p)
+     (match-rewrite q ids (k ... p)))))
+
+(define-syntax match-cons
+  (syntax-rules ()
+    ((match-cons (k ...) p q)
+     (k ... (p . q)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
 
+(cond-expand ;; old er cyclone macros had TODO: good enough, used
+ (chibi      ;; symbol? where chibi uses identifier. Using portable version
+  (define-syntax match-check-ellipsis ;; for now
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (compare '... (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-check-identifier
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (identifier? (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-bound-identifier=?
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (eq? (cadr expr) (car (cddr expr)))
+           (cadr (cddr expr))
+           (car (cddr (cddr expr))))))))
+
+ (chicken
+  (define-syntax match-check-ellipsis
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (compare '... (cadr expr))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-check-identifier
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (and (symbol? (cadr expr)) (not (keyword? (cadr expr))))
+           (car (cddr expr))
+           (cadr (cddr expr))))))
+  (define-syntax match-bound-identifier=?
+    (er-macro-transformer
+     (lambda (expr rename compare)
+       (if (eq? (cadr expr) (car (cddr expr)))
+           (cadr (cddr expr))
+           (car (cddr (cddr expr))))))))
+
+ (else
   ;; Portable versions
   ;;
   ;; This is the R7RS version.  For other standards, and
   ;; implementations not yet up-to-spec we have to use some tricks.
+
   ;;
   ;;   (define-syntax match-check-ellipsis
   ;;     (syntax-rules (...)
@@ -1041,3 +1262,16 @@
                ;; otherwise x is a non-symbol datum
                ((sym? y sk fk) fk))))
          (sym? abracadabra success-k failure-k)))))
+
+  ;; This check is inlined in some cases above, but included here for
+  ;; the convenience of match-rewrite.
+  (define-syntax match-bound-identifier=?
+    (syntax-rules ()
+      ((match-bound-identifier=? a b sk fk)
+       (let-syntax ((b (syntax-rules ())))
+         (let-syntax ((eq (syntax-rules (b)
+                            ((eq b) sk)
+                            ((eq _) fk))))
+           (eq a))))))
+  ))
+))

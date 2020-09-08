@@ -1,16 +1,17 @@
 Test suite: gerbil-match-test
 Test case: test: any
-gerbil-v0.16-109-g58c5eef2... check (match 'any (_ 'ok)) is equal? to ok
+gerbil-v0.16-109-g58c5eef2
+... check (match 'any (_ 'ok)) is equal? to ok
 ... 1 checks OK
 Test case: test: symbol
 ... check (match 'ok (x x)) is equal? to ok
-*** ERROR: (check equal? (match 'ok (x x)) 'ok) at "test.ss"@19.14: Unbound variable: x
+... 1 checks OK
 Test case: test: number
 ... check (match 28 (28 'ok)) is equal? to ok
 ... 1 checks OK
 Test case: test: string
 ... check (match good (bad 'fail) (good 'ok)) is equal? to ok
-*** FAILED: (check equal? (match good (bad 'fail) (good 'ok)) 'ok) at "test.ss"@23.14; value: fail
+... 1 checks OK
 Test case: test: literal symbol
 ... check (match 'good ('bad 'fail) ('good 'ok)) is equal? to ok
 ... 1 checks OK
@@ -19,10 +20,10 @@ Test case: test: null
 ... 1 checks OK
 Test case: test: pair
 ... check (match '(ok) ((x) x)) is equal? to ok
-*** ERROR: (check equal? (match '(ok) ((x) x)) 'ok) at "test.ss"@29.14: Unbound variable: x
+... 1 checks OK
 Test case: test: vector
 ... check (match '#(ok) (#(x) x)) is equal? to ok
-*** ERROR: (check equal? (match '#(ok) (#(x) x)) 'ok) at "test.ss"@31.14: Unbound variable: x
+... 1 checks OK
 Test case: test: any doubled
 ... check (match '(1 2) ((_ _) 'ok)) is equal? to ok
 ... 1 checks OK
@@ -31,7 +32,7 @@ Test case: test: and empty
 ... 1 checks OK
 Test case: test: and single
 ... check (match 'ok ((and x) x)) is equal? to ok
-*** ERROR: (check equal? (match 'ok ((and x) x)) 'ok) at "test.ss"@37.14: Unbound variable: x
+... 1 checks OK
 Test case: test: and double
 ... check (match 'ok ((and (? symbol?) y) 'ok)) is equal? to ok
 ... 1 checks OK
@@ -43,7 +44,7 @@ Test case: test: or single
 ... 1 checks OK
 Test case: test: or double
 ... check (match 'ok ((or (? symbol? y) y) y)) is equal? to ok
-*** ERROR: (check equal? (match 'ok ((or (? symbol? y) y) y)) 'ok) at "test.ss"@45.14: Unbound variable: y
+... 1 checks OK
 Test case: test: not
 ... check (match 28 ((not (a . b)) 'ok)) is equal? to ok
 ... 1 checks OK
@@ -52,52 +53,52 @@ Test case: test: pred
 ... 1 checks OK
 Test case: test: named pred
 ... check (match 28 ((? number? x) (+ x 1))) is equal? to 29
-*** ERROR: (check equal? (match 28 ((? number? x) (+ x 1))) 29) at "test.ss"@51.14: Unbound variable: x
+... 1 checks OK
 Test case: test: duplicate symbols pass
 ... check (match '(ok . ok) ((x . x) x)) is equal? to ok
-*** ERROR: (check equal? (match '(ok . ok) ((x . x) x)) 'ok) at "test.ss"@54.14: Unbound variable: x
+... 1 checks OK
 Test case: test: duplicate symbols fail
 ... check (match '(ok . bad) ((x . x) 'bad) (else 'ok)) is equal? to ok
-*** FAILED: (check equal? (match '(ok . bad) ((x . x) 'bad) (else 'ok)) 'ok) at "test.ss"@56.14; value: bad
+... 1 checks OK
 Test case: test: duplicate symbols samth
 ... check (match '(ok . ok) ((x quote bad) x) (('ok . x) x)) is equal? to ok
-*** ERROR: (check equal? (match '(ok . ok) ((x quote bad) x) (('ok . x) x)) 'ok) at "test.ss"@59.14: Unbound variable: x
+... 1 checks OK
 Test case: test: duplicate symbols bound
 ... check (let ((a '(1 2))) (match a ((and (a 2) (1 b)) (+ a b)) (_ #f))) is equal? to 3
-*** ERROR: (check equal? (let ((a '(1 2))) (match a ((and (a 2) (1 b)) (+ a b)) (_ #f))) 3) at "test.ss"@62.14: Unbound variable: b
+... 1 checks OK
 Test case: test: duplicate quasiquote
 ... check (match '(a b) ((or `(a ,x) `(,x b)) 'ok) (_ #f)) is equal? to ok
 ... 1 checks OK
 Test case: test: ellipses
 ... check (match '((a . 1) (b . 2) (c . 3)) (((x . y) ___) (list x y))) is equal? to ((a b c) (1 2 3))
-*** ERROR: (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ___) (list x y))) '((a b c) (1 2 3))) at "test.ss"@69.14: Unbound variable: x
+... 1 checks OK
 Test case: test: real ellipses
 ... check (match '((a . 1) (b . 2) (c . 3)) (((x . y) ...) (list x y))) is equal? to ((a b c) (1 2 3))
-*** ERROR: (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ...) (list x y))) '((a b c) (1 2 3))) at "test.ss"@74.14: Unbound variable: x
+... 1 checks OK
 Test case: test: vector ellipses
 ... check (match '#(1 2 3 (a . 1) (b . 2) (c . 3)) (#(a b c (hd . tl) ...) (list a b c hd tl))) is equal? to (1 2 3 (a b c) (1 2 3))
-*** ERROR: (check equal? (match '#(1 2 3 (a . 1) (b . 2) (c . 3)) (#(a b c (hd . tl) ...) (list a b c hd tl))) '(1 2 3 (a b c) (1 2 3))) at "test.ss"@79.14: Unbound variable: a
+... 1 checks OK
 Test case: test: pred ellipses
 ... check (match '(1 2 3) (((? odd? n) ___) n) (((? number? n) ___) n)) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(1 2 3) (((? odd? n) ___) n) (((? number? n) ___) n)) '(1 2 3)) at "test.ss"@84.14: Unbound variable: n
+... 1 checks OK
 Test case: test: failure continuation
 ... check (match '(1 2) ((a . b) (=> next) (if (even? a) 'fail (next))) ((a . b) 'ok)) is equal? to ok
-*** ERROR: (check equal? (match '(1 2) ((a . b) (=> next) (if (even? a) 'fail (next))) ((a . b) 'ok)) 'ok) at "test.ss"@90.14: Unbound variable: a
+... 1 checks OK
 Test case: test: let
 ... check (match-let ((x 'ok) (y '(o k))) y) is equal? to (o k)
 ... 1 checks OK
 Test case: test: let*
 ... check (match-let* ((x 'f) (y 'o) ((z w) (list y x))) (list x y z w)) is equal? to (f o o f)
-*** ERROR: (check equal? (match-let* ((x 'f) (y 'o) ((z w) (list y x))) (list x y z w)) '(f o o f)) at "test.ss"@100.14: Unbound variable: y
+... 1 checks OK
 Test case: test: getter car
 ... check (match '(1 . 2) (((get! a) . b) (list (a) b))) is equal? to (1 2)
-*** ERROR: (check equal? (match '(1 . 2) (((get! a) . b) (list (a) b))) '(1 2)) at "test.ss"@104.14: Unbound variable: b
+... 1 checks OK
 Test case: test: getter cdr
 ... check (match '(1 . 2) ((a get! b) (list a (b)))) is equal? to (1 2)
-*** ERROR: (check equal? (match '(1 . 2) ((a get! b) (list a (b)))) '(1 2)) at "test.ss"@108.14: Unbound variable: a
+... 1 checks OK
 Test case: test: getter vector
 ... check (match '#(1 2 3) (#((get! a) b c) (list (a) b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '#(1 2 3) (#((get! a) b c) (list (a) b c))) '(1 2 3)) at "test.ss"@112.14: Unbound variable: b
+... 1 checks OK
 Test case: test: setter car
 ... check (let ((x (cons 1 2))) (match x (((set! a) . b) (a 3))) x) is equal? to (3 . 2)
 ... 1 checks OK
@@ -109,43 +110,46 @@ Test case: test: setter vector
 ... 1 checks OK
 Test case: test: single tail
 ... check (match '((a . 1) (b . 2) (c . 3)) (((x . y) ... last) (list x y last))) is equal? to ((a b) (1 2) (c . 3))
-*** ERROR: (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ... last) (list x y last))) '((a b) (1 2) (c . 3))) at "test.ss"@134.14: Unbound variable: x
+... 1 checks OK
 Test case: test: single tail 2
 ... check (match '((a . 1) (b . 2) 3) (((x . y) ... last) (list x y last))) is equal? to ((a b) (1 2) 3)
-*** ERROR: (check equal? (match '((a . 1) (b . 2) 3) (((x . y) ... last) (list x y last))) '((a b) (1 2) 3)) at "test.ss"@139.14: Unbound variable: x
+... 1 checks OK
+Test case: test: single duplicate tail
+... check (match '(1 2) ((foo ... foo) foo) (_ #f)) is equal? to #f
+... 1 checks OK
 Test case: test: multiple tail
 ... check (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5)) (((x . y) ... u v w) (list x y u v w))) is equal? to ((a b) (1 2) (c . 3) (d . 4) (e . 5))
-*** ERROR: (check equal? (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5)) (((x . y) ... u v w) (list x y u v w))) '((a b) (1 2) (c . 3) (d . 4) (e . 5))) at "test.ss"@144.14: Unbound variable: x
+... 1 checks OK
 Test case: test: tail against improper list
 ... check (match '(a b c d e f . g) ((x ... y u v w) (list x y u v w)) (else #f)) is equal? to #f
 ... 1 checks OK
 Test case: test: Riastradh quasiquote
 ... check (match '(1 2 3) (`(1 ,b ,c) (list b c))) is equal? to (2 3)
-*** ERROR: (check equal? (match '(1 2 3) (`(1 ,b ,c) (list b c))) '(2 3)) at "test.ss"@155.14: Unbound variable: b
+... 1 checks OK
 Test case: test: unquote-splicing
 ... check (match '(1 2 3) (`(1 ,@ls) ls)) is equal? to (2 3)
-*** ERROR: (check equal? (match '(1 2 3) (`(1 ,@ls) ls)) '(2 3)) at "test.ss"@159.14: Unbound variable: ls
+... 1 checks OK
 Test case: test: unquote-splicing tail
 ... check (match '(a b c d) (`(a ,@ls d) ls)) is equal? to (b c)
-*** ERROR: (check equal? (match '(a b c d) (`(a ,@ls d) ls)) '(b c)) at "test.ss"@163.14: Unbound variable: ls
+... 1 checks OK
 Test case: test: unquote-splicing tail fail
 ... check (match '(a b c e) (`(a ,@ls d) ls) (else #f)) is equal? to #f
 ... 1 checks OK
 Test case: test: trivial tree search
 ... check (match '(1 2 3) ((_ *** (a b c)) (list a b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(1 2 3) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@171.14: Unbound variable: a
+... 1 checks OK
 Test case: test: simple tree search
 ... check (match '(x (1 2 3)) ((_ *** (a b c)) (list a b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(x (1 2 3)) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@175.14: Unbound variable: a
+... 1 checks OK
 Test case: test: deep tree search
 ... check (match '(x (x (x (1 2 3)))) ((_ *** (a b c)) (list a b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(x (x (x (1 2 3)))) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@179.14: Unbound variable: a
+... 1 checks OK
 Test case: test: non-tail tree search
 ... check (match '(x (x (x a b c (1 2 3) d e f))) ((_ *** (a b c)) (list a b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(x (x (x a b c (1 2 3) d e f))) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@183.14: Unbound variable: a
+... 1 checks OK
 Test case: test: restricted tree search
 ... check (match '(x (x (x a b c (1 2 3) d e f))) (('x *** (a b c)) (list a b c))) is equal? to (1 2 3)
-*** ERROR: (check equal? (match '(x (x (x a b c (1 2 3) d e f))) (('x *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@187.14: Unbound variable: a
+... 1 checks OK
 Test case: test: fail restricted tree search
 ... check (match '(x (y (x a b c (1 2 3) d e f))) (('x *** (a b c)) (list a b c)) (else #f)) is equal? to #f
 ... 1 checks OK
@@ -157,115 +161,78 @@ Test case: test: failed sxml tree search
 ... 1 checks OK
 Test case: test: collect tree search
 ... check (match '(p (ul (li a (b c) (a (@ (href . http://synthcode.com/)) synthcode) d e f))) (((and tag (or 'p 'ul 'li 'b)) *** ('a ('@ attrs ...) text ...)) (list tag attrs text)) (else #f)) is equal? to ((p ul li) ((href . "http://synthcode.com/")) ("synthcode"))
-*** ERROR: (check equal? (match '(p (ul (li a (b c) (a (@ (href . http://synthcode.com/)) synthcode) d e f))) (((and tag (or 'p 'ul 'li 'b)) *** ('a ('@ attrs ...) text ...)) (list tag attrs text)) (else #f)) '((p ul li) ((href . http://synthcode.com/)) (synthcode))) at "test.ss"@213.14: Unbound variable: tag
+... 1 checks OK
 Test case: test: anded tail pattern
 ... check (match '(1 2 3) ((and (a ... b) x) a)) is equal? to (1 2)
-*** ERROR: (check equal? (match '(1 2 3) ((and (a ... b) x) a)) '(1 2)) at "test.ss"@221.14: Unbound variable: a
+... 1 checks OK
 Test case: test: anded search pattern
 ... check (match '(a (b (c d))) ((and (p *** 'd) x) p)) is equal? to (a b c)
-*** ERROR: (check equal? (match '(a (b (c d))) ((and (p *** 'd) x) p)) '(a b c)) at "test.ss"@225.14: Unbound variable: p
+... 1 checks OK
 Test case: test: joined tail
 ... check (match '(1 2 3) ((and (a ... b) x) a)) is equal? to (1 2)
-*** ERROR: (check equal? (match '(1 2 3) ((and (a ... b) x) a)) '(1 2)) at "test.ss"@229.14: Unbound variable: a
-Test case: test: list ..1
-... check (match '(a b c) ((x ..1) x)) is equal? to (a b c)
 ... 1 checks OK
-Test case: test: list ..1 failed
-... check (match '() ((x ..1) x) (else #f)) is equal? to #f
+Test case: test: list **1
+... check (match '(a b c) ((x **1) x)) is equal? to (a b c)
 ... 1 checks OK
-Test case: test: list ..1 with predicate
-... check (match '(a b c) (((and x (? symbol?)) ..1) x)) is equal? to (a b c)
-*** ERROR: (check equal? (match '(a b c) (((and x (? symbol?)) ..1) x)) '(a b c)) at "test.ss"@243.14: Unbound variable: x
-Test case: test: list ..1 with failed predicate
-... check (match '(a b 3) (((and x (? symbol?)) ..1) x) (else #f)) is equal? to #f
+Test case: test: list **1 failed
+... check (match '() ((x **1) x) (else #f)) is equal? to #f
 ... 1 checks OK
-Test case: test: list ..= too few
-... check (match (list 1 2) ((a b ..= 2) b) (else #f)) is equal? to #f
+Test case: test: list **1 with predicate
+... check (match '(a b c) (((and x (? symbol?)) **1) x)) is equal? to (a b c)
 ... 1 checks OK
-Test case: test: list ..=
-... check (match (list 1 2 3) ((a b ..= 2) b) (else #f)) is equal? to (2 3)
-*** ERROR: (check equal? (match (list 1 2 3) ((a b ..= 2) b) (else #f)) '(2 3)) at "test.ss"@257.14: Unbound variable: b
-Test case: test: list ..= too many
-... check (match (list 1 2 3 4) ((a b ..= 2) b) (else #f)) is equal? to #f
+Test case: test: list **1 with failed predicate
+... check (match '(a b 3) (((and x (? symbol?)) **1) x) (else #f)) is equal? to #f
 ... 1 checks OK
-Test case: test: list ..= tail
-... check (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)) is equal? to 4
-*** ERROR: (check equal? (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)) 4) at "test.ss"@263.14: Unbound variable: c
-Test case: test: list ..= tail fail
-... check (match (list 1 2 3 4 5 6) ((a b ..= 2 c) c) (else #f)) is equal? to #f
+Test case: test: list =.. too few
+... check (match (list 1 2) ((a b =.. 2) b) (else #f)) is equal? to #f
 ... 1 checks OK
-Test case: test: list ..* too few
-... check (match (list 1 2) ((a b ..* 2 4) b) (else #f)) is equal? to #f
+Test case: test: list =..
+... check (match (list 1 2 3) ((a b =.. 2) b) (else #f)) is equal? to (2 3)
 ... 1 checks OK
-Test case: test: list ..* lo
-... check (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)) is equal? to (2 3)
-*** ERROR: (check equal? (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)) '(2 3)) at "test.ss"@273.14: Unbound variable: b
-Test case: test: list ..* hi
-... check (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)) is equal? to (2 3 4 5)
-*** ERROR: (check equal? (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)) '(2 3 4 5)) at "test.ss"@276.14: Unbound variable: b
-Test case: test: list ..* too many
-... check (match (list 1 2 3 4 5 6) ((a b ..* 2 4) b) (else #f)) is equal? to #f
+Test case: test: list =.. too many
+... check (match (list 1 2 3 4) ((a b =.. 2) b) (else #f)) is equal? to #f
 ... 1 checks OK
-Test case: test: list ..* tail
-... check (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)) is equal? to 4
-*** ERROR: (check equal? (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)) 4) at "test.ss"@282.14: Unbound variable: c
-Test case: test: list ..* tail 2
-... check (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)) is equal? to 5
-*** ERROR: (check equal? (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)) 5) at "test.ss"@285.14: Unbound variable: d
-Test case: test: list ..* tail
-... check (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)) is equal? to 6
-*** ERROR: (check equal? (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)) 6) at "test.ss"@288.14: Unbound variable: c
-Test case: test: list ..* tail fail
-... check (match (list 1 2 3 4 5 6 7) ((a b ..* 2 4 c) c) (else #f)) is equal? to #f
+Test case: test: list =.. tail
+... check (match (list 1 2 3 4) ((a b =.. 2 c) c) (else #f)) is equal? to 4
+... 1 checks OK
+Test case: test: list =.. tail fail
+... check (match (list 1 2 3 4 5 6) ((a b =.. 2 c) c) (else #f)) is equal? to #f
+... 1 checks OK
+Test case: test: list *.. too few
+... check (match (list 1 2) ((a b *.. 2 4) b) (else #f)) is equal? to #f
+... 1 checks OK
+Test case: test: list *.. lo
+... check (match (list 1 2 3) ((a b *.. 2 4) b) (else #f)) is equal? to (2 3)
+... 1 checks OK
+Test case: test: list *.. hi
+... check (match (list 1 2 3 4 5) ((a b *.. 2 4) b) (else #f)) is equal? to (2 3 4 5)
+... 1 checks OK
+Test case: test: list *.. too many
+... check (match (list 1 2 3 4 5 6) ((a b *.. 2 4) b) (else #f)) is equal? to #f
+... 1 checks OK
+Test case: test: list *.. tail
+... check (match (list 1 2 3 4) ((a b *.. 2 4 c) c) (else #f)) is equal? to 4
+... 1 checks OK
+Test case: test: list *.. tail 2
+... check (match (list 1 2 3 4 5) ((a b *.. 2 4 c d) d) (else #f)) is equal? to 5
+... 1 checks OK
+Test case: test: list *.. tail
+... check (match (list 1 2 3 4 5 6) ((a b *.. 2 4 c) c) (else #f)) is equal? to 6
+... 1 checks OK
+Test case: test: list *.. tail fail
+... check (match (list 1 2 3 4 5 6 7) ((a b *.. 2 4 c) c) (else #f)) is equal? to #f
 ... 1 checks OK
 Test case: test: match-named-let
 ... check (match-let loop (((x . rest) '(1 2 3)) (sum 0)) (let ((sum (+ x sum))) (if (null? rest) sum (loop rest sum)))) is equal? to 6
-*** ERROR: (check equal? (match-let loop (((x . rest) '(1 2 3)) (sum 0)) (let ((sum (+ x sum))) (if (null? rest) sum (loop rest sum)))) 6) at "test.ss"@295.14: Unbound variable: x
+... 1 checks OK
+Test case: match-letrec
+... check (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) is equal? to (2 1 1 2)
+*** FAILED: (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "test.ss"@309.14; value: (#<procedure #12 #:b152918> #<procedure #12 #:b152918> #<procedure #12 #:b152918> #<procedure #12 #:b152918>)
+Test case: test: match-letrec quote
+... check (match-letrec (((x 'x) (list #t 'x))) x) is equal? to #t
+... 1 checks OK
 *** Test FAILED
 --- Test Summary
 gerbil-match-test: FAILED
-test: match-named-let: ERROR (check equal? (match-let loop (((x . rest) '(1 2 3)) (sum 0)) (let ((sum (+ x sum))) (if (null? rest) sum (loop rest sum)))) 6) at "test.ss"@295.14: Unbound variable: x
-test: list ..* tail: ERROR (check equal? (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)) 6) at "test.ss"@288.14: Unbound variable: c
-test: list ..* tail 2: ERROR (check equal? (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)) 5) at "test.ss"@285.14: Unbound variable: d
-test: list ..* tail: ERROR (check equal? (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)) 4) at "test.ss"@282.14: Unbound variable: c
-test: list ..* hi: ERROR (check equal? (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)) '(2 3 4 5)) at "test.ss"@276.14: Unbound variable: b
-test: list ..* lo: ERROR (check equal? (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)) '(2 3)) at "test.ss"@273.14: Unbound variable: b
-test: list ..= tail: ERROR (check equal? (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)) 4) at "test.ss"@263.14: Unbound variable: c
-test: list ..=: ERROR (check equal? (match (list 1 2 3) ((a b ..= 2) b) (else #f)) '(2 3)) at "test.ss"@257.14: Unbound variable: b
-test: list ..1 with predicate: ERROR (check equal? (match '(a b c) (((and x (? symbol?)) ..1) x)) '(a b c)) at "test.ss"@243.14: Unbound variable: x
-test: joined tail: ERROR (check equal? (match '(1 2 3) ((and (a ... b) x) a)) '(1 2)) at "test.ss"@229.14: Unbound variable: a
-test: anded search pattern: ERROR (check equal? (match '(a (b (c d))) ((and (p *** 'd) x) p)) '(a b c)) at "test.ss"@225.14: Unbound variable: p
-test: anded tail pattern: ERROR (check equal? (match '(1 2 3) ((and (a ... b) x) a)) '(1 2)) at "test.ss"@221.14: Unbound variable: a
-test: collect tree search: ERROR (check equal? (match '(p (ul (li a (b c) (a (@ (href . http://synthcode.com/)) synthcode) d e f))) (((and tag (or 'p 'ul 'li 'b)) *** ('a ('@ attrs ...) text ...)) (list tag attrs text)) (else #f)) '((p ul li) ((href . http://synthcode.com/)) (synthcode))) at "test.ss"@213.14: Unbound variable: tag
-test: restricted tree search: ERROR (check equal? (match '(x (x (x a b c (1 2 3) d e f))) (('x *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@187.14: Unbound variable: a
-test: non-tail tree search: ERROR (check equal? (match '(x (x (x a b c (1 2 3) d e f))) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@183.14: Unbound variable: a
-test: deep tree search: ERROR (check equal? (match '(x (x (x (1 2 3)))) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@179.14: Unbound variable: a
-test: simple tree search: ERROR (check equal? (match '(x (1 2 3)) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@175.14: Unbound variable: a
-test: trivial tree search: ERROR (check equal? (match '(1 2 3) ((_ *** (a b c)) (list a b c))) '(1 2 3)) at "test.ss"@171.14: Unbound variable: a
-test: unquote-splicing tail: ERROR (check equal? (match '(a b c d) (`(a ,@ls d) ls)) '(b c)) at "test.ss"@163.14: Unbound variable: ls
-test: unquote-splicing: ERROR (check equal? (match '(1 2 3) (`(1 ,@ls) ls)) '(2 3)) at "test.ss"@159.14: Unbound variable: ls
-test: Riastradh quasiquote: ERROR (check equal? (match '(1 2 3) (`(1 ,b ,c) (list b c))) '(2 3)) at "test.ss"@155.14: Unbound variable: b
-test: multiple tail: ERROR (check equal? (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5)) (((x . y) ... u v w) (list x y u v w))) '((a b) (1 2) (c . 3) (d . 4) (e . 5))) at "test.ss"@144.14: Unbound variable: x
-test: single tail 2: ERROR (check equal? (match '((a . 1) (b . 2) 3) (((x . y) ... last) (list x y last))) '((a b) (1 2) 3)) at "test.ss"@139.14: Unbound variable: x
-test: single tail: ERROR (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ... last) (list x y last))) '((a b) (1 2) (c . 3))) at "test.ss"@134.14: Unbound variable: x
-test: getter vector: ERROR (check equal? (match '#(1 2 3) (#((get! a) b c) (list (a) b c))) '(1 2 3)) at "test.ss"@112.14: Unbound variable: b
-test: getter cdr: ERROR (check equal? (match '(1 . 2) ((a get! b) (list a (b)))) '(1 2)) at "test.ss"@108.14: Unbound variable: a
-test: getter car: ERROR (check equal? (match '(1 . 2) (((get! a) . b) (list (a) b))) '(1 2)) at "test.ss"@104.14: Unbound variable: b
-test: let*: ERROR (check equal? (match-let* ((x 'f) (y 'o) ((z w) (list y x))) (list x y z w)) '(f o o f)) at "test.ss"@100.14: Unbound variable: y
-test: failure continuation: ERROR (check equal? (match '(1 2) ((a . b) (=> next) (if (even? a) 'fail (next))) ((a . b) 'ok)) 'ok) at "test.ss"@90.14: Unbound variable: a
-test: pred ellipses: ERROR (check equal? (match '(1 2 3) (((? odd? n) ___) n) (((? number? n) ___) n)) '(1 2 3)) at "test.ss"@84.14: Unbound variable: n
-test: vector ellipses: ERROR (check equal? (match '#(1 2 3 (a . 1) (b . 2) (c . 3)) (#(a b c (hd . tl) ...) (list a b c hd tl))) '(1 2 3 (a b c) (1 2 3))) at "test.ss"@79.14: Unbound variable: a
-test: real ellipses: ERROR (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ...) (list x y))) '((a b c) (1 2 3))) at "test.ss"@74.14: Unbound variable: x
-test: ellipses: ERROR (check equal? (match '((a . 1) (b . 2) (c . 3)) (((x . y) ___) (list x y))) '((a b c) (1 2 3))) at "test.ss"@69.14: Unbound variable: x
-test: duplicate symbols bound: ERROR (check equal? (let ((a '(1 2))) (match a ((and (a 2) (1 b)) (+ a b)) (_ #f))) 3) at "test.ss"@62.14: Unbound variable: b
-test: duplicate symbols samth: ERROR (check equal? (match '(ok . ok) ((x quote bad) x) (('ok . x) x)) 'ok) at "test.ss"@59.14: Unbound variable: x
-test: duplicate symbols fail: Check FAILED (check equal? (match '(ok . bad) ((x . x) 'bad) (else 'ok)) 'ok) at "test.ss"@56.14
-test: duplicate symbols pass: ERROR (check equal? (match '(ok . ok) ((x . x) x)) 'ok) at "test.ss"@54.14: Unbound variable: x
-test: named pred: ERROR (check equal? (match 28 ((? number? x) (+ x 1))) 29) at "test.ss"@51.14: Unbound variable: x
-test: or double: ERROR (check equal? (match 'ok ((or (? symbol? y) y) y)) 'ok) at "test.ss"@45.14: Unbound variable: y
-test: and single: ERROR (check equal? (match 'ok ((and x) x)) 'ok) at "test.ss"@37.14: Unbound variable: x
-test: vector: ERROR (check equal? (match '#(ok) (#(x) x)) 'ok) at "test.ss"@31.14: Unbound variable: x
-test: pair: ERROR (check equal? (match '(ok) ((x) x)) 'ok) at "test.ss"@29.14: Unbound variable: x
-test: string: Check FAILED (check equal? (match good (bad 'fail) (good 'ok)) 'ok) at "test.ss"@23.14
-test: symbol: ERROR (check equal? (match 'ok (x x)) 'ok) at "test.ss"@19.14: Unbound variable: x
+match-letrec: Check FAILED (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "test.ss"@309.14
 FAILURE

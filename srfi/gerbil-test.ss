@@ -1,7 +1,7 @@
 (add-load-path ".")
 (import (scheme base)
 	(scheme write)
-	(match match)
+	(srfi-204)
 	(std test)
 	(std srfi 9))
 (define gerbil-tests
@@ -13,6 +13,7 @@
       (x point-x point-x-set!)
       (y point-y point-y-set!))
       (display (string-append "gerbil-" (gerbil-version-string)))
+      (newline)
       (test-case "test: any"
       (check (match 'any (_ 'ok)) => 'ok ))
       (test-case "test: symbol"
@@ -140,6 +141,10 @@
 		    (((x . y) ... last) (list x y last))) => '((a b) (1 2) 3)
 	     ))
 
+      (test-case "test: single duplicate tail" 
+	    (check (match '(1 2) ((foo ... foo) foo) (_ #f)) => #f
+	    ))
+
       (test-case "test: multiple tail"
       (check (match '((a . 1) (b . 2) (c . 3) (d . 4) (e . 5))
 		    (((x . y) ... u v w) (list x y u v w))) => '((a b) (1 2) (c . 3) (d . 4) (e . 5))
@@ -229,66 +234,66 @@
       (check (match '(1 2 3) ((and (a ... b) x) a)) => '(1 2)
 	     ))
 
-      (test-case "test: list ..1"
-      (check (match '(a b c) ((x ..1) x)) => '(a b c)
+      (test-case "test: list **1"
+      (check (match '(a b c) ((x **1) x)) => '(a b c)
 	     ))
 
-      (test-case "test: list ..1 failed"
+      (test-case "test: list **1 failed"
       (check (match '()
-		    ((x ..1) x)
+		    ((x **1) x)
 		    (else #f)) => #f
 	     ))
 
-      (test-case "test: list ..1 with predicate"
+      (test-case "test: list **1 with predicate"
       (check (match '(a b c)
-		    (((and x (? symbol?)) ..1) x)) => '(a b c)
+		    (((and x (? symbol?)) **1) x)) => '(a b c)
 	     ))
 
-      (test-case "test: list ..1 with failed predicate"
+      (test-case "test: list **1 with failed predicate"
       (check (match '(a b 3)
-		    (((and x (? symbol?)) ..1) x)
+		    (((and x (? symbol?)) **1) x)
 		    (else #f)) => #f
 	     ))
 
-      (test-case "test: list ..= too few"
-      (check (match (list 1 2) ((a b ..= 2) b) (else #f)) => #f
+      (test-case "test: list =.. too few"
+      (check (match (list 1 2) ((a b =.. 2) b) (else #f)) => #f
 	     ))
-      (test-case "test: list ..="
-      (check (match (list 1 2 3) ((a b ..= 2) b) (else #f)) => '(2 3)
+      (test-case "test: list =.."
+      (check (match (list 1 2 3) ((a b =.. 2) b) (else #f)) => '(2 3)
 	     ))
-      (test-case "test: list ..= too many"
-      (check (match (list 1 2 3 4) ((a b ..= 2) b) (else #f)) => #f
+      (test-case "test: list =.. too many"
+      (check (match (list 1 2 3 4) ((a b =.. 2) b) (else #f)) => #f
 	     ))
-      (test-case "test: list ..= tail"
-      (check (match (list 1 2 3 4) ((a b ..= 2 c) c) (else #f)) => 4
+      (test-case "test: list =.. tail"
+      (check (match (list 1 2 3 4) ((a b =.. 2 c) c) (else #f)) => 4
 	     ))
-      (test-case "test: list ..= tail fail"
-      (check (match (list 1 2 3 4 5 6) ((a b ..= 2 c) c) (else #f)) => #f
+      (test-case "test: list =.. tail fail"
+      (check (match (list 1 2 3 4 5 6) ((a b =.. 2 c) c) (else #f)) => #f
 	     ))
 
-      (test-case "test: list ..* too few"
-      (check (match (list 1 2) ((a b ..* 2 4) b) (else #f)) => #f
+      (test-case "test: list *.. too few"
+      (check (match (list 1 2) ((a b *.. 2 4) b) (else #f)) => #f
 	     ))
-      (test-case "test: list ..* lo"
-      (check (match (list 1 2 3) ((a b ..* 2 4) b) (else #f)) => '(2 3)
+      (test-case "test: list *.. lo"
+      (check (match (list 1 2 3) ((a b *.. 2 4) b) (else #f)) => '(2 3)
 	     ))
-      (test-case "test: list ..* hi"
-      (check (match (list 1 2 3 4 5) ((a b ..* 2 4) b) (else #f)) => '(2 3 4 5)
+      (test-case "test: list *.. hi"
+      (check (match (list 1 2 3 4 5) ((a b *.. 2 4) b) (else #f)) => '(2 3 4 5)
 	     ))
-      (test-case "test: list ..* too many"
-      (check (match (list 1 2 3 4 5 6) ((a b ..* 2 4) b) (else #f)) => #f
+      (test-case "test: list *.. too many"
+      (check (match (list 1 2 3 4 5 6) ((a b *.. 2 4) b) (else #f)) => #f
 	     ))
-      (test-case "test: list ..* tail"
-      (check (match (list 1 2 3 4) ((a b ..* 2 4 c) c) (else #f)) => 4
+      (test-case "test: list *.. tail"
+      (check (match (list 1 2 3 4) ((a b *.. 2 4 c) c) (else #f)) => 4
 	     ))
-      (test-case "test: list ..* tail 2"
-      (check (match (list 1 2 3 4 5) ((a b ..* 2 4 c d) d) (else #f)) => 5
+      (test-case "test: list *.. tail 2"
+      (check (match (list 1 2 3 4 5) ((a b *.. 2 4 c d) d) (else #f)) => 5
 	     ))
-      (test-case "test: list ..* tail"
-      (check (match (list 1 2 3 4 5 6) ((a b ..* 2 4 c) c) (else #f)) => 6
+      (test-case "test: list *.. tail"
+      (check (match (list 1 2 3 4 5 6) ((a b *.. 2 4 c) c) (else #f)) => 6
 	     ))
-      (test-case "test: list ..* tail fail"
-      (check (match (list 1 2 3 4 5 6 7) ((a b ..* 2 4 c) c) (else #f)) => #f
+      (test-case "test: list *.. tail fail"
+      (check (match (list 1 2 3 4 5 6 7) ((a b *.. 2 4 c) c) (else #f)) => #f
 	     ))
 
       (test-case "test: match-named-let"
@@ -300,10 +305,23 @@
 			      (loop rest sum)))) => 6
 	     ))
 
-      '(test "match-letrec" '(2 1 1 2)
-	     (match-letrec (((x y) (list 1 (lambda () (list a x))))
-			    ((a b) (list 2 (lambda () (list x a)))))
-			   (append (y) (b))))
+      (test-case "match-letrec" 
+	     (check (match-letrec (((x y) (list 1 (lambda () (list a x))))
+				   ((a b) (list 2 (lambda () (list x a)))))
+				  (append (y) (b))) => '(2 1 1 2)))
+
+      (test-case "test: match-letrec quote"
+        (check (match-letrec (((x 'x) (list #t 'x))) x) =>  #t))
+      
+      '(test-case "test: match-letrec mnieper" 
+		 (let-syntax
+        ((foo
+          (syntax-rules ()
+            ((foo x)
+             (match-letrec (((x y) (list 1 (lambda () (list a x))))
+                            ((a b) (list 2 (lambda () (list x a)))))
+                           (append (y) (b)))))))
+        (check (foo a) => '(2 1 1 2))))
 
       (cond-expand
 	(chibi

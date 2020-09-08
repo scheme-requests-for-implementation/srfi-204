@@ -14,3 +14,6 @@ all return the expected value, but
 
 crashes with "assert IdentifierP(obj) (190)../src/synrules.cpp"
 and then a long column if hexcodes? instructions?
+
+this issue remained after underscore? and r6rs compatibility changes,
+deleted directory.

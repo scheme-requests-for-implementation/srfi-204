@@ -141,3 +141,85 @@
                  ((a) #t)
                  (() #t)
 		 (_ #f)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; or not ellipsis patterns
+
+;;;some or patterns
+
+;; Any -> Boolean
+(define yes-match
+  (match-lambda
+    ((and (? string?)
+	  (or (? (lambda (s) (string-ci=? "yes" s)))
+	      (? (lambda (s) (string-ci=? "y" s))))) #t)
+    (_ #f)))
+
+;; Alist -> Boolean
+(define (f-g-or-b? alist)
+  (let ((make-field (lambda (sym) (lambda (x) (assoc sym x)))))
+  (match alist
+    ((or (= (make-field 'f) p)
+	 (= (make-field 'g) p)
+	 (= (make-field 'b) p))
+     (=> fail)
+     (if p #t (fail)))
+    (_ #f))))
+;; doesn't work because fail moves on to next pattern
+
+(define (f-g-or-b? alist)
+  (let ((make-field (lambda (sym) (lambda (x) (assoc sym x)))))
+  (match alist
+    ((or (= (make-field 'f) (and (? and)))
+	 (= (make-field 'g) (and (? and)))
+	 (= (make-field 'b) (and (? and))))
+     #t)
+    (_ #f))))
+;; (=> fail) does not return to revisit an or pattern,
+;; (and p (? and))
+
+(define (not-pair? x)
+  (match x
+    ((not (a . b)) #t)
+    (_ #f)))
+
+(define ends-in-one-of-first-three?
+  (match-lambda
+    ((a b c d ... x) (=> fail) (if (or (equal? a x)
+				       (equal? b x)
+				       (equal? c x))
+				   #t
+				   (fail)))
+    (_ #f)))
+
+(define ends-in-one-of-first-three?
+  "#t if a list is of 4 or more, last element is equal? one of first 3"
+  (match-lambda
+    ((a b c d ... (or a b c)) #t)
+    (_ #f)))
+
+(define ends-in-one-of-first-three?
+  (match-lambda
+    ((a b c d ... x) (=> fail) (if (equal? a x)
+				   #t
+				   (fail)))
+    ((a b c d ... x) (=> fail) (if (equal? b x)
+				   #t
+				   (fail)))
+    ((a b c d ... x) (=> fail) (if (equal? c x)
+				   #t
+				   (fail)))
+    (_ #f)))
+
+;;; another example of an or pattern that
+;;; misuses fail to get a wrong result.
+(define ends-in-one-of-first-three?
+  (match-lambda
+    ((or (p b c d ... x)
+	 (a p c d ... x)
+	 (a b p d ... x))
+     (=> fail) 
+     (if (equal? x p)
+	 #t
+	 (fail)))
+    (_ #f)))
