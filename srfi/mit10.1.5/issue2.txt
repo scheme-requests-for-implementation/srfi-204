@@ -1,0 +1,10 @@
+edited in second version, got:
+
+
+1 ]=> (load "load")
+
+;Loading "load.scm"...
+;  Loading "match.scm"...
+;Missing ellipsis in expansion. #f
+;To continue, call RESTART with an option number:
+; (RESTART 1) => Return to read-eval-print level 1.

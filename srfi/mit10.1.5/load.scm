@@ -13,11 +13,13 @@
   (self-relatively (lambda () (load filename env))))
 
 (load-relative "match" load-env)
+;(load-realative "../auxiliary-syntax.scm")
+;(define-auxiliary-keywords __ **1 =.. *.. *** ? $ struct object get!)
 
 (let ((export-list '(shinn-match
                         match-let* match-named-let match-letrec match-let
                         match-lambda* match-lambda
-			___ ..1 ..= ..* *** ? $ struct object get!)))
+			___ **1 =.. *.. *** ? $ struct object get!)))
   (for-each (lambda (sym)
               (if (eq? sym 'match)
                   (environment-define-macro
