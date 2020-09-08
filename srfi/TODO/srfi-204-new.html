@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SRFI 204: Wright-Cartwright-Shinn Pattern Matcher</title>
+    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
+    <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css" type="text/css">
+    <!-- highlight over-runs in pre-formatted zones
+<style>
+code {
+	background-color:aliceblue
+}
+pre {
+	background-color:aliceblue
+}
+</style>
+-->
+    <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+  <body>
+    <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI logo" /></a>204: Wright-Cartwright-Shinn Pattern Matcher</h1>
+
+<p>by Felix Thibault</p>
+
+<h2>Status</h2>
+
+<p>This SRFI is currently in <em>draft</em> status.  Here is <a href="https://srfi.schemers.org/srfi-process.html">an explanation</a> of each status that a SRFI can hold.  To provide input on this SRFI, please send email to <code><a href="mailto:srfi+minus+204+at+srfi+dotschemers+dot+org">srfi-204@<span class="antispam">nospam</span>srfi.schemers.org</a></code>.  To subscribe to the list, follow <a href="https://srfi.schemers.org/srfi-list-subscribe.html">these instructions</a>.  You can access previous messages via the mailing list <a href="https://srfi-email.schemers.org/srfi-204">archive</a>.</p>
+<ul>
+  <li>Received: 2020-07-15</li>
+  <li>60-day deadline: 2020-09-13</li>
+  <li>Draft #1 published: 2020-07-15</li>
+  <li>Draft #2 published: 2020-07-18</li>
+  <li>Draft #3 published: 2020-07-26</li>
+  <li>Draft #4 published: 2020-08-02</li>
+  <li>Draft #5 published: 2020-08-16</li>
+  <li>Draft #6 published: 2020-08-24</li>
+  <li>Draft #7 published: 2020-09-04</li>
+</ul>
+<h2 id="toc">Table of Contents</h2>
+<ul>
+	<li><a href="#Abstract">Abstract</a></li>
+	<li><a href="#Rationale">Rationale</a></li>
+	<li><a href="#Specification">Specification</a></li>
+	<ul>
+		<li><a href="#Intro">Introduction</a></li>
+		<li><a href="#Patterns">Patterns</a></li>
+		<ul>
+		<li><a href="#Literals">Literal Patterns</a></li>
+		<li><a href="#Variables">Pattern Variables</a></li>
+		<li><a href="#Repitition">Nonlinear Patterns 1: Repitition</a></li>
+		<li><a href="#Ellipsis">Nonlinear Patterns 2: Ellipsis Patterns</a></li>
+		<li><a href="#Boolean">Boolean Patterns</a></li>
+		<li><a href="#Pred">Predicates and Fields</a></li>
+		<li><a href="#g-and-s">Getters and Setters</a></li>
+		<li><a href="#records">Record Patterns</a></li>
+		</ul>
+		<li><a href="#Grammar">Pattern Grammar</a></li>
+		<li><a href="#Syntax">Syntax</a></li>
+		<ul>
+		<li><a href="#match">match</a></li>
+		<li><a href="#match-lambda">match-lambda</a></li>
+		<li><a href="#match-lambda*">match-lambda*</a></li>
+		<li><a href="#match-let">match-let</a></li>
+		<li><a href="#match-let*">match-let*</a></li>
+		<li><a href="#match-letrec">match-letrec</a></li>
+		</ul>
+		<li><a href="#TailContexts">Tail Contexts</a></li>
+		<li><a href="#Side Effects">Side Effects</a></li>
+		<li><a href="#Errors">Errors</a></li>
+		<li><a href="#Syntax">Syntax</a></li>
+	</ul>
+	
+		<li><a href="#Implementation">Implementation</a></li>
+		<li><a href="#References">References</a></li>
+		<li><a href="#Acknowledgements">Acknowledgements</a></li>
+		<li><a href="#Copyright">Copyright</a></li>
+</ul>
+<h2 id="Abstract">Abstract</h2>
+
+<p>Pattern matching decomposes a compound data structure
+into component parts and assigns those parts of interest to variables. This
+SRFI describes a pattern-matching library already in use by
+several scheme implementations which is able to match many common
+compound data structures.</p>
+
+<h2 id="Issues">Issues</h2>
+<ul>
+	<li>get all SRFI-64 tests on same runner</li>
+	<li>integrate Chez into testing framework</li>
+	<li>clarify specification</li>
+	<li>refactor for SRFI-206</li>
+</ul>
+
+<h2 id="Rationale">Rationale</h2>
+
+<p>
+Scheme has come with its own pattern-matching language since R4RS, as
+part of <code>syntax-rules</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 23-24]. Many implementations add an additional pattern
+matcher that does not involve writing macros to make pattern matching
+available to all users. Before R4RS, there was only the <code>case</code> [<a href="#SCG">Shinn, Cowan, Gleckler</a> pp. 14-15]
+statement, which does match, but does not bind its key. Bigloo<sup><a href="#Bigloo">1</a></sup>, STklos<sup><a href="#STklos">2</a></sup>
+and s7<sup><a href="#s7">3</a></sup> all use extended <code>case</code> statements for pattern
+matching.
+</p>
+<p>
+Currently, the pattern-matching facilities that have been implemented
+  by SRFIs are procedures of variable arity (<a href="https://srfi.schemers.org/srfi-16/">SRFI 16</a>) and S-expressions
+(<a href="https://srfi.schemers.org/srfi-200/">SRFI 200</a>). The focus of SRFI 200 is both consensus and clarity. That is,
+it aims to provide a pattern syntax that is both widely shared and easily
+read without requiring knowledge of any notation that is not ordinary Scheme.
+SRFI 200 also aims to provide a portable, readable way of using
+the pattern matchers already available in many implementations.
+</p>
+<p>
+This SRFI aims to take one pattern matcher that has a matching syntax beyond
+S-expressions and provide a sample implementation, documentation, and
+tests.
+It is based on a pattern matcher originated by Andrew K. Wright and
+Robert Cartwright [<a href="#WC">Wright and Cartwright</a>, pp. 116-120], using procedures and defmacros.
+Using a technique developed by Oleg Kiselyov [<a href="#Oleg2003">Kiselyov, 2003</a>] Alex Shinn converted the pattern matcher to pure syntax-rules.
+This pattern-matching library (WCS) is already in
+use (at least in part) in several Scheme implementations. Aside from
+S-expressions, it also matches vectors and records. It has the
+ability to match based on predicates, to match "fields" (procedure
+applications), getters, and setters, and has syntax to match patterns zero
+or more, one or more, or exactly n times, or to walk down a tree
+with a pattern.
+</p>
+<p>
+WCS is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
+LispKit<sup><a href="#LispKit">8</a></sup>, Loko<sup><a href="#Loko">9</a></sup>, Mosh<sup><a href="#Mosh">10</a></sup>, and Sagittarius<sup><a href="#Sagittarius">11</a></sup>. There are other pattern-matching
+libraries that are part of Armpit Scheme<sup><a href="#Armpit">12</a></sup>, Gerbil<sup><a href="#Gerbil">13</a></sup>, Bigloo<sup><a href="#Bigloo">14</a></sup>, STklos<sup><a href="#STklos">15</a></sup>, Chicken<sup><a href="#Chicken:bindings">16</a></sup>, Kawa<sup><a href="#Kawa">17</a></sup>, Gambit<sup><a href="#Gambit">18</a></sup>, Gauche<sup><a href="#Gauche">19</a></sup>, Picrin<sup><a href="#Picrin">20</a></sup>, Racket<sup><a href="#Racket">21</a></sup>,
+Scheme 9 from Empty Space<sup><a href="#s9fes">22</a></sup>, and Scheje<sup><a href="#Scheje">23</a></sup>. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program.  In length, they range from about twenty lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/srfi/match-implementations.md">the repository</a>.
+</p>
+<p>
+Making the WCS pattern matcher a SRFI
+makes a common interface and a portable implementation, along with its
+tests and documentation, available in a central repository. This SRFI also collects implementation-dependent code in one place, making it easier for future implementers to find.
+</p>
+<h2 id="Specification">Specification</h2>
+<h3 id="Intro">Introduction</h3>
+<h3 id="Patterns">Patterns</h3>
+<h4 id="Literals">Literal Patterns</h4>
+<h4 id="Variables">Pattern Variables</h4>
+<h4 id="Repitition">Nonlinear Patterns 1: Repitition</h4>
+<h4 id="Ellipsis">Nonlinear Patterns 2: Ellipsis Patterns</h4>
+<h4 id="Boolean">Boolean Patterns</h4>
+<h4 id="Pred">Predicates and Fields</h4>
+<h4 id="g-and-s">Getters and Setters</h4>
+<h4 id="records">Record Patterns</h4>
+<h3 id="Grammar">Pattern Grammar</h3>
+<h3 id="Syntax">Syntax</h3>
+<h4 id="match">match</h4>
+<h4 id="match-lambda">match-lambda</h4>
+<h4 id="match-lambda*">match-lambda*</h4>
+<h4 id="match-let">match-let</h4>
+<h4 id="match-let*">match-let*</h4>
+<h4 id="match-letrec">match-letrec</h4>
+<h3 id="TailContexts">Tail Contexts</h3>
+<h3 id="Side Effects">Side Effects</h3>
+<h3 id="Errors">Errors</h3>
+<h3 id="Syntax">Syntax</h3>
+<h2 id="Implementation">Implementation</h2>
+<h2 id="References">References</h2>
+<h2 id="Acknowledgements">Acknowledgements</h2>
+<h2 id="Copyright">Copyright</h2>
