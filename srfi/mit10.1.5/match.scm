@@ -461,8 +461,8 @@
                       fk
                       i))
          fk))
-    ((match-two v #(p ...) g+s . x)
-     (match-vector v 0 () (p ...) . x))
+;    ((match-two v #(p ...) g+s . x)
+;     (match-vector v 0 () (p ...) . x))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
@@ -510,11 +510,11 @@
           (match-quasiquote-step x q g+s sk fk depth)
           fk i . depth))
        fk))
-    ((_ v #(elt ...) g+s sk fk i . depth)
-     (if (vector? v)
-       (let ((ls (vector->list v)))
-         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
-       fk))
+;    ((_ v #(elt ...) g+s sk fk i . depth)
+;     (if (vector? v)
+;       (let ((ls (vector->list v)))
+;         (match-quasiquote ls (elt ...) g+s sk fk i . depth))
+;       fk))
     ((_ v x g+s sk fk i . depth)
      (match-one v 'x g+s sk fk i))))
 
@@ -890,8 +890,8 @@
       (match-extract-underscore p (match-extract-vars-step (q . r) k i v) i ())))
     ((match-extract-vars (p . q) k i v)
      (match-extract-underscore p (match-extract-vars-step q k i v) i ()))
-    ((match-extract-vars #(p ...) . x)
-     (match-extract-underscore (p ...) . x))
+;    ((match-extract-vars #(p ...) . x)
+;     (match-extract-underscore (p ...) . x))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
     ((match-extract-vars **1 (k ...) i v)  (k ... v))
@@ -933,8 +933,8 @@
      (match-extract-quasiquote-vars
       x
       (match-extract-quasiquote-vars-step y k i v d) i () d))
-    ((match-extract-quasiquote-vars #(x ...) k i v d)
-     (match-extract-quasiquote-vars (x ...) k i v d))
+;    ((match-extract-quasiquote-vars #(x ...) k i v d)
+;     (match-extract-quasiquote-vars (x ...) k i v d))
     ((match-extract-quasiquote-vars x (k ...) i v d)
      (k ... v))
     ))
@@ -1100,48 +1100,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
 
-(cond-expand
- (chibi
-  (define-syntax match-check-ellipsis
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (compare '... (cadr expr))
-           (car (cddr expr))
-           (cadr (cddr expr))))))
-  (define-syntax match-check-identifier
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (identifier? (cadr expr))
-           (car (cddr expr))
-           (cadr (cddr expr))))))
-  (define-syntax match-bound-identifier=?
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (eq? (cadr expr) (car (cddr expr)))
-           (cadr (cddr expr))
-           (car (cddr (cddr expr))))))))
-
- (chicken
-  (define-syntax match-check-ellipsis
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (compare '... (cadr expr))
-           (car (cddr expr))
-           (cadr (cddr expr))))))
-  (define-syntax match-check-identifier
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (and (symbol? (cadr expr)) (not (keyword? (cadr expr))))
-           (car (cddr expr))
-           (cadr (cddr expr))))))
-  (define-syntax match-bound-identifier=?
-    (er-macro-transformer
-     (lambda (expr rename compare)
-       (if (eq? (cadr expr) (car (cddr expr)))
-           (cadr (cddr expr))
-           (car (cddr (cddr expr))))))))
-
- (else
   ;; Portable versions
   ;;
   ;; This is the R7RS version.  For other standards, and
@@ -1200,4 +1158,4 @@
                             ((eq b) sk)
                             ((eq _) fk))))
            (eq a))))))
-  ))
+  

@@ -13,8 +13,8 @@
   (self-relatively (lambda () (load filename env))))
 
 (load-relative "match" load-env)
-;(load-realative "../auxiliary-syntax.scm")
-;(define-auxiliary-keywords __ **1 =.. *.. *** ? $ struct object get!)
+;(load-relative "../auxiliary-syntax.scm" load-env)
+;:(define-auxiliary-keywords __ **1 =.. *.. *** ? $ struct object get!)
 
 (let ((export-list '(shinn-match
                         match-let* match-named-let match-letrec match-let
