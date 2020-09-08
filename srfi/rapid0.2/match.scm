@@ -2,10 +2,10 @@
 (define-library (rapid0.2 match)
   (import (rapid))
   (export match match-lambda match-lambda* match-let match-letrec match-let*
-	  ___ ..1 ..= ..* *** ? $ struct object get!)
+	  ___ **1 =.. *.. *** ? $ struct object get!)
   (include "auxiliary-syntax.scm")
   (begin
-    (define-auxiliary-keywords ___ ..1 ..= ..* *** ? $ struct object get!))
+    (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))
   (include "srfi-204/srfi-204.scm"))
 
 (display '(match '(mom dad sis bro)
