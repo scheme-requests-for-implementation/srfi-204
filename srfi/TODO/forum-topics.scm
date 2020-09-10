@@ -40,6 +40,32 @@
 		 acc
 		 (lp (c) (cons v acc)))))
 
+(define (nfibs n)
+  (match-let loop ((($ <yield> (this last) c)
+		    (simple-gen (match-lambda ((this last) `(,(+ this last) ,this)))
+				(list 1 0)))
+		   (n n)
+		   (acc '()))
+	     (if (zero? n)
+		 (reverse acc)
+		 (loop (c) (- n 1) (cons this acc)))))
+
+(define (make-builder proc init select)
+  (lambda (n)
+    (match-let loop ((($ <yield> v c) (simple-gen proc init))
+		     (n n)
+		     (acc '()))
+	       (if (zero? n)
+		   (reverse acc)
+		   (loop (c) (- n 1) (cons (select v) acc))))))
+
+(define id (lambda (x) x))
+(define jota (make-builder (lambda (x) (+ x 1)) 0 id))
+(define nfibs-2
+  (make-builder (match-lambda ((this last) `(,(+ this last) ,this)))
+		(list 1 0)
+		car))
+
 ;;; some benchmarking, adding underscores to make nums more readable
 ;; scheme@(guile-user) [5]> ,time (let ((l (iota-2 10_000))) (car l))
 ;; $24 = 0
@@ -135,12 +161,40 @@
 ;;;another example using pattern variables in the predicate
 
 (define fibby
-  (match-lambda* ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
-		  (apply fibby (cons b (cons c rest))))
+  (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
+		  (fibby (cons b (cons c rest))))
                  ((a b) #t)
                  ((a) #t)
                  (() #t)
 		 (_ #f)))
+
+(define fibby-2
+  (match-lambda ((a b c . rest)
+		  (if (= (+ a b) c)
+		      (fibby (cons b (cons c rest)))
+		      #f))
+                 ((a b) #t)
+                 ((a) #t)
+                 (() #t)
+		 (_ #f)))
+
+(define fibby-3
+  (match-lambda (() #t)
+		((a) #t)
+		((a b) #t)
+		((a b . rest)
+		 (match-let loop (((c . rest) rest)
+			         (a a)
+			         (b b))
+		           (if (= c (+ a b))
+			       (cond
+				 ((null? rest) #t)
+				 (else (loop rest b c)))
+			       #f)))))
+;;; first-pass benchmarking using a list of the first 10 000 Fibonacci numbers shows
+;;; little difference between all these methods, possibly because doing arithmetic
+;;; with numbers whose log is +inf.0
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; or not ellipsis patterns
@@ -223,3 +277,44 @@
 	 #t
 	 (fail)))
     (_ #f)))
+
+(define (palindrome? str)
+  (let loop ((chars (filter char-alphabetic? (string->list (string-foldcase str)))))
+    (match chars
+      (() #t)
+      ((a) #t)
+      ((a b ... a) (loop b))
+      (_ #f))))
+
+(define handle-arithmetic-sexpr
+ (match-lambda (`(+ . ,operands) (apply + (map eval-sexpr operands)))
+               (`(- . ,operands) (apply - (map eval-sexpr operands)))
+               (`(* . ,operands) (apply * (map eval-sexpr operands)))
+               (`(/ . ,operands) (apply / (map eval-sexpr operands)))))
+
+(define eval-sexpr
+  (match-lambda ((? number? n) n)
+		 ((and arith-sexpr ((or '+ '- '* '/) . _))
+		  (handle-arithmetic-sexpr arith-sexpr))
+		 (_ (error "not implemented"))))
+
+(define alist (list (cons 'a 1) (cons 'b 2) (cons 'c 3)))
+(define g (match-let loop ((((sym . (get! g)) . rest) alist))
+		     (cond
+		       ((eq? sym 'c) g)
+		       ((null? rest) #f)
+		       (else (loop rest)))))
+
+(define s (match-let loop ((((sym . (set! s)) . rest) alist))
+		     (cond
+		       ((eq? sym 'c) s)
+		       ((null? rest) #f)
+		       (else (loop rest)))))
+
+(define g2 (match alist ((= (lambda (al) (assv 'c al))
+			    (_ . (get! g)))
+			 g)))
+
+(define s2 (match alist ((= (lambda (al) (assv 'c al))
+			    (_ . (set! g)))
+			 g)))
