@@ -4,7 +4,7 @@
 - update srfi:
    <!-- - (pat1 ... patN patN+1 ooo \[patN+2 ...]) **fixed** -->
    - ?nested quasiquotes?
-   <!-- - specify srfi-206 for exporting patterns **fixed** -->
+   - specify srfi-206 for exporting patterns **un-fixed** 
    <!-- - clarify tail context **fixed** (not sure what there is to clarify re: -->
    <!-- call/cc, side-effects **fixed** , and exceptions **fixed**, but those are likely -->
    <!-- next issues to come up) -->
