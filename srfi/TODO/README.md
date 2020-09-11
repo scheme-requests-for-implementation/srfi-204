@@ -1,4 +1,4 @@
-- check not-working
+- check not-working **fixed**
 - try to get all srfi-64 on same test-runner
 - try to integrate chez into testing framework
 - update srfi:
@@ -18,10 +18,10 @@
       - leave as is
       - make optional, refer to use of internal define + match-lambda/match-lambda*
         or named match-let by vast majority of users
-   - srfi should give implementors more guidance
+   - srfi should give implementors more guidance **fixed**
    - find and show example of match with failure -does this figure into call/cc (escape continuations,etc?)? **fixed**
    - flesh out:
-       - or patterns
-       - not patterns
-       - ellipses
+       - or patterns **fixed**
+       - not patterns **fixed**
+       - ellipses **fixed**
 - refactor for srfi-206
