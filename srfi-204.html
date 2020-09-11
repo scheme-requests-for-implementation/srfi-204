@@ -71,7 +71,7 @@ dt {
 		<li><a href="#Errors">Errors</a></li>
                 <li><a href="#Macros">Using in Other Macros</a></li>
 	</ul></li>
-	
+
 		<li><a href="#Implementation">Implementation</a></li>
 		<li><a href="#References">References</a></li>
 		<li><a href="#Acknowledgements">Acknowledgements</a></li>
@@ -154,7 +154,7 @@ If no patterns match, an error is signalled. The forms <code>match</code>, <code
 The following terms will be used in describing pattern matching:
 <dl>
 	<dt>pattern</dt><dd>an expression that is supposed to match against the first argument to the <code>match</code> form.</dd>
-	<dt>body</dt><dd>the set of expressions that is evaluated when a pattern matches.</dd> 
+	<dt>body</dt><dd>the set of expressions that is evaluated when a pattern matches.</dd>
 	<dt>failure</dt><dd>a thunk that can be called in the body to signal that a match was not successful, and restart matching at the next pattern.</dd>
 	<dt>next, subsequent, etc.</dt><dd>patterns are matched in the order they are listed. Matching stops at the first match unless a call is made to failure.</dd>
 	<dt>pattern clause</dt><dd>a pattern and its body.</dd>
@@ -200,7 +200,7 @@ At the time of this writing, cyclic literals seem irregularly implemented, at le
                         (if (equal? a c) 'ok (fail)))</b>
 		       (_ 'fail))
 </code></pre>
-<p>If an implementation chooses not to support repetition, only the second pattern is valid and the first (as well as those in the first part of this section) should cause a syntax error. 
+<p>If an implementation chooses not to support repetition, only the second pattern is valid and the first (as well as those in the first part of this section) should cause a syntax error.
 </p>
 <h4 id="Ellipsis">Ellipsis and Tail Patterns</h4>
 <p>The first type of ellipsis pattern is just the ellipsis <code><b>...</b></code>, which is equivalent to the unquote-splicing in quasi-patterns. An ellipsis will match any number (zero or more) of a pattern (like a regex Kleene star):</p>
@@ -461,7 +461,7 @@ if the value isn't a pair. Like predicates, fields should avoid side effects whe
 In contrast to the predicate operator, the field operator succeeds
 when its value is false. Compare:</p>
 <pre><code>
-  
+
 (match 1 ((and n (? even?)) n) (_ 'fail)) =&gt; fail
 
 (match 1 ((and n (= even? r)) (list n r)) (_ 'fail)) =&gt; (1 #f)
@@ -507,7 +507,7 @@ returns the current value of the field.
 (s 7)
 
 (g) =&gt; 7
- 
+
 alist =&gt; ((a . 1) (b . 2) (c . 7))
 </code></pre>
 <h4 id="records">Record Patterns</h4>
