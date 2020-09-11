@@ -243,11 +243,8 @@
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
 ;; 2020/09/04 - perf fix for `not`; rename `..=', `..=', `..1' per SRFI 204
-;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
-;; 2020/08/21 - handle underscores separately, not as literals
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
-;; 2020/08/03 - added bindings for auxiliary syntax
-;; 2020/07/06 - adding `=..' and `*..' patterns; fixing ,@ patterns
+;; 2020/07/06 - adding `..=' and `..=' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
 ;; 2015/05/09 - fixing bug in var extraction of quasiquote patterns
@@ -258,7 +255,7 @@
 ;; 2011/09/25 - fixing bug when directly matching an identifier repeated in
 ;;              the pattern (thanks to Stefan Israelsson Tampe)
 ;; 2011/01/27 - fixing bug when matching tail patterns against improper lists
-;; 2010/09/26 - adding `**1' patterns (thanks to Ludovic Courtès)
+;; 2010/09/26 - adding `..1' patterns (thanks to Ludovic Courtès)
 ;; 2010/09/07 - fixing identifier extraction in some `...' and `***' patterns
 ;; 2009/11/25 - adding `***' tree search patterns
 ;; 2008/03/20 - fixing bug where (a ...) matched non-lists
@@ -339,7 +336,7 @@
      (match-next v g+s (pat (=> failure) . body) . rest))))
 
 ;; MATCH-ONE first checks for ellipsis patterns, otherwise passes on to
-;; MATCH-UNDERSCORE.
+;; MATCH-TWO.
 
 (define-syntax match-one
   (syntax-rules ()
@@ -349,41 +346,11 @@
     ((match-one v (p q . r) g+s sk fk i)
      (match-check-ellipsis
       q
-      (match-extract-underscore p (match-gen-ellipsis v p r  g+s sk fk i) i ())
-      (match-underscore v (p q . r) g+s sk fk i)))
+      (match-extract-vars p (match-gen-ellipsis v p r  g+s sk fk i) i ())
+      (match-two v (p q . r) g+s sk fk i)))
     ;; Go directly to MATCH-TWO.
     ((match-one . x)
-     (match-underscore . x))))
-
-;; Helper functions
-;; this may need to be changed, I've had trouble with cond-expand and
-;; R6RS
-(cond-expand
-  (gerbil 
-    (include "gerbil-underscore.scm"))
-  (r7rs
-    (define-syntax underscore?
-      (syntax-rules (_)
-	((_ _ kt kf) kt)
-	((_ x kt kf) kf))))
-  (r6rs
-    ;some r7rs's don't like #' syntax
-    (import (srfi-204 underscore)))
-  (else
-    (define-syntax underscore?
-      (syntax-rules (_)
-	((_ _ kt kf) kt)
-	((_ x kt kf) kf)))))
-
-;; MATCH-UNDERSCORE first checks for underscore patterns, otherwise passes
-;; on to MATCH-TWO.
-
-(define-syntax match-underscore
-  (syntax-rules ()
-    ((match-underscore v p g+s (sk ...) fk i)
-     (underscore? p
-		  (sk ... i)
-		  (match-two v p g+s (sk ...) fk i)))))
+     (match-two . x))))
 
 ;; This is the guts of the pattern matcher.  We are passed a lot of
 ;; information in the form:
@@ -403,7 +370,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get!)
+  (syntax-rules (_ ___ **1 =.. *.. *** quote quasiquote ? $ struct @ object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -417,7 +384,7 @@
     ((match-two v (or p) . x)
      (match-one v p . x))
     ((match-two v (or p ...) g+s sk fk i)
-     (match-extract-underscore (or p ...) (match-gen-or v (p ...) g+s sk fk i) i ()))
+     (match-extract-vars (or p ...) (match-gen-or v (p ...) g+s sk fk i) i ()))
     ((match-two v (not p) g+s (sk ...) fk i)
      (let ((fk2 (lambda () (sk ... i))))
        (match-one v p g+s (match-drop-ids fk) (fk2) i)))
@@ -430,14 +397,14 @@
     ((match-two v (= proc p) . x)
      (let ((w (proc v))) (match-one w p . x)))
     ((match-two v (p ___ . r) g+s sk fk i)
-     (match-extract-underscore p (match-gen-ellipsis v p r g+s sk fk i) i ()))
+     (match-extract-vars p (match-gen-ellipsis v p r g+s sk fk i) i ()))
     ((match-two v (p) g+s sk fk i)
      (if (and (pair? v) (null? (cdr v)))
          (let ((w (car v)))
            (match-one w p ((car v) (set-car! v)) sk fk i))
          fk))
     ((match-two v (p *** q) g+s sk fk i)
-     (match-extract-underscore p (match-gen-search v p q g+s sk fk i) i ()))
+     (match-extract-vars p (match-gen-search v p q g+s sk fk i) i ()))
     ((match-two v (p *** . q) g+s sk fk i)
      (match-syntax-error "invalid use of ***" (p *** . q)))
     ((match-two v (p **1) g+s sk fk i)
@@ -445,11 +412,11 @@
          (match-one v (p ___) g+s sk fk i)
          fk))
     ((match-two v (p =.. n . r) g+s sk fk i)
-     (match-extract-underscore
+     (match-extract-vars
       p
       (match-gen-ellipsis/range n n v p r g+s sk fk i) i ()))
     ((match-two v (p *.. n m . r) g+s sk fk i)
-     (match-extract-underscore
+     (match-extract-vars
       p
       (match-gen-ellipsis/range n m v p r g+s sk fk i) i ()))
     ((match-two v ($ rec p ...) g+s sk fk i)
@@ -459,6 +426,10 @@
     ((match-two v (struct rec p ...) g+s sk fk i)
      (if (is-a? v rec)
          (match-record-refs v rec 0 (p ...) g+s sk fk i)
+         fk))
+    ((match-two v (@ rec p ...) g+s sk fk i)
+     (if (is-a? v rec)
+         (match-record-named-refs v rec (p ...) g+s sk fk i)
          fk))
     ((match-two v (object rec p ...) g+s sk fk i)
      (if (is-a? v rec)
@@ -474,6 +445,7 @@
          fk))
     ((match-two v #(p ...) g+s . x)
      (match-vector v 0 () (p ...) . x))
+    ((match-two v _ g+s (sk ...) fk i) (sk ... i))
     ;; Not a pair or vector or special literal, test to see if it's a
     ;; new symbol, in which case we just bind it, or if it's an
     ;; already bound symbol or some other literal, in which case we
@@ -504,7 +476,7 @@
     ((_ v ((unquote-splicing p) . rest) g+s sk fk i)
      ;; TODO: it is an error to have another unquote-splicing in rest,
      ;; check this and signal explicitly
-     (match-extract-underscore
+     (match-extract-vars
       p
       (match-gen-ellipsis/qq v p rest g+s sk fk i) i ()))
     ((_ v (quasiquote p) g+s sk fk i . depth)
@@ -818,7 +790,7 @@
 (define-syntax match-vector-tail
   (syntax-rules ()
     ((_ v p n len sk fk i)
-     (match-extract-underscore p (match-vector-tail-two v p n len sk fk i) i ()))))
+     (match-extract-vars p (match-vector-tail-two v p n len sk fk i) i ()))))
 
 (define-syntax match-vector-tail-two
   (syntax-rules ()
@@ -849,16 +821,6 @@
     ((_ v rec () g+s (sk ...) fk i)
      (sk ... i))))
 
-;; Extract underscore in a pattern, otherwise pass on to
-;; MATCH-EXTRACT-VARS
-
-(define-syntax match-extract-underscore
-  (syntax-rules ()
-    ((match-extract-underscore p (k ...) i v)
-     (underscore? p
-		  (k ... v)
-		  (match-extract-vars p (k ...) i v)))))
-
 ;; Extract all identifiers in a pattern.  A little more complicated
 ;; than just looking for symbols, we need to ignore special keywords
 ;; and non-pattern forms (such as the predicate expression in ?
@@ -872,38 +834,41 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set!)
+  (syntax-rules (_ ___ **1 =.. *.. *** ? $ struct @ object = quote quasiquote and or not get! set!)
     ((match-extract-vars (? pred . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ((match-extract-vars ($ rec . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ((match-extract-vars (struct rec . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
+    ((match-extract-vars (@ rec (f p) ...) . x)
+     (match-extract-vars (p ...) . x))
     ((match-extract-vars (object rec (f p) ...) . x)
-     (match-extract-underscore (p ...) . x))
+     (match-extract-vars (p ...) . x))
     ((match-extract-vars (= proc p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ((match-extract-vars (quote x) (k ...) i v)
      (k ... v))
     ((match-extract-vars (quasiquote x) k i v)
      (match-extract-quasiquote-vars x k i v (#t)))
     ((match-extract-vars (and . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ((match-extract-vars (or . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ((match-extract-vars (not . p) . x)
-     (match-extract-underscore p . x))
+     (match-extract-vars p . x))
     ;; A non-keyword pair, expand the CAR with a continuation to
     ;; expand the CDR.
     ((match-extract-vars (p q . r) k i v)
      (match-check-ellipsis
       q
-      (match-extract-underscore (p . r) k i v)
-      (match-extract-underscore p (match-extract-vars-step (q . r) k i v) i ())))
+      (match-extract-vars (p . r) k i v)
+      (match-extract-vars p (match-extract-vars-step (q . r) k i v) i ())))
     ((match-extract-vars (p . q) k i v)
-     (match-extract-underscore p (match-extract-vars-step q k i v) i ()))
+     (match-extract-vars p (match-extract-vars-step q k i v) i ()))
     ((match-extract-vars #(p ...) . x)
-     (match-extract-underscore (p ...) . x))
+     (match-extract-vars (p ...) . x))
+    ((match-extract-vars _ (k ...) i v)    (k ... v))
     ((match-extract-vars ___ (k ...) i v)  (k ... v))
     ((match-extract-vars *** (k ...) i v)  (k ... v))
     ((match-extract-vars **1 (k ...) i v)  (k ... v))
@@ -928,7 +893,7 @@
 (define-syntax match-extract-vars-step
   (syntax-rules ()
     ((_ p k i v ((v2 v2-ls) ...))
-     (match-extract-underscore p k (v2 ... . i) ((v2 v2-ls) ... . v)))
+     (match-extract-vars p k (v2 ... . i) ((v2 v2-ls) ... . v)))
     ))
 
 (define-syntax match-extract-quasiquote-vars
@@ -938,7 +903,7 @@
     ((match-extract-quasiquote-vars (unquote-splicing x) k i v d)
      (match-extract-quasiquote-vars (unquote x) k i v d))
     ((match-extract-quasiquote-vars (unquote x) k i v (#t))
-     (match-extract-underscore x k i v))
+     (match-extract-vars x k i v))
     ((match-extract-quasiquote-vars (unquote x) k i v (#t . d))
      (match-extract-quasiquote-vars x k i v d))
     ((match-extract-quasiquote-vars (x . y) k i v d)
@@ -1048,7 +1013,7 @@
 (define-syntax match-letrec-one
   (syntax-rules ()
     ((_ (pat . rest) expr ((id tmp) ...))
-     (match-extract-underscore
+     (match-extract-vars
       pat (match-letrec-one rest expr) (id ...) ((id tmp) ...)))
     ((_ () expr ((id tmp) ...))
      (match-letrec-two expr () ((id tmp) ...)))))
