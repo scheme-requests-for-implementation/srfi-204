@@ -35,15 +35,16 @@ dt {
   <li>Draft #5 published: 2020-08-16</li>
   <li>Draft #6 published: 2020-08-24</li>
   <li>Draft #7 published: 2020-09-04</li>
+  <li>Draft #8 published: 2020-09-10</li>
 </ul>
 <h2 id="toc">Table of Contents</h2>
 <ul>
 	<li><a href="#Abstract">Abstract</a></li>
 	<li><a href="#Rationale">Rationale</a></li>
-	<li><a href="#Specification">Specification</a></li>
+	<li><a href="#Specification">Specification</a>
 	<ul>
 		<li><a href="#Intro">Introduction</a></li>
-		<li><a href="#Patterns">Patterns</a></li>
+		<li><a href="#Patterns">Patterns</a>
 		<ul>
 		<li><a href="#Literals">Literal Patterns</a></li>
 		<li><a href="#Variables">Pattern Variables</a></li>
@@ -54,9 +55,9 @@ dt {
 		<li><a href="#Pred">Predicates and Fields</a></li>
 		<li><a href="#g-and-s">Getters and Setters</a></li>
 		<li><a href="#records">Record Patterns</a></li>
-		</ul>
+		</ul></li>
 		<li><a href="#Grammar">Pattern Grammar</a></li>
-		<li><a href="#Syntax">Syntax</a></li>
+		<li><a href="#Syntax">Syntax</a>
 		<ul>
 		<li><a href="#match">match</a></li>
 		<li><a href="#match-lambda">match-lambda</a></li>
@@ -64,12 +65,12 @@ dt {
 		<li><a href="#match-let">match-let</a></li>
 		<li><a href="#match-let*">match-let*</a></li>
 		<li><a href="#match-letrec">match-letrec</a></li>
-		</ul>
+		</ul></li>
 		<li><a href="#TailContexts">Tail Contexts</a></li>
-		<li><a href="#Side Effects">Side Effects</a></li>
+		<li><a href="#Side-Effects">Side Effects</a></li>
 		<li><a href="#Errors">Errors</a></li>
                 <li><a href="#Macros">Using in Other Macros</a></li>
-	</ul>
+	</ul></li>
 	
 		<li><a href="#Implementation">Implementation</a></li>
 		<li><a href="#References">References</a></li>
@@ -163,47 +164,46 @@ The following terms will be used in describing pattern matching:
 <h3 id="Patterns">Patterns</h3>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
 <h4 id="Literals">Literal Patterns</h4>
-<p>Literal patterns are patterns like the example above, where the content of the pattern is <code>equal?</code> to the content of the expression being matched. In this case, quasi-patterns and patterns are very similar (except symbols don't need quoting in quasi-patterns):
+<p>Literal patterns are patterns like the example above, where the content of the pattern is <code>equal?</code> to the content of the expression being matched. In this case, quasi-patterns and patterns are very similar (except symbols don't need quoting in quasi-patterns):</p>
 <pre><code>
 (let ((ls (list 'a "b" #f 2 '() #\c #(1))
   (list (match ls (('a "b" #f 2 () #\c #(1)) 'ok))
         (match ls (`(a "b" #f 2 () #\c #(1)) 'ok))
 =&gt; (ok ok)
 </code></pre>
-Note also that the empty list does not need to be quoted in either type of pattern.
+<p>Note also that the empty list does not need to be quoted in either type of pattern.
 At the time of this writing, cyclic literals seem irregularly implemented, at least in the repl, but this is one area where quasi-patterns and other literal patterns differ, since even those repls which handle cyclic literals [eg '0#=(1 . #0#)] with no trouble have stack overflow, segfaults, etc. with quasi-quoted cyclic literals [eg `0#=(1 . #0#)] due to the difference between quotation and quasi-quotation. So cyclic literals should be avoided inside quasi-patterns.
 </p>
 <h4 id="Variables">Pattern Variables</h4>
-<p>Identifiers in patterns that are not one of the operators (<code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>) will match anything and their corresponding binding is available in the body. The special variable <b>_</b> matches anything and does not bind the result. It can be used to get rid of unintersting values or in a block of match expressions, <b>_</b> is often used like <code>else</code> if the result is not needed. Pattern variables have to be unquoted in quasi-patterns.
+<p>Identifiers in patterns that are not one of the operators (<code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>) will match anything and their corresponding binding is available in the body. The special variable <b>_</b> matches anything and does not bind the result. It can be used to get rid of unintersting values or in a block of match expressions, <b>_</b> is often used like <code>else</code> if the result is not needed. Pattern variables have to be unquoted in quasi-patterns.</p>
 <pre><code>
 (match (list 1 2 3) ((a b c) b)) =&gt; 2
 (match (list 1 2 3) ((_ b _) b)) =&gt; 2
 (match (list 1 2 3) (`(a ,b c) b) (_ 'fail)) =&gt; fail
 (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)) =&gt; 2
 </code></pre>
-</p>
 <h4 id="Repitition">Nonlinear Patterns: Repitition</h4>
-<p>A nonlinear pattern has repeated pattern variables:
+<p>A nonlinear pattern has repeated pattern variables:</p>
 <pre><code>
 (match (list A B A) ((a b a) a)) =&gt; A
 (match (list A B A) (`(,a b ,a) a) (_ 'fail)) =&gt; fail
 (match (list A B A) (`(,a B ,a) a) (_ 'fail)) =&gt; A
 (match (list A B A) (`(,a ,b ,a) a) (_ 'fail)) =&gt; A
 </code></pre>
-After the first match, subsequent instances must match a value <code>equal?</code> to the first. Any nonlinear pattern clause that involves repetition can be converted into a linear pattern clause that uses failure to restart pattern matching at the next pattern:
+<p>After the first match, subsequent instances must match a value <code>equal?</code> to the first. Any nonlinear pattern clause that involves repetition can be converted into a linear pattern clause that uses failure to restart pattern matching at the next pattern:</p>
 <pre><code>
 (match (list 1 2 1) <b>((a b a) 'ok)</b> (_ 'fail))
-
-converts to
-
+</code></pre>
+<p>converts to</p>
+<pre><code>
 (match (list 1 2 1) <b>((a b c) (=&gt; fail)
                         (if (equal? a c) 'ok (fail)))</b>
 		       (_ 'fail))
 </code></pre>
-If an implementation chooses not to support repetition, only the second pattern is valid and the first (as well as those in the first part of this section) should cause a syntax error. 
+<p>If an implementation chooses not to support repetition, only the second pattern is valid and the first (as well as those in the first part of this section) should cause a syntax error. 
 </p>
 <h4 id="Ellipsis">Ellipsis and Tail Patterns</h4>
-<p>The first type of ellipsis pattern is just the ellipsis <code><b>...</b></code>, which is equivalent to the unquote-splicing in quasi-patterns. An ellipsis will match any number (zero or more) of a pattern (like a regex Kleene star):
+<p>The first type of ellipsis pattern is just the ellipsis <code><b>...</b></code>, which is equivalent to the unquote-splicing in quasi-patterns. An ellipsis will match any number (zero or more) of a pattern (like a regex Kleene star):</p>
 <pre><code>
 (match (list 1 2) ((1 2 3 ...) #t)) =&gt; #t
 (match (list 1 2) (`(1 2 ,@3) #t)) =&gt; #t
@@ -217,7 +217,7 @@ If an implementation chooses not to support repetition, only the second pattern 
 
 (match '((a b) (c d) (e f)) (`(,@(x y)) (list x y))) =&gt; ((a c e) (b d f))
 </code></pre>
-There can be only one ellipsis or tail pattern per list, but there can be multiple ellipsis or tail patterns in a pattern:
+<p>There can be only one ellipsis or tail pattern per list, but there can be multiple ellipsis or tail patterns in a pattern:</p>
 <pre><code>
 ;;;[List-of [List-of Any]] -> [List-of [List-of Any]]
 (define transpose
@@ -225,7 +225,7 @@ There can be only one ellipsis or tail pattern per list, but there can be multip
 
 (transpose '((1 2 3) (4 5 6))) =&gt; ((1 4) (2 5) (3 6))
 </code></pre>
-Ellipsis patterns also do not have to be the last pattern in a list:
+<p>Ellipsis patterns also do not have to be the last pattern in a list:</p>
 <pre><code>
 (define (palindrome? str)
   (let loop ((chars (filter char-alphabetic?
@@ -239,24 +239,24 @@ Ellipsis patterns also do not have to be the last pattern in a list:
 (palindrome? "Able was I, ere I saw Elba.") =&gt; #t
 (palindrome? "Napoleon") =&gt; #f
 </code></pre>
-and they can be used with _ to throw away unimportant data:
+<p>and they can be used with _ to throw away unimportant data:</p>
 <pre><code>
 (define first-column
   (match-lambda (((a _ ...) ...) a)))
 
 (first-column '((1 2 3) (4 5 6) (7 8 9))) =&gt; (1 4 7)
 </code></pre>
-<code>___</code> is provided as an alias for <code>...</code> when it is
+<p><code>___</code> is provided as an alias for <code>...</code> when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
 </p><p>
-The second kind of ellipsis is <code><b>**1</b></code>, which matches one or more of a pattern (like regex +)
+The second kind of ellipsis is <code><b>**1</b></code>, which matches one or more of a pattern (like regex +)</p>
 <pre><code>
 (match (list 1 2) ((a b c **1) c))
 ERROR: match: "no matching pattern"
 
 (match (list 1 2 3) ((a b c **1) c)) =&gt; (3)
 </code></pre>
-This pattern (and the remaining ellipsis patterns) has no quasi-pattern equivalent, so if it occurs in a quasi-pattern that quasi-pattern must be unquoted:
+<p>This pattern (and the remaining ellipsis patterns) has no quasi-pattern equivalent, so if it occurs in a quasi-pattern that quasi-pattern must be unquoted:</p>
 <pre><code>
 (define first-column-of-some
   (match-lambda (`(,@(a _ **1)) a)))
@@ -314,7 +314,7 @@ Tail patterns will match dotted pairs, and ellipsis patterns won't:
 (keys '((a 1) (b 2) (c 3))) =&gt; (a b c)
 (keys '((a . 1) (b . 2) (c . 3))) =&gt; (a b c)
 </code></pre>
-Tail patterns also don't require any special treatment in quasi-patterns
+<p>Tail patterns also don't require any special treatment in quasi-patterns</p>
 <pre><code>
 (define handle-arithmetic-sexpr
  (match-lambda (`(+ . ,operands) (apply + (map eval-sexpr operands)))
@@ -322,7 +322,6 @@ Tail patterns also don't require any special treatment in quasi-patterns
                (`(* . ,operands) (apply * (map eval-sexpr operands)))
                (`(/ . ,operands) (apply / (map eval-sexpr operands)))))
 </code></pre>
-</p>
 <h3 id="Tree">Tree Patterns</h3>
 <p>
 The new operator <code>***</code> can be used to search a tree for
@@ -334,7 +333,7 @@ object in which case the path is the empty list.  In a sense it's
 a 2-dimensional version of the <code>...</code> pattern.
 As a common case the pattern <code>(_ *** y)</code> can be used to
 search for <code>y</code> anywhere in a tree, regardless of the path
-used.
+used.</p>
 <pre><code>
 (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 	  ((a *** 7) a))
@@ -344,7 +343,6 @@ used.
 	  ((_ *** `(sqrt . ,rest)) rest))
 =&gt; ((+ (sqr x) (sqr y)))
 </code></pre>
-</p>
 <h4 id="Boolean">Boolean Patterns</h4>
 <p>
 The boolean operators <code>and</code>, <code>or</code> and <code>not</code>
@@ -357,17 +355,17 @@ bind <code>x</code> to the entire value that matches <code>pat</code>
 conjunction with <code>not</code> patterns to match a general case
 with certain exceptions.
 </p>
-</p><pre><code>(match 1 ((and) #t)) =&gt; #t</code></pre><p>
-</p><pre><code>(match 1 ((and x) x)) =&gt; 1</code></pre><p>
-</p><pre><code>(match 1 ((and x 1) x)) =&gt; 1</code></pre><p>
+<pre><code>(match 1 ((and) #t)) =&gt; #t</code></pre>
+<pre><code>(match 1 ((and x) x)) =&gt; 1</code></pre>
+<pre><code>(match 1 ((and x 1) x)) =&gt; 1</code></pre><p>
 An and pattern is different from its Scheme counter part in that matching,
-not truth, is what determines whether it succeeds:
+not truth, is what determines whether it succeeds:</p>
 
 <pre><code>
 (match #f ((and) #t) (_ #f)) =&gt; #t
 </code></pre>
 
-Failure is one way to catch when a value has matched false
+<p>Failure is one way to catch when a value has matched false</p>
 
 <pre><code>
 (match #f ((and x) (=&gt; fail) (if x #t (fail))) (_ #f)) =&gt; #f
@@ -379,10 +377,10 @@ matches.  If the same identifier occurs in different subpatterns,
 it is matched independently.  All identifiers from all subpatterns
 are bound if the <code>or</code> operator matches, but the binding is
 only defined for identifiers from the subpattern which matched.
-</p><pre><code>(match 1 ((or) #t) (else #f)) =&gt; #f</code></pre><p>
-</p><pre><code>(match 1 ((or x) x)) =&gt; 1</code></pre><p>
-</p><pre><code>(match 1 ((or x 2) x)) =&gt; 1</code></pre><p>
-If failure patterns are used as replacements for <code>or</code> repetition patterns, the <code>or</code> should be moved from the pattern to the body:
+</p><pre><code>(match 1 ((or) #t) (else #f)) =&gt; #f</code></pre>
+<pre><code>(match 1 ((or x) x)) =&gt; 1</code></pre>
+<pre><code>(match 1 ((or x 2) x)) =&gt; 1</code></pre>
+<p>If failure patterns are used as replacements for <code>or</code> repetition patterns, the <code>or</code> should be moved from the pattern to the body:</p>
 <pre><code>
 (define last-matches-one-of-first-three
   (match-lambda ((a a) #t)
@@ -399,7 +397,7 @@ If failure patterns are used as replacements for <code>or</code> repetition patt
                      (fail)))
                 ((a b c d ... e) (equal? c e))
                 (_ #f)))
-</pre></code>
+</code></pre>
 <p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body. This pattern also gives us a way to eliminate values (like false above) in a more streamlined way:
@@ -409,15 +407,14 @@ match.  None of the identifiers used are available in the body. This pattern als
 (match #f ((and x (not #f)) x) (_ 'fail)) =&gt; fail
 
 (match 1 ((not 2) #t)) =&gt; #t</code></pre>
-<p>
 <h4 id="Pred">Predicates and Fields</h4>
-The operator <code>?</code> can be used to provide a
+<p>The operator <code>?</code> can be used to provide a
 predicate.  The usage is <code>(? predicate pat ...)</code> where
 <code>predicate</code> is a Scheme expression evaluating to a predicate
 called on the value to match, and any optional patterns after the
 predicate are then matched as in an <code>and</code> pattern.
 </p><pre><code>(match 1 ((? odd? x) x)) =&gt; 1</code></pre>
-Along with boolean patterns, the predicate pattern is enough to make the other half of the math expression evaluator started in the section on dotted pairs:
+<p>Along with boolean patterns, the predicate pattern is enough to make the other half of the math expression evaluator started in the section on dotted pairs:</p>
 <pre><code>
 (define eval-sexpr
   (match-lambda ((? number? n) n)
@@ -426,8 +423,8 @@ Along with boolean patterns, the predicate pattern is enough to make the other h
 		(_ (error "not implemented yet"))))
 
 (eval-sexpr '(+ (* 3 4 5) (- 10 3))) =&gt; 67
-</pre></code>
-A predicate may be called multiple times on matching and non-matching expressions and sub-expressions, in any order, so side effects should be avoided unless there is some overriding interest (debugging, logging, short-cutting, etc.). Predicates can also be written using references to pattern variables, if repetition is supported:
+</code></pre>
+<p>A predicate may be called multiple times on matching and non-matching expressions and sub-expressions, in any order, so side effects should be avoided unless there is some overriding interest (debugging, logging, short-cutting, etc.). Predicates can also be written using references to pattern variables, if repetition is supported:</p>
 <pre><code>
 (define fibby?
   (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
@@ -462,7 +459,7 @@ Thus the pattern <code>(and (= car x) (= cdr y))</code> is equivalent
 to <code>(x . y)</code> except that it will result in an immediate error
 if the value isn't a pair. Like predicates, fields should avoid side effects when there is no overriding interest.
 In contrast to the predicate operator, the field operator succeeds
-when its value is false. Compare:
+when its value is false. Compare:</p>
 <pre><code>
   
 (match 1 ((and n (? even?)) n) (_ 'fail)) =&gt; fail
@@ -482,9 +479,9 @@ when its value is false. Compare:
 		   r)
 		   (_ 'fail))
 =&gt; (b c d)
-</pre></code>
-</p><pre><code>(match '(1 . 2) ((= car x) x)) =&gt; 1</code></pre><p>
-</p><pre><code>(match 4 ((= square x) x)) =&gt; 16</code></pre><p>
+</code></pre>
+<pre><code>(match '(1 . 2) ((= car x) x)) =&gt; 1</code></pre>
+<pre><code>(match 4 ((= square x) x)) =&gt; 16</code></pre>
 <h4 id="g-and-s">Getters and Setters</h4>
 <p>
 The <code>set!</code> and <code>get!</code> operators are used to bind an
@@ -494,8 +491,8 @@ that argument.  The getter is a procedure of no arguments which
 returns the current value of the field.
 </p><pre><code>(let ((x (cons 1 2)))
   (match x
-    ((1 . (set! s)) (s 3) x)))</code></pre><code>=&gt; (1 . 3)</code><p>
-</p><pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) =&gt; 2</code></pre>
+    ((1 . (set! s)) (s 3) x)))</code></pre><code>=&gt; (1 . 3)</code>
+<pre><code>(match '(1 . 2) ((1 . (get! g)) (g))) =&gt; 2</code></pre>
 <pre><code>
 (define alist (list (cons 'a 1) (cons 'b 2) (cons 'c 3)))
 
@@ -546,7 +543,7 @@ operator, originally a Gauche extension:
   (match (make-employee "Bob" "Doctor")
     ((object employee (title t) (name n)) (list t n))))
 </code></pre><code>=&gt; ("Doctor" "Bob")</code>
-Matching on records when this feature is not implemented can be done as follows:
+<p>Matching on records when this feature is not implemented can be done as follows:</p>
 <pre><code>
 (match (make-employee "Bob" "Doctor")
        ((and (? employee?)
@@ -555,17 +552,17 @@ Matching on records when this feature is not implemented can be done as follows:
 	(list t n)))
 =&gt; ("Doctor" "Bob")
 </code></pre>
-But this technique cannot be used to emulate setter patterns like:
+<p>But this technique cannot be used to emulate setter patterns like:</p>
 <pre><code>
-(let () (define-record-type <posn>
+(let () (define-record-type &lt;posn&gt;
            (make-posn x y)
 	   posn?
 	   (x posn-x set-posn-x!)
            (y posn-y set-posn-y!))
 	 (match (make-posn 3 4)
-		((and p ($ <posn> (set! set-x)))
+		((and p ($ &lt;posn&gt; (set! set-x)))
 		(set-x 7)
-		(match p (($ <posn> x y) (list x y))))))
+		(match p (($ &lt;posn&gt; x y) (list x y))))))
 =&gt; (7 4)
 </code></pre>
 <h3 id="Grammar">Pattern Grammar</h3>
@@ -699,7 +696,7 @@ clause.</p>
   (match-lambda (($ &lt;checkable&gt; pred (? pred ok)) ok)
                 (($ &lt;checkable&gt;) 'bad-data)))
 </code></pre>
-<h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  Creates a procedure of any
+<h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  <p>Creates a procedure of any
 number of arguments, and matches the argument list against each
 clause.</p>
 <pre><code>
@@ -744,7 +741,7 @@ matches and binds the patterns in sequence, with preceding match
 patterns in scope.</p>
 <h3 id="TailContexts">Tail Contexts</h3>
 <p>
-If a pattern matcher is in tail context, expressions marked as tail-bodies below will be in tail context.
+If a pattern matcher is in tail context, expressions marked as tail-bodies below will be in tail context.</p>
 <pre><code>
 (match &lt;expression&gt; <b>&lt;match-clause&gt;</b>+)
 
@@ -765,17 +762,16 @@ where:
 &lt;match-clause&gt; &rarr; (&lt;pattern&gt; <b>&lt;tail-body&gt;</b>+)
 </code></pre>
 
-<h3 id="Side Effects">Side Effects</h3>
-<p>There are two types of patterns where the issue of side-effects is prominent:
+<h3 id="Side-Effects">Side Effects</h3>
+<p>There are two types of patterns where the issue of side-effects is prominent:</p>
 <ul>
 	<li>predicate patterns and field patterns, which may be applied repeatedly and to non-matches,
 		so should not have side effects</li>
 	<li>set! patterns, which are intended have side effects when they are used
 	in the body, and get! patterns, which return the current value for values thare subject to change.</li>
 </ul>
-</p>
 <h3 id="Errors">Errors</h3>
-The following is a list of examples of the erroneous conditions, and the message given by the current implementation:
+<p>The following is a list of examples of the erroneous conditions, and the message given by the current implementation:</p>
 <ul>
 	<li><code>(match)                                  "missing match expression"</code></li>
 	<li><code>(match (list 1 2 3))                     "no match clauses"</code></li>
@@ -786,9 +782,8 @@ The following is a list of examples of the erroneous conditions, and the message
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
 	</ul>
-
-A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
-However if this occurs in a context where a body is required, it will cause an error:
+<p>A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
+However if this occurs in a context where a body is required, it will cause an error:</p>
 <pre><code>
 (match-let (((a b) (list 1 2))))
 ERROR on line 1023 of file ../srfi-204/srfi-204.scm:
@@ -836,8 +831,8 @@ To use the <code><b>$,</b></code>  <code><b>struct</b></code>, and <code><b>obje
                             position slot to new-value</var>. If slot is a symbol,
                             <var>set! the value named slot to new-value</var>
 </code></pre>
-Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another. This
-is an example from  Gauche, where records are implemented on top of native CLOS-like objects:
+<p>Since these forms rely on the underlying structure of records in a particular implementation, their definition will vary from one Scheme to another. This
+is an example from  Gauche, where records are implemented on top of native CLOS-like objects:</p>
 <pre><code>
 (import (only (gauche base) is-a? slot-definition-name class-slots)
   (scheme base)
@@ -865,7 +860,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
     	              value)
              (gb-slot-set! inst n value))))))
 </code></pre>
-this is an example from Larceny, which has SRFI 99:
+<p>this is an example from Larceny, which has SRFI 99:</p>
 <pre><code>
 (import (scheme base)
 	(srfi 99 records))
@@ -887,8 +882,8 @@ this is an example from Larceny, which has SRFI 99:
            ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
            ((rtd-mutator rtd n) rec value))))))
 </code></pre>
-and this is an example from Loko and Chez, which use forms from
-<code><b>(rnrs records procedural)</b></code> and <code><b>(rnrs records inspection)</b></code>:
+<p>and this is an example from Loko and Chez, which use forms from
+<code><b>(rnrs records procedural)</b></code> and <code><b>(rnrs records inspection)</b></code>:</p>
 <pre><code>
 (define-syntax is-a?
   (syntax-rules ()
