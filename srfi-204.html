@@ -302,13 +302,13 @@ The <code>*.. <var>k j</var></code> syntax matches between <var>k</var> and <var
 Tail patterns will match dotted pairs, and ellipsis patterns won't:
 <pre><code>
 (define keys
-  (match-lambda (((a _ ...) ...)) (_ 'fail)))
+  (match-lambda (((a _ ...) ...) a) (_ 'fail)))
 
 (keys '((a 1) (b 2) (c 3))) =&gt; (a b c)
 (keys '((a . 1) (b . 2) (c . 3))) =&gt; fail
 
 (define keys
-  (match-lambda (((a . _) ...)) (_ 'fail)))
+  (match-lambda (((a . _) ...) a) (_ 'fail)))
 
 (keys '((a 1) (b 2) (c 3))) =&gt; (a b c)
 (keys '((a . 1) (b . 2) (c . 3))) =&gt; (a b c)

@@ -1,5 +1,5 @@
-(test-begin (string-append test-name scheme-version-name))
-(test-equal "Introduction" #f (let ((ls (list 1 2 3)))
+(test-begin (string-append test-name "-" scheme-version-name))
+(test-equal "Introduction" #t (let ((ls (list 1 2 3)))
 				(match ls
 				       ((1 2 3) #t))))
 
@@ -11,26 +11,26 @@
 (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
 (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
 (test-equal "Quasi-quote variable fail"
-	    fail
+	    'fail
 	    (match (list 1 2 3) (`(a ,b c) b) (_ 'fail)))
 (test-equal "Quasi-quote variable pass"
 	    2
 	    (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)))
 
 (if (not non-linear-pattern) (test-skip 4))
-(test-equal "repeated pattern" A (match (list A B A) ((a b a) a)))
+(test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
 (test-equal "quasi-quote fail repeated pattern" 
-	    fail
-	    (match (list A B A) (`(,a b ,a) a) (_ 'fail)))
+	    'fail
+	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
 (test-equal "quasi-quote repeated pattern 1"
-	    A
-	    (match (list A B A) (`(,a B ,a) a) (_ 'fail)))
+	    'A
+	    (match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)))
 (test-equal "quasi-quote repeated pattern 2"
-	    A
-	    (match (list A B A) (`(,a ,b ,a) a) (_ 'fail)))
+	    'A
+	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
 
 (if non-linear-pattern (test-skip 4))
-(test-error "error repeated pattern" A (match (list A B A) ((a b a) a)))
+(test-error "error repeated pattern" #t (match (list A B A) ((a b a) a)))
 (test-error "error quasi-quote fail repeated pattern" 
 	    #t
 	    (match (list A B A) (`(,a b ,a) a) (_ 'fail)))
@@ -67,7 +67,7 @@
 	    (match (list 1 2 3 3 3) (`(1 2 ,@3) #t)))
 
 (test-equal "subexpression ellipsis match"
-	    ((a stitch in) (time saves nine))
+	    '((a stitch in) (time saves nine))
 	    (match '((a time) (stitch saves) (in nine)) (((x y) ...) (list x y))))
 
 (test-equal "subexpression quasi-quote splicing match"
@@ -90,6 +90,7 @@
 		(match chars
 		       (() #t)
 		       ((a) #t)
+		       ((a a) #t)
 		       ((a b ... a) (loop b))
 		       (_ #f))))
 	    (lambda (str)
@@ -98,6 +99,7 @@
 		(match chars
 		       (() #t)
 		       ((a) #t)
+		       ((a b) (eqv? a b))
 		       ((a b ... c) (if (eqv? a c) (loop b) #f))
 		       (_ #f)))))))
 
@@ -119,15 +121,15 @@
 
 (let ()
   (define first-column-of-some
-  (match-lambda (`(,@(a _ **1)) a))))
+  (match-lambda (`(,@(a _ **1)) a)))
 
 (test-error "quasi-quote unquote-splicing **1 error"
-	    #f
+	    #t
 	    (first-column-of-some '((1) (2))))
 
 (test-equal "quasi-quote unquote-splicing **1 match"
 	    '(1 3)
-	    (first-column-of-some '((1 2) (3 4))))
+	    (first-column-of-some '((1 2) (3 4)))))
 
 (test-equal "=.. match"
 	    '((a c e) (b d f))
@@ -136,7 +138,7 @@
 		   (_ 'fail)))
 
 (test-equal "=.. fail"
-	    fail
+	    'fail
 	    (match '((a b) (c d) (e f) (g h))
 		   (((x y) =.. 3) (list x y))
 		   (_ 'fail)))
@@ -154,21 +156,21 @@
 		   (_ 'fail)))
 
 (test-equal "*.. 2 4 fail hi"
-	    fail
+	    'fail
 	    (match '((a b) (c d) (e f) (g h) (i j))
 		   (((x y) *.. 2 4) (list x y))
 		   (_ 'fail)))
 
 (let ()
   (define keys
-	   (match-lambda (((a _ ...) ...)) (_ 'fail)))
+	   (match-lambda (((a _ ...) ...) a) (_ 'fail)))
 
-  (test-equal "... proper list match" (a b c) (keys '((a 1) (b 2) (c 3))))
-  (test-equal "... dotted-pair fail" fail (keys '((a . 1) (b . 2) (c . 3)))))
+  (test-equal "... proper list match" '(a b c) (keys '((a 1) (b 2) (c 3))))
+  (test-equal "... dotted-pair fail" 'fail (keys '((a . 1) (b . 2) (c . 3)))))
 
 (let ()
   (define keys
-    (match-lambda (((a . _) ...)) (_ 'fail)))
+    (match-lambda (((a . _) ...) a) (_ 'fail)))
 
   (test-equal "tail pattern proper list match"
 	      '(a b c)
@@ -219,7 +221,7 @@
 
 
 (test-equal "not #f match" 1 (match 1 ((and x (not #f)) x) (_ 'fail)))
-(test-equal "not #f fail" fail (match #f ((and x (not #f)) x) (_ 'fail)))
+(test-equal "not #f fail" 'fail (match #f ((and x (not #f)) x) (_ 'fail)))
 (test-equal "not match" #t (match 1 ((not 2) #t)))
 
 (test-equal "predicate match" 1 (match 1 ((? odd? x) x)))
@@ -241,7 +243,7 @@
 	      (eval-sexpr '(+ (* 3 4 5) (- 10 3)))))
 
 (if non-linear-pred
-    (let ((fibby?
+    (letrec ((fibby?
 	    (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
 			   (fibby? (cons b (cons c rest))))
 			  ((a b) #t)
@@ -272,7 +274,7 @@
 	      #t
 	      (fibby? '(4 7 11 18 29 47))))
 
-(test-equal "pred false fail" fail (match 1 ((and n (? even?)) n) (_ 'fail)))
+(test-equal "pred false fail" 'fail (match 1 ((and n (? even?)) n) (_ 'fail)))
 (test-equal "field false match"
 	    '(1 #f)
 	    (match 1 ((and n (= even? r)) (list n r)) (_ 'fail)))
@@ -296,7 +298,7 @@
 (test-equal "field N->N proc" 16 (match 4 ((= square x) x)))
 
 (let ((x (cons 1 2)))
-  (test-equal "list setter test" (1 . 3)   (match x ((1 . (set! s)) (s 3) x))))
+  (test-equal "list setter test" '(1 . 3)   (match x ((1 . (set! s)) (s 3) x))))
 (test-equal "list getter test" 2 (match '(1 . 2) ((1 . (get! g)) (g))))
 
 (let () (define alist (list (cons 'a 1) (cons 'b 2) (cons 'c 3)))
@@ -324,17 +326,17 @@
       (define-record-type employee (fields name title))))
   (if (not record-implemented) (test-skip 2))
   (test-equal "posistional record"
-	      ("Doctor" "Bob")
+	      (list "Doctor" "Bob")
 	      (match (make-employee "Bob" "Doctor")
 		     (($ employee n t) (list t n))))
 
   (test-equal "named record"
-	      ("Doctor" "Bob")
+	      (list "Doctor" "Bob")
 	      (match (make-employee "Bob" "Doctor")
 		     ((object employee (title t) (name n)) (list t n))))
 
 (test-equal "record emulation via pred/field"
-	    ("Doctor" "Bob")
+	    (list "Doctor" "Bob")
 	    (match (make-employee "Bob" "Doctor")
 		   ((and (? employee?)
 			 (= get-title t)
@@ -352,7 +354,7 @@
   
   (if (not record-implemented) (test-skip 1))
   (test-equal "record setter"
-	      (7 4)
+	      (list 7 4)
 	      (match (make-posn 3 4)
 		     ((and p ($ posn (set! set-x)))
 		     (set-x 7)
@@ -440,30 +442,30 @@
 	      1
 	      (fact 0)))
 
-(test-error "error missing match expression" #t (match))
-(test-error "error no match clauses" #t (match (list 1 2 3)))
-(test-error "error no matching pattern" #t (match (list 1 2 3) ((a b))))
-(test-error "error invalid use of ***" #t (match (list 1 2 3) ((a *** . 3) a)))
+(test-error "error missing match expression" #t (read-eval-string "(match)"))
+(test-error "error no match clauses" #t (read-eval-string "(match (list 1 2 3))"))
+(test-error "error no matching pattern" #t (read-eval-string "(match (list 1 2 3) ((a b)))"))
+(test-error "error invalid use of ***" #t (read-eval-string "(match (list 1 2 3) ((a *** . 3) a))"))
 (test-error "error multiple ellipsis patterns at same level"
 	    #t
-	    (match '(1 1 1 2 2 2) ((a ... b ...) b)))
+	    (read-eval-string "(match '(1 1 1 2 2 2) ((a ... b ...) b))"))
 (test-error "error ellipsis + =.. at same level"
 	    #t
-	    (match '(1 1 1 2 2 2) ((a =.. 3 b ...) b)))
+	    (read-eval-string "(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b))"))
 (test-error "error ellipsis + ,@ at same level"
 	    #t
-	    (match '(1 1 1 2 2 2) (`(,@a ,b ...) b)))
+	    (read-eval-string "(match '(1 1 1 2 2 2) (`(,@a ,b ...) b))"))
 (test-error "error dotted tail not allowed after ellipsis"
 	    #t
-	    (match '(1 1 1 2 2 2) (`(,@a . b) a)))
+	    (read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
 
 (test-equal "match w/o body has undefined value" 
 	    (if #f #t)
-	    (match-let (((a b) (list 1 2)))))
+	    (read-eval-string "(match (list 1 2) ((a b)))"))
 
 (test-error "error match-let w/o body, let requires body"
 	    #t
-	    (match-let (((a b) (list 1 2)))))
+	    (read-eval-string "(match-let (((a b) (list 1 2))))"))
 
 (let ()
   (define-syntax make-chunker
@@ -476,15 +478,15 @@
 		  (end (list end))))))))
 
   (test-equal "match macro, no name clash"
-	      ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+	      '((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
 	      ((make-chunker a b c d) (iota 20)))
 
   (test-error "error match macro _ name clash"
 	      #t
-	      ((make-chunker a b c _) (iota 20)))
+	      (read-eval-string "((make-chunker a b c _) (iota 20))"))
 
   (test-error "error match macro ___ name clash"
 	      #t
-	      ((make-chunker a b c ___) (iota 20))))
+	      (read-eval-string "((make-chunker a b c ___) (iota 20))")))
 
-(test-end (string-append test-name scheme-version-name))
+(test-end (string-append test-name "-" scheme-version-name))
