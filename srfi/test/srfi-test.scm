@@ -1,28 +1,33 @@
-(define non-linear-pattern #t)
-(define non-linear-pred #t)
-(define non-linear-field #t)
-(define record-implemented #t)
-(define test-name "srfi-test")
 (cond-expand
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output
     (import (srfi-test)))
   (guile
     (use-modules (srfi-204)
-	    (srfi srfi-64)
-	    (srfi srfi-9)
-	    (rnrs unicode))
+		 (srfi srfi-64)
+		 (srfi srfi-9)
+		 (rnrs unicode))
+    (define non-linear-pattern #t)
+    (define non-linear-pred #t)
+    (define non-linear-field #t)
+    (define record-implemented #t)
+    (define test-name "srfi-test")
     (define (square x) (* x x))
     (define scheme-version-name (string-append "guile-" (version)))
     (include-from-path "./test/srfi-common.scm"))
   (gauche
-    (import (only (gauche base) gauche-version)
-	    (srfi-204)
+    (import (gauche base)
 	    (scheme base)
+	    (scheme char)
+	    (srfi-204)
 	    (srfi-64))
-    (define test-name "gauche-match-test")
+    (define non-linear-pattern #t)
+    (define non-linear-pred #t)
+    (define non-linear-field #t)
+    (define record-implemented #t)
+    (define test-name "srfi-test")
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
-    (include "srfi-common.scm"))
+    (include "./test/srfi-common.scm"))
   (gerbil
     (include "../gerbil-test.ss")) ; doesn't work
   (larceny
@@ -47,7 +52,8 @@
     (begin
       (include "srfi-204.sld")
       (import (srfi-204))
-      (include "test/srfi-common.scm"))))
+      (include "test/srfi-common.scm")))
+  (else))
 (cond-expand
   (chibi
     (run-match-tests))
