@@ -249,11 +249,13 @@
 			  (() #t)
 			  (_ #f))))
 
-      (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47))))
+      (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47)))))
+
+(if (not non-linear-pred)
     (test-error "error non-linear pred"
 		#t
 		(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
-		                (_ #f))))
+		       (_ #f))))
 
 (let ()
   (define fibby?
@@ -339,11 +341,14 @@
 			 (= get-name n))
 		    (list t n)))))
 
-(let () (define-record-type posn
+(let () (cond-expand
+  ((or r7rs (not r6rs))
+   (define-record-type posn
 	  (make-posn x y)
 	  posn?
 	  (x posn-x set-posn-x!)
-	  (y posn-y set-posn-y!))
+	  (y posn-y set-posn-y!)))
+  (else (define-record-type posn (fields (mutable x) (mutable y)))))
   
   (if (not record-implemented) (test-skip 1))
   (test-equal "record setter"
@@ -368,5 +373,118 @@
 			      (if (= (car a) 1) (fail) 'ok))
 		   (_ 'fail)))
 
+(if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
+(let ()
+  (cond-expand
+  ((or r7rs (not r6rs))
+   (define-record-type checkable
+     (make-checkable pred value)
+     checkable?
+     (pred checkable-pred)
+     (value checkable-value)))
+  (else (define-record-type checkable (fields pred value))))
+
+(define check
+  (match-lambda (($ checkable pred (? pred ok)) ok)
+                (($ checkable) 'bad-data)))
+
+(test-equal "match-lambda non-linear pred match"
+	    1
+	    (check (make-checkable odd? 1)))
+(test-equal "match-lambda non-linear pred fail"
+	    'bad-data
+	    (check (make-checkable odd? 2))))
+
+(if (not non-linear-field) (test-skip 1))
+(let ()
+  (define zero-to-three-cycle
+    (match-lambda ((and c (= car c)) 0)
+		  ((and c (= cdr c)) 1)
+		  ((and c (= cddr c)) 2)
+		  ((and c (= cdddr c)) 3)
+		  (_ 'fail)))
+
+  (define l3 (list 1 2 3))
+  (set-cdr! (cddr l3) l3)
+  (test-equal "match-lambda/non-linear field"
+	      3
+	      (zero-to-three-cycle l3) ))
+(if non-linear-field (test-skip 1))
+(test-error "error repeated pattern in field"
+	    #t
+	    (match '((1 2) 1) ((a (= car a)) 'ok) (_ 'fail)))
+
+(let ()
+  (define multiples-of-seven?
+    (match-lambda* (((? (lambda (x) (zero? (modulo x 7)))) . rest)
+		    (apply multiples-of-seven? rest))
+		   (() #t)
+		   (_ #f)))
+
+  (test-equal "match-lambda*/lambda pred/tail"
+	      #t
+	      (multiples-of-seven? 7 14 49 28 56 77) ))
+
+(let ()
+  (define (fact n)
+    (if (zero? n)
+	1
+	(match-let loop (((a . rest) (cdr (iota (+ n 1))))
+			 (out 1))
+		   (if (null? rest) (* a out) (loop rest (* a out))))))
+  
+  (test-equal "match-named-let/tail"
+	      39916800
+	      (fact 11))
+  (test-equal "match-named-let/tail catch exceptional value"
+	      1
+	      (fact 0)))
+
+(test-error "error missing match expression" #t (match))
+(test-error "error no match clauses" #t (match (list 1 2 3)))
+(test-error "error no matching pattern" #t (match (list 1 2 3) ((a b))))
+(test-error "error invalid use of ***" #t (match (list 1 2 3) ((a *** . 3) a)))
+(test-error "error multiple ellipsis patterns at same level"
+	    #t
+	    (match '(1 1 1 2 2 2) ((a ... b ...) b)))
+(test-error "error ellipsis + =.. at same level"
+	    #t
+	    (match '(1 1 1 2 2 2) ((a =.. 3 b ...) b)))
+(test-error "error ellipsis + ,@ at same level"
+	    #t
+	    (match '(1 1 1 2 2 2) (`(,@a ,b ...) b)))
+(test-error "error dotted tail not allowed after ellipsis"
+	    #t
+	    (match '(1 1 1 2 2 2) (`(,@a . b) a)))
+
+(test-equal "match w/o body has undefined value" 
+	    (if #f #t)
+	    (match-let (((a b) (list 1 2)))))
+
+(test-error "error match-let w/o body, let requires body"
+	    #t
+	    (match-let (((a b) (list 1 2)))))
+
+(let ()
+  (define-syntax make-chunker
+    (syntax-rules ()
+      ((_ s ...)
+       (lambda (l)
+	 (let lp ((l l))
+	   (match l (() '())
+		  ((s ... . rest) (cons (list s ...) (lp rest)))
+		  (end (list end))))))))
+
+  (test-equal "match macro, no name clash"
+	      ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+	      ((make-chunker a b c d) (iota 20)))
+
+  (test-error "error match macro _ name clash"
+	      #t
+	      ((make-chunker a b c _) (iota 20)))
+
+  (test-error "error match macro ___ name clash"
+	      #t
+	      ((make-chunker a b c ___) (iota 20))))
 
 (test-end (string-append test-name scheme-version-name))

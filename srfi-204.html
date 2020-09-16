@@ -694,6 +694,9 @@ clause.</p>
 (define check
   (match-lambda (($ &lt;checkable&gt; pred (? pred ok)) ok)
                 (($ &lt;checkable&gt;) 'bad-data)))
+
+(check (make-checkable odd? 1)) =&gt; 1
+(check (make-checkable odd? 2)) =&gt; bad-data
 </code></pre>
 <h4 id="match-lambda*"><code>(match-lambda* (pattern . body) ...)</code></h4><p>Similar to <code>match-lambda</code>.  <p>Creates a procedure of any
 number of arguments, and matches the argument list against each
@@ -730,6 +733,9 @@ arguments as in <code>match-lambda*</code>.</p>
       (match-let loop (((a . rest) (cdr (iota (+ n 1))))
                        (out 1))
 		      (if (null? rest) (* a out) (loop rest (* a out))))))
+
+(fact 11) =&gt; 39916800
+(fact 0) =&gt; 1
 </code></pre>
 <p><b>Note:</b> as this example shows, since each binding takes one pattern, if an init value may not match its pattern (as in <code>(cdr (iota (+ 0 1))) =&gt; ()</code>) that has to be handled some other way.</p>
 <h4 id="match-letrec"><code>(match-letrec ((pattern value) ...) . body)</code></h4><p>Similar to <code>match-let</code>, but analogously to <code>letrec</code>
