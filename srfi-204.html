@@ -165,9 +165,9 @@ The following terms will be used in describing pattern matching:
 <h4 id="Literals">Literal Patterns</h4>
 <p>Literal patterns are patterns like the example above, where the content of the pattern is <code>equal?</code> to the content of the expression being matched. In this case, quasi-patterns and patterns are very similar (except symbols don't need quoting in quasi-patterns):</p>
 <pre><code>
-(let ((ls (list 'a "b" #f 2 '() #\c #(1))
+(let ((ls (list 'a "b" #f 2 '() #\c #(1))))
   (list (match ls (('a "b" #f 2 () #\c #(1)) 'ok))
-        (match ls (`(a "b" #f 2 () #\c #(1)) 'ok))
+        (match ls (`(a "b" #f 2 () #\c #(1)) 'ok))))
 =&gt; (ok ok)
 </code></pre>
 <p>Note also that the empty list does not need to be quoted in either type of pattern.
@@ -184,19 +184,19 @@ At the time of this writing, cyclic literals seem irregularly implemented, at le
 <h4 id="Repitition">Nonlinear Patterns: Repitition</h4>
 <p>A nonlinear pattern has repeated pattern variables:</p>
 <pre><code>
-(match (list A B A) ((a b a) a)) =&gt; A
+(match (list A B A) ((a b a) a) (_ 'fail)) =&gt; A
 (match (list A B A) (`(,a b ,a) a) (_ 'fail)) =&gt; fail
 (match (list A B A) (`(,a B ,a) a) (_ 'fail)) =&gt; A
 (match (list A B A) (`(,a ,b ,a) a) (_ 'fail)) =&gt; A
 </code></pre>
 <p>After the first match, subsequent instances must match a value <code>equal?</code> to the first. Any nonlinear pattern clause that involves repetition can be converted into a linear pattern clause that uses failure to restart pattern matching at the next pattern:</p>
 <pre><code>
-(match (list 1 2 1) <b>((a b a) 'ok)</b> (_ 'fail))
+(match (list 1 2 1) <b>((a b a) a)</b> (_ 'fail))
 </code></pre>
 <p>converts to</p>
 <pre><code>
 (match (list 1 2 1) <b>((a b c) (=&gt; fail)
-                        (if (equal? a c) 'ok (fail)))</b>
+                        (if (equal? a c) a (fail)))</b>
 		       (_ 'fail))
 </code></pre>
 <p>If an implementation chooses not to support repetition, only the second pattern is valid and the first (as well as those in the first part of this section) should cause a syntax error.
@@ -260,7 +260,7 @@ ERROR: match: "no matching pattern"
 (define first-column-of-some
   (match-lambda (`(,@(a _ **1)) a)))
 
-(first-column-of-some '((1) (2))
+(first-column-of-some '((1) (2)))
 ERROR: match: "no matching pattern"
 
 (first-column-of-some '((1 2) (3 4))) =&gt; (1 3)
@@ -495,17 +495,17 @@ returns the current value of the field.
 <pre><code>
 (define alist (list (cons 'a 1) (cons 'b 2) (cons 'c 3)))
 
-(define g (match alist ((= (lambda (al) (assv 'c al))
+(define get-c (match alist ((= (lambda (al) (assv 'c al))
                             (_ . (get! g)))
 			 g)))
-(g) =&gt; 3
+(get-c) =&gt; 3
 
-(define s (match alist ((= (lambda (al) (assv 'c al))
-			    (_ . (set! g)))
-			 g)))
-(s 7)
+(define set-c! (match alist ((= (lambda (al) (assv 'c al))
+			    (_ . (set! s)))
+			 s)))
+(set-c! 7)
 
-(g) =&gt; 7
+(get-c) =&gt; 7
 
 alist =&gt; ((a . 1) (b . 2) (c . 7))
 </code></pre>

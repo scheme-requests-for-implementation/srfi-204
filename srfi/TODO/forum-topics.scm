@@ -319,16 +319,17 @@
 			    (_ . (set! g)))
 			 g)))
 
-(define (make-alt-equal? new-equal?) (lambda (a) (lambda (b) (new-equal? a b))))
+(define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
 
 (define-record-type <posn> (make-posn x y) posn? (x posn-x set-posn-x!) (y posn-y set-posn-y!))
+;;; (define-record-type (<posn> make-posn posn?) (fields (mutable x) (mutable y)))
 
 (define posn-equal?
-  (make-alt-equal?
+  (make-alt-pred
     (match-lambda* ((($ <posn> x y) ($ <posn> x y)) #t) (_ #f))))
 
 (define slope-equal?
-  (make-alt-equal?
+  (make-alt-pred
     (match-lambda* ((($ <posn> x y) ($ <posn> w z))
 		    (cond
 		      ((and (= 0 y) (= 0 z)) #t)
