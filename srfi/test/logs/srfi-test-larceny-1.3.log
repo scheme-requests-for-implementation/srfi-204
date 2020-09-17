@@ -1,0 +1,575 @@
+%%%% Starting test srfi-test-larceny-1.3
+Group begin: srfi-test-larceny-1.3
+Test begin:
+  test-name: "Introduction"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "Literal Patterns"
+Test end:
+  result-kind: pass
+  actual-value: (ok ok)
+  expected-value: (ok ok)
+Test begin:
+  test-name: "Simple Variable"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Throwaway Variable"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Quasi-quote variable fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "Quasi-quote variable pass"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "repeated pattern"
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "quasi-quote fail repeated pattern"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "quasi-quote repeated pattern 1"
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "quasi-quote repeated pattern 2"
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "error repeated pattern"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "error quasi-quote fail repeated pattern"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "error quasi-quote repeated pattern 1"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "error quasi-quote repeated pattern 2"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "repeated pattern->failure"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "empty ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "empty quasi-quote splicing match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "single ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "single quasi-quote splicing match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "triple ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "triple quasi-quote splicing match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "subexpression ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: ((a stitch in) (time saves nine))
+  expected-value: ((a stitch in) (time saves nine))
+Test begin:
+  test-name: "subexpression quasi-quote splicing match"
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "double ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: ((1 4) (2 5) (3 6))
+  expected-value: ((1 4) (2 5) (3 6))
+Test begin:
+  test-name: "middle ellipsis"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "middle ellipsis fail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "underscore ellipsis"
+Test end:
+  result-kind: pass
+  actual-value: (1 4 7)
+  expected-value: (1 4 7)
+Test begin:
+  test-name: "**1 error"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "**1 match"
+Test end:
+  result-kind: pass
+  actual-value: (3)
+  expected-value: (3)
+Test begin:
+  test-name: "quasi-quote unquote-splicing **1 error"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "quasi-quote unquote-splicing **1 match"
+Test end:
+  result-kind: pass
+  actual-value: (1 3)
+  expected-value: (1 3)
+Test begin:
+  test-name: "=.. match"
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "=.. fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "*.. 2 4 match 3"
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "*.. 2 4 match 4"
+Test end:
+  result-kind: pass
+  actual-value: ((a c e g) (b d f h))
+  expected-value: ((a c e g) (b d f h))
+Test begin:
+  test-name: "*.. 2 4 fail hi"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "... proper list match"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "... dotted-pair fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "tail pattern proper list match"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "tail pattern dotted-pair match"
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "tree match for path"
+Test end:
+  result-kind: pass
+  actual-value: (+ * +)
+  expected-value: (+ * +)
+Test begin:
+  test-name: "underscore tree match for destination"
+Test end:
+  result-kind: pass
+  actual-value: ((+ (sqr x) (sqr y)))
+  expected-value: ((+ (sqr x) (sqr y)))
+Test begin:
+  test-name: "empty and match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "and identifier match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "and identifier matching literal match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "and false match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "and false catch via failure"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "empty or fail"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "or identifier match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "or identifier mis-matched literal match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "or pattern with repetition"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "not #f match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "not #f fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "not match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "predicate match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "quasi-quoted dotted pair/pred/boolean sexpr eval"
+Test end:
+  result-kind: pass
+  actual-value: 67
+  expected-value: 67
+Test begin:
+  test-name: "non-linear pred match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "pred catch repetition in body match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "pred false fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "field false match"
+Test end:
+  result-kind: pass
+  actual-value: (1 #f)
+  expected-value: (1 #f)
+Test begin:
+  test-name: "field #f bad match"
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "field (not #f) good match"
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "field car"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "field N->N proc"
+Test end:
+  result-kind: pass
+  actual-value: 16
+  expected-value: 16
+Test begin:
+  test-name: "list setter test"
+Test end:
+  result-kind: pass
+  actual-value: (1 . 3)
+  expected-value: (1 . 3)
+Test begin:
+  test-name: "list getter test"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "alist get value"
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+  test-name: "alist get value after set"
+Test end:
+  result-kind: pass
+  actual-value: 7
+  expected-value: 7
+Test begin:
+  test-name: "alist get list after set"
+Test end:
+  result-kind: pass
+  actual-value: ((a . 1) (b . 2) (c . 7))
+  expected-value: ((a . 1) (b . 2) (c . 7))
+Test begin:
+  test-name: "posistional record"
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "named record"
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "record emulation via pred/field"
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "record setter"
+Test end:
+  result-kind: pass
+  actual-value: (7 4)
+  expected-value: (7 4)
+Test begin:
+  test-name: "simple match"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "simple match + failure fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "simple match + failure match"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "match-lambda non-linear pred match"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "match-lambda non-linear pred fail"
+Test end:
+  result-kind: pass
+  actual-value: bad-data
+  expected-value: bad-data
+Test begin:
+  test-name: "match-lambda/non-linear field"
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+  test-name: "error repeated pattern in field"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "match-lambda*/lambda pred/tail"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "match-named-let/tail"
+Test end:
+  result-kind: pass
+  actual-value: 39916800
+  expected-value: 39916800
+Test begin:
+  test-name: "match-named-let/tail catch exceptional value"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "error missing match expression"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error no match clauses"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error no matching pattern"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error invalid use of ***"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error multiple ellipsis patterns at same level"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error ellipsis + =.. at same level"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error ellipsis + ,@ at same level"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error dotted tail not allowed after ellipsis"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "match w/o body has undefined value"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: #!unspecified
+Test begin:
+  test-name: "match w/o body has last value"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: 2
+Test begin:
+  test-name: "match w/o body causes error"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error match-let w/o body, let requires body"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error match-lambda w/o body, lambda requires body"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "match macro, no name clash"
+Test end:
+  result-kind: pass
+  actual-value: ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+  expected-value: ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+Test begin:
+  test-name: "error match macro _ name clash"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Test begin:
+  test-name: "error match macro ___ name clash"
+Test end:
+  result-kind: pass
+  actual-value: #t
+Group end: srfi-test-larceny-1.3
+# of expected passes      92
+# of unexpected failures  2
+# of skipped tests        5

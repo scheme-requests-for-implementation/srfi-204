@@ -318,3 +318,26 @@
 (define s2 (match alist ((= (lambda (al) (assv 'c al))
 			    (_ . (set! g)))
 			 g)))
+
+(define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
+
+(define-record-type <posn> (make-posn x y) posn? (x posn-x set-posn-x!) (y posn-y set-posn-y!))
+;;; (define-record-type (<posn> make-posn posn?) (fields (mutable x) (mutable y)))
+
+(define posn-equal?
+  (make-alt-pred
+    (match-lambda* ((($ <posn> x y) ($ <posn> x y)) #t) (_ #f))))
+
+(define slope-equal?
+  (make-alt-pred
+    (match-lambda* ((($ <posn> x y) ($ <posn> w z))
+		    (cond
+		      ((and (= 0 y) (= 0 z)) #t)
+		      ((or (= 0 y) (= 0 z)) #f)
+		      (else (= (/ x y) (/ w z))))) (_ #f))))
+
+(define (cross-peephole vec-product)
+  (match vec-product
+	 (('cross a (? (posn-equal? a))) (make-posn 0 0))
+	 (('cross a (? (slope-equal? a))) (make-posn 0 0))
+	 (other other)))

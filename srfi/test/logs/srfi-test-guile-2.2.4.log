@@ -1,0 +1,878 @@
+%%%% Starting test srfi-test-guile-2.2.4
+Group begin: srfi-test-guile-2.2.4
+Test begin:
+  test-name: "Introduction"
+  source-file: "test/srfi-common.scm"
+  source-line: 2
+  source-form: (test-equal "Introduction" #t (let ((ls (list 1 2 3))) (match ls ((1 2 3) #t))))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "Literal Patterns"
+  source-file: "test/srfi-common.scm"
+  source-line: 6
+  source-form: (test-equal "Literal Patterns" (quote (ok ok)) (let ((ls (list (quote a) "b" #f 2 (quote ()) #\c))) (list (match ls (((quote a) "b" #f 2 () #\c) (quote ok))) (match ls ((quasiquote (a "b" #f 2 () #\c)) (quote ok))))))
+Test end:
+  result-kind: pass
+  actual-value: (ok ok)
+  expected-value: (ok ok)
+Test begin:
+  test-name: "Simple Variable"
+  source-file: "test/srfi-common.scm"
+  source-line: 11
+  source-form: (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Throwaway Variable"
+  source-file: "test/srfi-common.scm"
+  source-line: 12
+  source-form: (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Quasi-quote variable fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 13
+  source-form: (test-equal "Quasi-quote variable fail" (quote fail) (match (list 1 2 3) ((quasiquote (a (unquote b) c)) b) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "Quasi-quote variable pass"
+  source-file: "test/srfi-common.scm"
+  source-line: 16
+  source-form: (test-equal "Quasi-quote variable pass" 2 (match (list 1 2 3) ((quasiquote (1 (unquote b) (unquote _))) b) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "repeated pattern"
+  source-file: "test/srfi-common.scm"
+  source-line: 21
+  source-form: (test-equal "repeated pattern" (quote A) (match (list (quote A) (quote B) (quote A)) ((a b a) a)))
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "quasi-quote fail repeated pattern"
+  source-file: "test/srfi-common.scm"
+  source-line: 22
+  source-form: (test-equal "quasi-quote fail repeated pattern" (quote fail) (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) b (unquote a))) a) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "quasi-quote repeated pattern 1"
+  source-file: "test/srfi-common.scm"
+  source-line: 25
+  source-form: (test-equal "quasi-quote repeated pattern 1" (quote A) (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) B (unquote a))) a) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "quasi-quote repeated pattern 2"
+  source-file: "test/srfi-common.scm"
+  source-line: 28
+  source-form: (test-equal "quasi-quote repeated pattern 2" (quote A) (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) (unquote b) (unquote a))) a) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: A
+  expected-value: A
+Test begin:
+  test-name: "error repeated pattern"
+  source-file: "test/srfi-common.scm"
+  source-line: 33
+  source-form: (test-error "error repeated pattern" #t (match (list (quote A) (quote B) (quote A)) ((a b a) a)))
+Test begin:
+  test-name: "error quasi-quote fail repeated pattern"
+  source-file: "test/srfi-common.scm"
+  source-line: 34
+  source-form: (test-error "error quasi-quote fail repeated pattern" #t (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) b (unquote a))) a) (_ (quote fail))))
+Test begin:
+  test-name: "error quasi-quote repeated pattern 1"
+  source-file: "test/srfi-common.scm"
+  source-line: 37
+  source-form: (test-error "error quasi-quote repeated pattern 1" #t (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) B (unquote a))) a) (_ (quote fail))))
+Test begin:
+  test-name: "error quasi-quote repeated pattern 2"
+  source-file: "test/srfi-common.scm"
+  source-line: 40
+  source-form: (test-error "error quasi-quote repeated pattern 2" #t (match (list (quote A) (quote B) (quote A)) ((quasiquote ((unquote a) (unquote b) (unquote a))) a) (_ (quote fail))))
+Test begin:
+  test-name: "repeated pattern->failure"
+  source-file: "test/srfi-common.scm"
+  source-line: 44
+  source-form: (test-eqv "repeated pattern->failure" 1 (match (list 1 2 1) ((a b c) (=> fail) (if (equal? a c) a (fail))) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "empty ellipsis match"
+  source-file: "test/srfi-common.scm"
+  source-line: 50
+  source-form: (test-equal "empty ellipsis match" #t (match (list 1 2) ((1 2 3 ...) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "empty quasi-quote splicing match"
+  source-file: "test/srfi-common.scm"
+  source-line: 53
+  source-form: (test-equal "empty quasi-quote splicing match" #t (match (list 1 2) ((quasiquote (1 2 (unquote-splicing 3))) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "single ellipsis match"
+  source-file: "test/srfi-common.scm"
+  source-line: 56
+  source-form: (test-equal "single ellipsis match" #t (match (list 1 2 3) ((1 2 3 ...) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "single quasi-quote splicing match"
+  source-file: "test/srfi-common.scm"
+  source-line: 59
+  source-form: (test-equal "single quasi-quote splicing match" #t (match (list 1 2 3) ((quasiquote (1 2 (unquote-splicing 3))) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "triple ellipsis match"
+  source-file: "test/srfi-common.scm"
+  source-line: 62
+  source-form: (test-equal "triple ellipsis match" #t (match (list 1 2 3 3 3) ((1 2 3 ...) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "triple quasi-quote splicing match"
+  source-file: "test/srfi-common.scm"
+  source-line: 65
+  source-form: (test-equal "triple quasi-quote splicing match" #t (match (list 1 2 3 3 3) ((quasiquote (1 2 (unquote-splicing 3))) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "subexpression ellipsis match"
+  source-file: "test/srfi-common.scm"
+  source-line: 69
+  source-form: (test-equal "subexpression ellipsis match" (quote ((a stitch in) (time saves nine))) (match (quote ((a time) (stitch saves) (in nine))) (((x y) ...) (list x y))))
+Test end:
+  result-kind: pass
+  actual-value: ((a stitch in) (time saves nine))
+  expected-value: ((a stitch in) (time saves nine))
+Test begin:
+  test-name: "subexpression quasi-quote splicing match"
+  source-file: "test/srfi-common.scm"
+  source-line: 73
+  source-form: (test-equal "subexpression quasi-quote splicing match" (quote ((a c e) (b d f))) (match (quote ((a b) (c d) (e f))) ((quasiquote ((unquote-splicing (x y)))) (list x y))))
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "double ellipsis match"
+  source-file: "test/srfi-common.scm"
+  source-line: 81
+  source-form: (test-equal "double ellipsis match" (quote ((1 4) (2 5) (3 6))) (transpose (quote ((1 2 3) (4 5 6)))))
+Test end:
+  result-kind: pass
+  actual-value: ((1 4) (2 5) (3 6))
+  expected-value: ((1 4) (2 5) (3 6))
+Test begin:
+  test-name: "middle ellipsis"
+  source-file: "test/srfi-common.scm"
+  source-line: 106
+  source-form: (test-equal "middle ellipsis" #t (palindrome? "Able was I, ere I saw Elba."))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "middle ellipsis fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 107
+  source-form: (test-equal "middle ellipsis fail" #f (palindrome? "Napoleon"))
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "underscore ellipsis"
+  source-file: "test/srfi-common.scm"
+  source-line: 115
+  source-form: (test-equal "underscore ellipsis" (quote (1 4 7)) (first-column (quote ((1 2 3) (4 5 6) (7 8 9)))))
+Test end:
+  result-kind: pass
+  actual-value: (1 4 7)
+  expected-value: (1 4 7)
+Test begin:
+  test-name: "**1 error"
+  source-file: "test/srfi-common.scm"
+  source-line: 119
+  source-form: (test-error "**1 error" #t (match (list 1 2) ((a b c **1) c)))
+Test end:
+  result-kind: pass
+  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  expected-error: #t
+Test begin:
+  test-name: "**1 match"
+  source-file: "test/srfi-common.scm"
+  source-line: 120
+  source-form: (test-equal "**1 match" (quote (3)) (match (list 1 2 3) ((a b c **1) c)))
+Test end:
+  result-kind: pass
+  actual-value: (3)
+  expected-value: (3)
+Test begin:
+  test-name: "quasi-quote unquote-splicing **1 error"
+  source-file: "test/srfi-common.scm"
+  source-line: 126
+  source-form: (test-error "quasi-quote unquote-splicing **1 error" #t (first-column-of-some (quote ((1) (2)))))
+Test end:
+  result-kind: pass
+  actual-error: (misc-error #f "~A ~S" (match "no matching pattern") #f)
+  expected-error: #t
+Test begin:
+  test-name: "quasi-quote unquote-splicing **1 match"
+  source-file: "test/srfi-common.scm"
+  source-line: 130
+  source-form: (test-equal "quasi-quote unquote-splicing **1 match" (quote (1 3)) (first-column-of-some (quote ((1 2) (3 4)))))
+Test end:
+  result-kind: pass
+  actual-value: (1 3)
+  expected-value: (1 3)
+Test begin:
+  test-name: "=.. match"
+  source-file: "test/srfi-common.scm"
+  source-line: 134
+  source-form: (test-equal "=.. match" (quote ((a c e) (b d f))) (match (quote ((a b) (c d) (e f))) (((x y) =.. 3) (list x y)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "=.. fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 140
+  source-form: (test-equal "=.. fail" (quote fail) (match (quote ((a b) (c d) (e f) (g h))) (((x y) =.. 3) (list x y)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "*.. 2 4 match 3"
+  source-file: "test/srfi-common.scm"
+  source-line: 146
+  source-form: (test-equal "*.. 2 4 match 3" (quote ((a c e) (b d f))) (match (quote ((a b) (c d) (e f))) (((x y) *.. 2 4) (list x y)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: ((a c e) (b d f))
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "*.. 2 4 match 4"
+  source-file: "test/srfi-common.scm"
+  source-line: 152
+  source-form: (test-equal "*.. 2 4 match 4" (quote ((a c e g) (b d f h))) (match (quote ((a b) (c d) (e f) (g h))) (((x y) *.. 2 4) (list x y)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: ((a c e g) (b d f h))
+  expected-value: ((a c e g) (b d f h))
+Test begin:
+  test-name: "*.. 2 4 fail hi"
+  source-file: "test/srfi-common.scm"
+  source-line: 158
+  source-form: (test-equal "*.. 2 4 fail hi" (quote fail) (match (quote ((a b) (c d) (e f) (g h) (i j))) (((x y) *.. 2 4) (list x y)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "... proper list match"
+  source-file: "test/srfi-common.scm"
+  source-line: 168
+  source-form: (test-equal "... proper list match" (quote (a b c)) (keys (quote ((a 1) (b 2) (c 3)))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "... dotted-pair fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 169
+  source-form: (test-equal "... dotted-pair fail" (quote fail) (keys (quote ((a . 1) (b . 2) (c . 3)))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "tail pattern proper list match"
+  source-file: "test/srfi-common.scm"
+  source-line: 175
+  source-form: (test-equal "tail pattern proper list match" (quote (a b c)) (keys (quote ((a 1) (b 2) (c 3)))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "tail pattern dotted-pair match"
+  source-file: "test/srfi-common.scm"
+  source-line: 178
+  source-form: (test-equal "tail pattern dotted-pair match" (quote (a b c)) (keys (quote ((a . 1) (b . 2) (c . 3)))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+  test-name: "tree match for path"
+  source-file: "test/srfi-common.scm"
+  source-line: 182
+  source-form: (test-equal "tree match for path" (quote (+ * +)) (match (quote (+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))) ((a *** 7) a)))
+Test end:
+  result-kind: pass
+  actual-value: (+ * +)
+  expected-value: (+ * +)
+Test begin:
+  test-name: "underscore tree match for destination"
+  source-file: "test/srfi-common.scm"
+  source-line: 187
+  source-form: (test-equal "underscore tree match for destination" (quote ((+ (sqr x) (sqr y)))) (match (quote (+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))) ((_ *** (quasiquote (sqrt unquote rest))) rest)))
+Test end:
+  result-kind: pass
+  actual-value: ((+ (sqr x) (sqr y)))
+  expected-value: ((+ (sqr x) (sqr y)))
+Test begin:
+  test-name: "empty and match"
+  source-file: "test/srfi-common.scm"
+  source-line: 192
+  source-form: (test-equal "empty and match" #t (match 1 ((and) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "and identifier match"
+  source-file: "test/srfi-common.scm"
+  source-line: 193
+  source-form: (test-equal "and identifier match" 1 (match 1 ((and x) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "and identifier matching literal match"
+  source-file: "test/srfi-common.scm"
+  source-line: 194
+  source-form: (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "and false match"
+  source-file: "test/srfi-common.scm"
+  source-line: 195
+  source-form: (test-equal "and false match" #t (match #f ((and) #t) (_ #f)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "and false catch via failure"
+  source-file: "test/srfi-common.scm"
+  source-line: 196
+  source-form: (test-equal "and false catch via failure" #f (match #f ((and x) (=> fail) (if x #t (fail))) (_ #f)))
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "empty or fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 199
+  source-form: (test-equal "empty or fail" #f (match 1 ((or) #t) (else #f)))
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "or identifier match"
+  source-file: "test/srfi-common.scm"
+  source-line: 200
+  source-form: (test-equal "or identifier match" 1 (match 1 ((or x) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "or identifier mis-matched literal match"
+  source-file: "test/srfi-common.scm"
+  source-line: 201
+  source-form: (test-equal "or identifier mis-matched literal match" 1 (match 1 ((or x 2) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "or pattern with repetition"
+  source-file: "test/srfi-common.scm"
+  source-line: 218
+  source-form: (test-equal "or pattern with repetition" #t (last-matches-one-of-first-three (quote (1 2 3 4 5 2))))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "not #f match"
+  source-file: "test/srfi-common.scm"
+  source-line: 223
+  source-form: (test-equal "not #f match" 1 (match 1 ((and x (not #f)) x) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "not #f fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 224
+  source-form: (test-equal "not #f fail" (quote fail) (match #f ((and x (not #f)) x) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "not match"
+  source-file: "test/srfi-common.scm"
+  source-line: 225
+  source-form: (test-equal "not match" #t (match 1 ((not 2) #t)))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "predicate match"
+  source-file: "test/srfi-common.scm"
+  source-line: 227
+  source-form: (test-equal "predicate match" 1 (match 1 ((? odd? x) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "quasi-quoted dotted pair/pred/boolean sexpr eval"
+  source-file: "test/srfi-common.scm"
+  source-line: 241
+  source-form: (test-equal "quasi-quoted dotted pair/pred/boolean sexpr eval" 67 (eval-sexpr (quote (+ (* 3 4 5) (- 10 3)))))
+Test end:
+  result-kind: pass
+  actual-value: 67
+  expected-value: 67
+Test begin:
+  test-name: "non-linear pred match"
+  source-file: "test/srfi-common.scm"
+  source-line: 254
+  source-form: (test-equal "non-linear pred match" #t (fibby? (quote (4 7 11 18 29 47))))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "pred catch repetition in body match"
+  source-file: "test/srfi-common.scm"
+  source-line: 273
+  source-form: (test-equal "pred catch repetition in body match" #t (fibby? (quote (4 7 11 18 29 47))))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "pred false fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 277
+  source-form: (test-equal "pred false fail" (quote fail) (match 1 ((and n (? even?)) n) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "field false match"
+  source-file: "test/srfi-common.scm"
+  source-line: 278
+  source-form: (test-equal "field false match" (quote (1 #f)) (match 1 ((and n (= even? r)) (list n r)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 #f)
+  expected-value: (1 #f)
+Test begin:
+  test-name: "field #f bad match"
+  source-file: "test/srfi-common.scm"
+  source-line: 281
+  source-form: (test-equal "field #f bad match" #f (match (quote (a b c d)) ((or (= (lambda (x) (memq (quote f) x)) r) (= (lambda (x) (memq (quote g) x)) r) (= (lambda (x) (memq (quote b) x)) r)) r) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: #f
+  expected-value: #f
+Test begin:
+  test-name: "field (not #f) good match"
+  source-file: "test/srfi-common.scm"
+  source-line: 289
+  source-form: (test-equal "field (not #f) good match" (quote (b c d)) (match (quote (a b c d)) ((or (= (lambda (x) (memq (quote f) x)) (and r (not #f))) (= (lambda (x) (memq (quote g) x)) (and r (not #f))) (= (lambda (x) (memq (quote b) x)) (and r (not #f)))) r) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "field car"
+  source-file: "test/srfi-common.scm"
+  source-line: 297
+  source-form: (test-equal "field car" 1 (match (quote (1 . 2)) ((= car x) x)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "field N->N proc"
+  source-file: "test/srfi-common.scm"
+  source-line: 300
+  source-form: (test-equal "field N->N proc" 16 (match 4 ((= square x) x)))
+Test end:
+  result-kind: pass
+  actual-value: 16
+  expected-value: 16
+Test begin:
+  test-name: "list setter test"
+  source-file: "test/srfi-common.scm"
+  source-line: 303
+  source-form: (test-equal "list setter test" (quote (1 . 3)) (match x ((1 set! s) (s 3) x)))
+Test end:
+  result-kind: pass
+  actual-value: (1 . 3)
+  expected-value: (1 . 3)
+Test begin:
+  test-name: "list getter test"
+  source-file: "test/srfi-common.scm"
+  source-line: 304
+  source-form: (test-equal "list getter test" 2 (match (quote (1 . 2)) ((1 get! g) (g))))
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "alist get value"
+  source-file: "test/srfi-common.scm"
+  source-line: 314
+  source-form: (test-equal "alist get value" 3 (get-c))
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+  test-name: "alist get value after set"
+  source-file: "test/srfi-common.scm"
+  source-line: 316
+  source-form: (test-equal "alist get value after set" 7 (get-c))
+Test end:
+  result-kind: pass
+  actual-value: 7
+  expected-value: 7
+Test begin:
+  test-name: "alist get list after set"
+  source-file: "test/srfi-common.scm"
+  source-line: 317
+  source-form: (test-equal "alist get list after set" (quote ((a . 1) (b . 2) (c . 7))) alist)
+Test end:
+  result-kind: pass
+  actual-value: ((a . 1) (b . 2) (c . 7))
+  expected-value: ((a . 1) (b . 2) (c . 7))
+Test begin:
+  test-name: "posistional record"
+  source-file: "test/srfi-common.scm"
+  source-line: 330
+  source-form: (test-equal "posistional record" (list "Doctor" "Bob") (match (make-employee "Bob" "Doctor") (($ employee n t) (list t n))))
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "named record"
+  source-file: "test/srfi-common.scm"
+  source-line: 335
+  source-form: (test-equal "named record" (list "Doctor" "Bob") (match (make-employee "Bob" "Doctor") ((object employee (title t) (name n)) (list t n))))
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "record emulation via pred/field"
+  source-file: "test/srfi-common.scm"
+  source-line: 340
+  source-form: (test-equal "record emulation via pred/field" (list "Doctor" "Bob") (match (make-employee "Bob" "Doctor") ((and (? employee?) (= employee-title t) (= employee-name n)) (list t n))))
+Test end:
+  result-kind: pass
+  actual-value: ("Doctor" "Bob")
+  expected-value: ("Doctor" "Bob")
+Test begin:
+  test-name: "record setter"
+  source-file: "test/srfi-common.scm"
+  source-line: 358
+  source-form: (test-equal "record setter" (list 7 4) (match (make-posn 3 4) ((and p ($ posn (set! set-x))) (set-x 7) (match p (($ posn x y) (list x y))))))
+Test end:
+  result-kind: pass
+  actual-value: (7 4)
+  expected-value: (7 4)
+Test begin:
+  test-name: "simple match"
+  source-file: "test/srfi-common.scm"
+  source-line: 365
+  source-form: (test-equal "simple match" (quote ok) (match (quote (1 1 1)) ((a =.. 3) (quote ok)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "simple match + failure fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 367
+  source-form: (test-equal "simple match + failure fail" (quote fail) (match (quote (1 1 1)) ((a =.. 3) (=> fail) (if (= (car a) 1) (fail) (quote ok))) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "simple match + failure match"
+  source-file: "test/srfi-common.scm"
+  source-line: 373
+  source-form: (test-equal "simple match + failure match" (quote ok) (match (quote (2 1 1)) ((a =.. 3) (=> fail) (if (= (car a) 1) (fail) (quote ok))) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "match-lambda non-linear pred match"
+  source-file: "test/srfi-common.scm"
+  source-line: 395
+  source-form: (test-equal "match-lambda non-linear pred match" 1 (check (make-checkable odd? 1)))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "match-lambda non-linear pred fail"
+  source-file: "test/srfi-common.scm"
+  source-line: 398
+  source-form: (test-equal "match-lambda non-linear pred fail" (quote bad-data) (check (make-checkable odd? 2)))
+Test end:
+  result-kind: pass
+  actual-value: bad-data
+  expected-value: bad-data
+Test begin:
+  test-name: "match-lambda/non-linear field"
+  source-file: "test/srfi-common.scm"
+  source-line: 413
+  source-form: (test-equal "match-lambda/non-linear field" 3 (zero-to-three-cycle l3))
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+  test-name: "error repeated pattern in field"
+  source-file: "test/srfi-common.scm"
+  source-line: 417
+  source-form: (test-error "error repeated pattern in field" #t (match (quote ((1 2) 1)) ((a (= car a)) (quote ok)) (_ (quote fail))))
+Test begin:
+  test-name: "match-lambda*/lambda pred/tail"
+  source-file: "test/srfi-common.scm"
+  source-line: 428
+  source-form: (test-equal "match-lambda*/lambda pred/tail" #t (multiples-of-seven? 7 14 49 28 56 77))
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "match-named-let/tail"
+  source-file: "test/srfi-common.scm"
+  source-line: 440
+  source-form: (test-equal "match-named-let/tail" 39916800 (fact 11))
+Test end:
+  result-kind: pass
+  actual-value: 39916800
+  expected-value: 39916800
+Test begin:
+  test-name: "match-named-let/tail catch exceptional value"
+  source-file: "test/srfi-common.scm"
+  source-line: 443
+  source-form: (test-equal "match-named-let/tail catch exceptional value" 1 (fact 0))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "error missing match expression"
+  source-file: "test/srfi-common.scm"
+  source-line: 447
+  source-form: (test-error "error missing match expression" #t (test-read-eval-string "(match)"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "missing match expression") #f)
+  expected-error: #t
+Test begin:
+  test-name: "error no match clauses"
+  source-file: "test/srfi-common.scm"
+  source-line: 448
+  source-form: (test-error "error no match clauses" #t (test-read-eval-string "(match (list 1 2 3))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "no match clauses") #f)
+  expected-error: #t
+Test begin:
+  test-name: "error no matching pattern"
+  source-file: "test/srfi-common.scm"
+  source-line: 449
+  source-form: (test-error "error no matching pattern" #t (test-read-eval-string "(match (list 1 2 3) ((a b)))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  expected-error: #t
+Test begin:
+  test-name: "error invalid use of ***"
+  source-file: "test/srfi-common.scm"
+  source-line: 450
+  source-form: (test-error "error invalid use of ***" #t (test-read-eval-string "(match (list 1 2 3) ((a *** . 3) a))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "invalid use of ***" (a *** . 3)) #f)
+  expected-error: #t
+Test begin:
+  test-name: "error multiple ellipsis patterns at same level"
+  source-file: "test/srfi-common.scm"
+  source-line: 451
+  source-form: (test-error "error multiple ellipsis patterns at same level" #t (test-read-eval-string "(match '(1 1 1 2 2 2) ((a ... b ...) b))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "multiple ellipsis patterns not allowed at same level") #f)
+  expected-error: #t
+Test begin:
+  test-name: "error ellipsis + =.. at same level"
+  source-file: "test/srfi-common.scm"
+  source-line: 454
+  source-form: (test-error "error ellipsis + =.. at same level" #t (test-read-eval-string "(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "multiple ellipsis patterns not allowed at same level") #f)
+  expected-error: #t
+Test begin:
+  test-name: "error ellipsis + ,@ at same level"
+  source-file: "test/srfi-common.scm"
+  source-line: 457
+  source-form: (test-error "error ellipsis + ,@ at same level" #t (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a ,b ...) b))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "multiple ellipsis patterns not allowed at same level") #f)
+  expected-error: #t
+Test begin:
+  test-name: "error dotted tail not allowed after ellipsis"
+  source-file: "test/srfi-common.scm"
+  source-line: 460
+  source-form: (test-error "error dotted tail not allowed after ellipsis" #t (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" ((line . 0) (column . 0) (filename . #f)) (match-syntax-error "dotted tail not allowed after ellipsis" b) #f)
+  expected-error: #t
+Test begin:
+  test-name: "match w/o body has undefined value"
+  source-file: "test/srfi-common.scm"
+  source-line: 465
+  source-form: (test-equal "match w/o body has undefined value" (if #f #t) (test-read-eval-string "(match (list 1 2) ((a b)))"))
+Test end:
+  result-kind: fail
+  actual-value: #f
+  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  expected-value: #<unspecified>
+Test begin:
+  test-name: "match w/o body has last value"
+  source-file: "test/srfi-common.scm"
+  source-line: 469
+  source-form: (test-equal "match w/o body has last value" 2 (test-read-eval-string "(match (list 1 2) ((a b)))"))
+Test end:
+  result-kind: fail
+  actual-value: #f
+  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  expected-value: 2
+Test begin:
+  test-name: "match w/o body causes error"
+  source-file: "test/srfi-common.scm"
+  source-line: 473
+  source-form: (test-error "match w/o body causes error" #t (test-read-eval-string "(match (list 1 2) ((a b)))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  expected-error: #t
+Test begin:
+  test-name: "error match-let w/o body, let requires body"
+  source-file: "test/srfi-common.scm"
+  source-line: 477
+  source-form: (test-error "error match-let w/o body, let requires body" #t (test-read-eval-string "(match-let (((a b) (list 1 2))))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error let "bad let" ((line . 0) (column . 0) (filename . #f)) (let ()) #f)
+  expected-error: #t
+Test begin:
+  test-name: "error match-lambda w/o body, lambda requires body"
+  source-file: "test/srfi-common.scm"
+  source-line: 481
+  source-form: (test-error "error match-lambda w/o body, lambda requires body" #t (test-read-eval-string "(match-let (((a b) (list 1 2))))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error let "bad let" ((line . 0) (column . 0) (filename . #f)) (let ()) #f)
+  expected-error: #t
+Test begin:
+  test-name: "match macro, no name clash"
+  source-file: "test/srfi-common.scm"
+  source-line: 495
+  source-form: (test-equal "match macro, no name clash" (quote ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))) ((make-chunker a b c d) (iota 20)))
+Test end:
+  result-kind: pass
+  actual-value: ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+  expected-value: ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
+Test begin:
+  test-name: "error match macro _ name clash"
+  source-file: "test/srfi-common.scm"
+  source-line: 499
+  source-form: (test-error "error match macro _ name clash" #t (test-read-eval-string "((make-chunker a b c _) (iota 20))"))
+Test end:
+  result-kind: pass
+  actual-error: (unbound-variable #f "Unbound variable: ~S" (make-chunker) #f)
+  expected-error: #t
+Test begin:
+  test-name: "error match macro ___ name clash"
+  source-file: "test/srfi-common.scm"
+  source-line: 503
+  source-form: (test-error "error match macro ___ name clash" #t (test-read-eval-string "((make-chunker a b c ___) (iota 20))"))
+Test end:
+  result-kind: pass
+  actual-error: (syntax-error #f "source expression failed to match any pattern" #f ___ #f)
+  expected-error: #t
+Group end: srfi-test-guile-2.2.4
+# of expected passes      92
+# of unexpected failures  2

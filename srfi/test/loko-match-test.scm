@@ -6,7 +6,4 @@
 (define test-name "loko-match-test")
 (include "match-common.scm")
 
-;;; like larceny:
-;;; (but library directory set through environment)
-;;; $rlwrap loko
-;;; > (include "loko-match-test.scm")
+;;; set library directories via environment

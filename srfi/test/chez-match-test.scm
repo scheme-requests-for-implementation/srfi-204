@@ -4,4 +4,6 @@
 	(chez9.5 match))
 (define test-name "chez-match-test")
 (define scheme-version-name (scheme-version))
-(include "../test/match-common.scm")
+(include "match-common.scm")
+(exit)
+;;; $~/.akku/env

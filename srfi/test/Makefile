@@ -15,14 +15,17 @@ GOSHFLAGS = -I $(top_srcdir)
 #TODO have not found a way to make larceny work from Makefile
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
-LARCENY = larceny
-LARCENYFLAGS = -r7rs -I $(top_srcdir) -program
+LARCENY = larceny-scheme-script
+LARCENYFLAGS = -r7rs -I $(top_srcdir)
 CHEZSCHEME = chezscheme
-CHEZSCHEMEFLAGS = --libdirs $(top_srcdir)/chezscheme9.5
+CHEZSCHEMEFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
 GXI = gxi
 GXIFLAGS = --lang r7rs
+LOKO = loko
+LOKOFLAGS = --script
+
 
 # chose implentation based on TESTSCHEME
 # from environment
@@ -50,8 +53,13 @@ ifeq ($(TESTSCHEME), gxi)
 	SCM = $(GXI)
 	SCMFLAGS = $(GXIFLAGS)
 else
+ifeq ($(TESTSCHEME), loko)
+	SCM = $(LOKO)
+	SCMFLAGS = $(LOKOFLAGS)
+else
 	SCM = $(GUILE)
 	SCMFLAGS = $(GUILEFLAGS)
+endif
 endif
 endif
 endif
