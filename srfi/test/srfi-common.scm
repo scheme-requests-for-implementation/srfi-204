@@ -30,16 +30,16 @@
 	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
 
 (if non-linear-pattern (test-skip 4))
-(test-error "error repeated pattern" #t (match (list A B A) ((a b a) a)))
+(test-error "error repeated pattern" #t (match (list 'A 'B 'A) ((a b a) a)))
 (test-error "error quasi-quote fail repeated pattern" 
 	    #t
-	    (match (list A B A) (`(,a b ,a) a) (_ 'fail)))
+	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
 (test-error "error quasi-quote repeated pattern 1"
 	    #t
-	    (match (list A B A) (`(,a B ,a) a) (_ 'fail)))
+	    (match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)))
 (test-error "error quasi-quote repeated pattern 2"
 	    #t
-	    (match (list A B A) (`(,a ,b ,a) a) (_ 'fail)))
+	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
 
 (test-eqv "repeated pattern->failure"
 	 1
@@ -444,30 +444,30 @@
 	      1
 	      (fact 0)))
 
-(test-error "error missing match expression" #t (read-eval-string "(match)"))
-(test-error "error no match clauses" #t (read-eval-string "(match (list 1 2 3))"))
-(test-error "error no matching pattern" #t (read-eval-string "(match (list 1 2 3) ((a b)))"))
-(test-error "error invalid use of ***" #t (read-eval-string "(match (list 1 2 3) ((a *** . 3) a))"))
+(test-error "error missing match expression" #t (test-read-eval-string "(match)"))
+(test-error "error no match clauses" #t (test-read-eval-string "(match (list 1 2 3))"))
+(test-error "error no matching pattern" #t (test-read-eval-string "(match (list 1 2 3) ((a b)))"))
+(test-error "error invalid use of ***" #t (test-read-eval-string "(match (list 1 2 3) ((a *** . 3) a))"))
 (test-error "error multiple ellipsis patterns at same level"
 	    #t
-	    (read-eval-string "(match '(1 1 1 2 2 2) ((a ... b ...) b))"))
+	    (test-read-eval-string "(match '(1 1 1 2 2 2) ((a ... b ...) b))"))
 (test-error "error ellipsis + =.. at same level"
 	    #t
-	    (read-eval-string "(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b))"))
+	    (test-read-eval-string "(match '(1 1 1 2 2 2) ((a =.. 3 b ...) b))"))
 (test-error "error ellipsis + ,@ at same level"
 	    #t
-	    (read-eval-string "(match '(1 1 1 2 2 2) (`(,@a ,b ...) b))"))
+	    (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a ,b ...) b))"))
 (test-error "error dotted tail not allowed after ellipsis"
 	    #t
-	    (read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
+	    (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
 
 (test-equal "match w/o body has undefined value" 
 	    (if #f #t)
-	    (read-eval-string "(match (list 1 2) ((a b)))"))
+	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
 (test-error "error match-let w/o body, let requires body"
 	    #t
-	    (read-eval-string "(match-let (((a b) (list 1 2))))"))
+	    (test-read-eval-string "(match-let (((a b) (list 1 2))))"))
 
 (let ()
   (define-syntax make-chunker
@@ -485,10 +485,10 @@
 
   (test-error "error match macro _ name clash"
 	      #t
-	      (read-eval-string "((make-chunker a b c _) (iota 20))"))
+	      (test-read-eval-string "((make-chunker a b c _) (iota 20))"))
 
   (test-error "error match macro ___ name clash"
 	      #t
-	      (read-eval-string "((make-chunker a b c ___) (iota 20))")))
+	      (test-read-eval-string "((make-chunker a b c ___) (iota 20))")))
 
 (test-end (string-append test-name "-" scheme-version-name))

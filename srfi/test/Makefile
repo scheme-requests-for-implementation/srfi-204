@@ -16,13 +16,16 @@ GOSHFLAGS = -I $(top_srcdir)
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
 LARCENY = larceny
-LARCENYFLAGS = -r7rs -I $(top_srcdir) -program
+LARCENYFLAGS = -r7rs -I $(top_srcdir)
 CHEZSCHEME = chezscheme
 CHEZSCHEMEFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
 GXI = gxi
 GXIFLAGS = --lang r7rs
+LOKO = loko
+LOKOFLAGS = --script
+
 
 # chose implentation based on TESTSCHEME
 # from environment
@@ -50,8 +53,13 @@ ifeq ($(TESTSCHEME), gxi)
 	SCM = $(GXI)
 	SCMFLAGS = $(GXIFLAGS)
 else
+ifeq ($(TESTSCHEME), loko)
+	SCM = $(LOKO)
+	SCMFLAGS = $(LOKOFLAGS)
+else
 	SCM = $(GUILE)
 	SCMFLAGS = $(GUILEFLAGS)
+endif
 endif
 endif
 endif

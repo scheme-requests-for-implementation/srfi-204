@@ -1,0 +1,5 @@
+%%%% Starting test srfi-test-loko0.5.0
+FAIL match w/o body has undefined value
+# of expected passes      90 [32m[PASS](B[m
+# of unexpected failures  1 [31m[FAIL](B[m
+# of skipped tests        5
