@@ -184,10 +184,10 @@ At the time of this writing, cyclic literals seem irregularly implemented, at le
 <h4 id="Repitition">Nonlinear Patterns: Repitition</h4>
 <p>A nonlinear pattern has repeated pattern variables:</p>
 <pre><code>
-(match (list A B A) ((a b a) a) (_ 'fail)) =&gt; A
-(match (list A B A) (`(,a b ,a) a) (_ 'fail)) =&gt; fail
-(match (list A B A) (`(,a B ,a) a) (_ 'fail)) =&gt; A
-(match (list A B A) (`(,a ,b ,a) a) (_ 'fail)) =&gt; A
+(match (list 'A 'B 'A) ((a b a) a) (_ 'fail)) =&gt; A
+(match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)) =&gt; fail
+(match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)) =&gt; A
+(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)) =&gt; A
 </code></pre>
 <p>After the first match, subsequent instances must match a value <code>equal?</code> to the first. Any nonlinear pattern clause that involves repetition can be converted into a linear pattern clause that uses failure to restart pattern matching at the next pattern:</p>
 <pre><code>
@@ -787,14 +787,7 @@ where:
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
 	</ul>
-<p>A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] has an unspecified return value, like <code>(if #f 1).</code>
-However if this occurs in a context where a body is required, it will cause an error:</p>
-<pre><code>
-(match-let (((a b) (list 1 2))))
-ERROR on line 1023 of file ../srfi-204/srfi-204.scm:
-no let body:
-    (#&lt;SC 136102368243328 let #&lt;procedure #f&gt;&gt; ())
-</code></pre>
+<p>A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] does not have a reliable return value in the sample implementation. This form should be avoided and should become a syntax error.</p>
 <h3 id="Macros">Using in Other Macros</h3>
 <p>Other macros that use the pattern matcher will be subject to the same constraints, in particular with respect to names. For example:
 <pre><code>
