@@ -19,6 +19,7 @@
     (import (gauche base)
 	    (scheme base)
 	    (scheme char)
+	    (scheme cxr)
 	    (srfi-204)
 	    (srfi-64))
     (define non-linear-pattern #t)
@@ -35,20 +36,27 @@
     ;; $rlwrap larceny -r7rs -I ..
     ;; > (include "test/match-test.scm")
     (import (scheme base)
+	    (scheme char)
+	    (scheme cxr)
 	    ;(srfi-204) doesn't work
 	    (srfi 64)
-	    (srfi 115))
+	    (srfi 115)
+	    (only (srfi 1) iota filter))
     (define (is-version? sym)
       (regexp-matches?
 	'(seq "larceny-" (one-or-more (or numeric ".")))
 	(symbol->string sym)))
-    (define test-name "larceny-match-tests")
+    (define non-linear-pattern #t)
+    (define non-linear-pred #t)
+    (define non-linear-field #t)
+    (define record-implemented #t)
+    (define test-name "srfi-test")
     (define scheme-version-name
       (let lp ((has (features)))
-	(match has
-	       (() "larceny-???")
-	       (((? symbol? (? is-version? sym)) . rest) (symbol->string sym))
-	       ((this . rest) (lp rest)))))
+	(cond
+	  ((null? has) "larceny-???")
+	  ((is-version? (car has)) (symbol->string (car has)))
+	  (else (lp (cdr has))))))
     (begin
       (include "srfi-204.sld")
       (import (srfi-204))

@@ -461,11 +461,24 @@
 	    #t
 	    (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
 
+;;; screen for match w/o body behavior 1 of these 3 tests should pass, 2 should fail
 (test-equal "match w/o body has undefined value" 
 	    (if #f #t)
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
+(test-equal "match w/o body has last value" 
+	    2
+	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
+
+(test-error "match w/o body causes error" 
+	    #t
+	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
+
 (test-error "error match-let w/o body, let requires body"
+	    #t
+	    (test-read-eval-string "(match-let (((a b) (list 1 2))))"))
+
+(test-error "error match-lambda w/o body, lambda requires body"
 	    #t
 	    (test-read-eval-string "(match-let (((a b) (list 1 2))))"))
 

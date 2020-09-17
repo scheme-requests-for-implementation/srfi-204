@@ -3,6 +3,7 @@ Copyright 1984-2017 Cisco Systems, Inc.
 
 %%%% Starting test srfi-test-Chez Scheme Version 9.5
 FAIL match w/o body has undefined value
-# of expected passes      90 [32m[PASS](B[m
-# of unexpected failures  1 [31m[FAIL](B[m
+FAIL match w/o body has last value
+# of expected passes      92 [32m[PASS](B[m
+# of unexpected failures  2 [31m[FAIL](B[m
 # of skipped tests        5

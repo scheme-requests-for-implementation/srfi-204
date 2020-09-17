@@ -12,3 +12,14 @@
 5. Run tests with <code>make clean</code> then <code>make hello-test</code>, and trouble-shoot any problems that occur.
 
 6. When tests pass for hello, repeat steps 4 and 5 for **match-test**, this time importing the match library defined for this implementation and <code>include</code> **match-common**. Run tests with <code>make clean</code> and <code>make match-test</code> and <code>mv</code> result to **logs** folder.
+
+7. To test code from srfi set up new block in **srfi-test** (for cond-expand schemes) or in a separate file, like that from **make-test**. In addition you may need:
+	- <code>(scheme char)</code> [r7rs] or  <code>(rnrs unicode)</code> [r6rs]
+	- <code>(only (srfi :1) iota filter)</code>
+	- <code>(define (square x) (\* x x))</code>
+	- <code>(scheme cxr)</code>
+	- the following values need to be set to #t or #f depending on how the srfi is implemented:
+		- <code>non-linear-pattern</code>
+		- <code>non-linear-field</code>
+		- <code>non-linear-pred</code>
+		- <code>record-implemented</code>

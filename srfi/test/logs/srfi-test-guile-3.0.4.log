@@ -1,5 +1,5 @@
-%%%% Starting test srfi-test-guile-2.2.4
-Group begin: srfi-test-guile-2.2.4
+%%%% Starting test srfi-test-guile-3.0.4
+Group begin: srfi-test-guile-3.0.4
 Test begin:
   test-name: "Introduction"
   source-file: "test/srfi-common.scm"
@@ -752,7 +752,7 @@ Test begin:
   source-form: (test-error "error no matching pattern" #t (test-read-eval-string "(match (list 1 2 3) ((a b)))"))
 Test end:
   result-kind: pass
-  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  actual-error: (syntax-error #f "empty body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
   expected-error: #t
 Test begin:
   test-name: "error invalid use of ***"
@@ -807,7 +807,7 @@ Test begin:
 Test end:
   result-kind: fail
   actual-value: #f
-  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  actual-error: (syntax-error #f "empty body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
   expected-value: #<unspecified>
 Test begin:
   test-name: "match w/o body has last value"
@@ -817,7 +817,7 @@ Test begin:
 Test end:
   result-kind: fail
   actual-value: #f
-  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  actual-error: (syntax-error #f "empty body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
   expected-value: 2
 Test begin:
   test-name: "match w/o body causes error"
@@ -826,7 +826,7 @@ Test begin:
   source-form: (test-error "match w/o body causes error" #t (test-read-eval-string "(match (list 1 2) ((a b)))"))
 Test end:
   result-kind: pass
-  actual-error: (syntax-error #f "no expressions in body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
+  actual-error: (syntax-error #f "empty body" ((line . 0) (column . 0) (filename . #f)) (let ((b w)) (match-drop-ids (begin) (a b))) #f)
   expected-error: #t
 Test begin:
   test-name: "error match-let w/o body, let requires body"
@@ -862,7 +862,7 @@ Test begin:
   source-form: (test-error "error match macro _ name clash" #t (test-read-eval-string "((make-chunker a b c _) (iota 20))"))
 Test end:
   result-kind: pass
-  actual-error: (unbound-variable #f "Unbound variable: ~S" (make-chunker) #f)
+  actual-error: (syntax-error _ "bad use of '_' syntactic keyword" #f _ _)
   expected-error: #t
 Test begin:
   test-name: "error match macro ___ name clash"
@@ -873,6 +873,6 @@ Test end:
   result-kind: pass
   actual-error: (syntax-error #f "source expression failed to match any pattern" #f ___ #f)
   expected-error: #t
-Group end: srfi-test-guile-2.2.4
+Group end: srfi-test-guile-3.0.4
 # of expected passes      92
 # of unexpected failures  2

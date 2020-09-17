@@ -15,7 +15,7 @@ GOSHFLAGS = -I $(top_srcdir)
 #TODO have not found a way to make larceny work from Makefile
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
-LARCENY = larceny
+LARCENY = larceny-scheme-script
 LARCENYFLAGS = -r7rs -I $(top_srcdir)
 CHEZSCHEME = chezscheme
 CHEZSCHEMEFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)

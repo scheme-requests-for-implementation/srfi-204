@@ -1,5 +1,5 @@
-%%%% Starting test srfi-test-gauche-0.9.6
-Group begin: srfi-test-gauche-0.9.6
+%%%% Starting test srfi-test-larceny-1.3
+Group begin: srfi-test-larceny-1.3
 Test begin:
   test-name: "Introduction"
 Test end:
@@ -159,7 +159,6 @@ Test begin:
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "**1 match"
 Test end:
@@ -171,7 +170,6 @@ Test begin:
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "quasi-quote unquote-splicing **1 match"
 Test end:
@@ -493,79 +491,68 @@ Test begin:
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error no match clauses"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error no matching pattern"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error invalid use of ***"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error multiple ellipsis patterns at same level"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error ellipsis + =.. at same level"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error ellipsis + ,@ at same level"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error dotted tail not allowed after ellipsis"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "match w/o body has undefined value"
 Test end:
   result-kind: fail
-  actual-value: 2
-  expected-value: #<undef>
+  actual-value: #f
+  expected-value: #!unspecified
 Test begin:
   test-name: "match w/o body has last value"
 Test end:
-  result-kind: pass
-  actual-value: 2
+  result-kind: fail
+  actual-value: #f
   expected-value: 2
 Test begin:
   test-name: "match w/o body causes error"
 Test end:
-  result-kind: fail
-  actual-value: #f
-  expected-value: #t
+  result-kind: pass
+  actual-value: #t
 Test begin:
   test-name: "error match-let w/o body, let requires body"
 Test end:
-  result-kind: fail
-  actual-value: #f
-  expected-value: #t
+  result-kind: pass
+  actual-value: #t
 Test begin:
   test-name: "error match-lambda w/o body, lambda requires body"
 Test end:
-  result-kind: fail
-  actual-value: #f
-  expected-value: #t
+  result-kind: pass
+  actual-value: #t
 Test begin:
   test-name: "match macro, no name clash"
 Test end:
@@ -577,14 +564,12 @@ Test begin:
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
 Test begin:
   test-name: "error match macro ___ name clash"
 Test end:
   result-kind: pass
   actual-value: #t
-  expected-value: #t
-Group end: srfi-test-gauche-0.9.6
-# of expected passes      90
-# of unexpected failures  4
+Group end: srfi-test-larceny-1.3
+# of expected passes      92
+# of unexpected failures  2
 # of skipped tests        5
