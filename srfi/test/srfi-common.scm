@@ -4,9 +4,9 @@
 				       ((1 2 3) #t))))
 
 (test-equal "Literal Patterns" '(ok ok)
-	    (let ((ls (list 'a "b" #f 2 '() #\c #(1))))
-	      (list (match ls (('a "b" #f 2 () #\c #(1)) 'ok))
-		    (match ls (`(a "b" #f 2 () #\c #(1)) 'ok)))))
+	    (let ((ls (list 'a "b" #f 2 '() #\c)))
+	      (list (match ls (('a "b" #f 2 () #\c) 'ok))
+		    (match ls (`(a "b" #f 2 () #\c) 'ok)))))
 
 (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
 (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
@@ -236,7 +236,7 @@
     (match-lambda ((? number? n) n)
 		  ((and pair ((or '+ '- '* '/) . rest))
 		   (handle-arithmetic-sexpr pair))
-		  (_ (error "not implemented yet"))))
+		  (any (error #f "not implemented yet" any))))
 
   (test-equal "quasi-quoted dotted pair/pred/boolean sexpr eval"
 	      67 
@@ -295,7 +295,9 @@
 		   (_ 'fail)))
 
 (test-equal "field car" 1 (match '(1 . 2) ((= car x) x)))
-(test-equal "field N->N proc" 16 (match 4 ((= square x) x)))
+(let ()
+  (define (square x) (* x x))
+  (test-equal "field N->N proc" 16 (match 4 ((= square x) x))))
 
 (let ((x (cons 1 2)))
   (test-equal "list setter test" '(1 . 3)   (match x ((1 . (set! s)) (s 3) x))))
@@ -320,8 +322,8 @@
      (define-record-type employee
        (make-employee name title)
        employee?
-       (name get-name)
-       (title get-title)))
+       (name employee-name)
+       (title employee-title)))
     (else
       (define-record-type employee (fields name title))))
   (if (not record-implemented) (test-skip 2))
@@ -339,8 +341,8 @@
 	    (list "Doctor" "Bob")
 	    (match (make-employee "Bob" "Doctor")
 		   ((and (? employee?)
-			 (= get-title t)
-			 (= get-name n))
+			 (= employee-title t)
+			 (= employee-name n))
 		    (list t n)))))
 
 (let () (cond-expand

@@ -1,0 +1,13 @@
+(import (chezscheme)
+	(srfi :0)
+	(srfi :64)
+	(chez9.5 match))
+(define non-linear-pattern #t)
+(define non-linear-pred #t)
+(define non-linear-field #t)
+(define record-implemented #t)
+(define test-name "srfi-test")
+(define scheme-version-name (scheme-version))
+(include "srfi-common.scm")
+(exit)
+;;; $~/.akku/env
