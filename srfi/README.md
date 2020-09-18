@@ -8,14 +8,10 @@
 
 4. When step 3 succeeds, follow the instructions for setting uptesting in **./test/README.md**.
 
-# Files used to make SRFI for WCS pattern matcher.
 
 ## .:
 
 **auxiliary-syntax.scm** macros to export auxiliary syntax
-
-**match-implementations.md** all the documentation and implementation
-for scheme pattern matching I could find.
 
 **srfi-204.sld** Chibi, Gauche, Guile and Larceny pattern matching library definitions.
 
@@ -33,7 +29,7 @@ files for in-development features
 files needed to make match work in a particular implementation of scheme, and a record of any issues.
 
 ## ./not-working:
-failed attempts to make module work with GNU/MIT, Rapid, Husk, Foment, Gambit, and Gerbil.
+failed attempts to make module work with GNU/MIT, Rapid, Husk, Foment, and Gambit.
 
 ## ./ref
 files used for reference.
@@ -45,13 +41,15 @@ files used for reference.
 
 ## ./test:
 
-**match-tests.scm** implementation-specific parts of match tests
+**match-test.scm** implementation-specific parts of match tests
 
 **match-common.scm** match-test.sld tests re-written to use srfi-64
 
-**loko-match-test.scm**
+**srfi-common.scm** all code from srfi in test form.
 
-**match-common-r6rs.scm** match-common.scm rewritten for r6rs
+**srfi-test.scm** cond-expand implementation specific parts of srfi tests
+
+**loko-\*\**, **chez-\*\** same as namesake file, but has no cond-expands.
 
 **hello-test.scm** <code>cond-expand</code> to run tests in hello common. Used to check <code>SCM</code>, <code>SCMFLAGS</code> and <code>cond-expand</code> before adding <code>cond-expand</code> to **match-tests.scm**
 
