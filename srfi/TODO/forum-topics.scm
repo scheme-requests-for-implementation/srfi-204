@@ -320,6 +320,19 @@
 			 g)))
 
 (define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
+(define (make-getter getter) (lambda (ref) (lambda (obj) (lambda () (getter obj ref)))))
+(define (make-setter setter) (lambda (ref) (lambda (obj) (lambda (value) (setter obj ref value)))))
+
+(import (srfi srfi-69))
+(define get-key (make-getter (lambda (obj ref) (hash-table-ref obj ref (lambda () #f)))))
+(define set-key (make-setter hash-table-set!))
+
+(define ht (make-hash-table))
+
+(define get-mode
+  (match ht ((= (get-key 'mode) gm) gm)))
+(define set-mode!
+  (match ht ((= (set-key 'mode) sm!) sm!)))
 
 (define-record-type <posn> (make-posn x y) posn? (x posn-x set-posn-x!) (y posn-y set-posn-y!))
 ;;; (define-record-type (<posn> make-posn posn?) (fields (mutable x) (mutable y)))
