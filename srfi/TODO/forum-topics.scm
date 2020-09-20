@@ -320,8 +320,24 @@
 			 g)))
 
 (define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
-(define (make-getter getter) (lambda (ref) (lambda (obj) (lambda () (getter obj ref)))))
-(define (make-setter setter) (lambda (ref) (lambda (obj) (lambda (value) (setter obj ref value)))))
+
+;;;emulate 
+(define (make-binary-pred pred)
+  (case-lambda
+    ((a) (lambda (b) (pred a b)))
+    ((a b) (pred a b))))
+
+(define (make-getter get-proc)
+  (lambda (ref)
+    (lambda (obj)
+      (lambda ()
+	(get-proc obj ref)))))
+
+(define (make-setter set-proc)
+  (lambda (ref)
+    (lambda (obj)
+      (lambda (value)
+	(set-proc obj ref value)))))
 
 (import (srfi srfi-69))
 (define get-key (make-getter (lambda (obj ref) (hash-table-ref obj ref (lambda () #f)))))

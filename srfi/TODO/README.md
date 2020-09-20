@@ -30,7 +30,7 @@
 - run #f branches of srfi-test using (util match) and 
 - close out threads move to maybe, answered, or no-answer, depending on how handled
    <!-- - milestone handle files that start with 1 -->
-   - milestone handle files that start with 2
+   <!-- - milestone handle files that start with 2 -->
    - milestone handle files that start with 3
    - milestone handle files that start with 4
    - milestone handle files that start with 5
