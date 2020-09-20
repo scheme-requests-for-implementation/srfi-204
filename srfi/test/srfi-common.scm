@@ -16,7 +16,7 @@
 (test-equal "Quasi-quote variable pass"
 	    2
 	    (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)))
-
+#|
 (if (not non-linear-pattern) (test-skip 4))
 (test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
 (test-equal "quasi-quote fail repeated pattern" 
@@ -28,18 +28,20 @@
 (test-equal "quasi-quote repeated pattern 2"
 	    'A
 	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
-
+|#
 (if non-linear-pattern (test-skip 4))
-(test-error "error repeated pattern" #t (match (list 'A 'B 'A) ((a b a) a)))
+(test-error "error repeated pattern"
+	    #t 
+	    (test-read-eval-string  "(match (list 'A 'B 'A) ((a b a) a))"))
 (test-error "error quasi-quote fail repeated pattern" 
 	    #t
-	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail))"))
 (test-error "error quasi-quote repeated pattern 1"
 	    #t
-	    (match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)))
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail))"))
 (test-error "error quasi-quote repeated pattern 2"
 	    #t
-	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail))"))
 
 (test-eqv "repeated pattern->failure"
 	 1
@@ -82,6 +84,7 @@
 	      '((1 4) (2 5) (3 6))
 	      (transpose '((1 2 3) (4 5 6)))))
 
+#|
 (let ((palindrome? 
 	(if non-linear-pattern
 	    (lambda (str)
@@ -107,6 +110,7 @@
 (test-equal "middle ellipsis fail"
 	    #f
 	    (palindrome? "Napoleon")))
+|#
 
 (let ()
   (define first-column
@@ -189,13 +193,18 @@
 	    (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 		   ((_ *** `(sqrt . ,rest)) rest)))
 	
+#|
 (test-equal "empty and match" #t (match 1 ((and) #t)))
+|#
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
 (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
+#|
 (test-equal "and false match" #t (match #f ((and) #t) (_ #f)))
+|#
 (test-equal "and false catch via failure"
 	    #f
 	    (match #f ((and x) (=> fail) (if x #t (fail))) (_ #f)))
+#|
 (test-equal "empty or fail" #f (match 1 ((or) #t) (else #f)))
 (test-equal "or identifier match" 1 (match 1 ((or x) x)))
 (test-equal "or identifier mis-matched literal match" 1 (match 1 ((or x 2) x)))
@@ -218,6 +227,7 @@
   (test-equal "or pattern with repetition"
 	      #t
 	      (last-matches-one-of-first-three '(1 2 3 4 5 2))))
+|#
 
 
 (test-equal "not #f match" 1 (match 1 ((and x (not #f)) x) (_ 'fail)))
@@ -256,8 +266,8 @@
 (if (not non-linear-pred)
     (test-error "error non-linear pred"
 		#t
-		(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
-		       (_ #f))))
+		(test-read-eval-string "(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
+		       (_ #f))")))
 
 (let ()
   (define fibby?
@@ -377,6 +387,7 @@
 			      (if (= (car a) 1) (fail) 'ok))
 		   (_ 'fail)))
 
+#|
 (if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
 (let ()
   (cond-expand
@@ -416,7 +427,8 @@
 (if non-linear-field (test-skip 1))
 (test-error "error repeated pattern in field"
 	    #t
-	    (match '((1 2) 1) ((a (= car a)) 'ok) (_ 'fail)))
+	    (test-read-eval-string "(match '((1 2) 1) ((a (= car a)) 'ok) (_ 'fail))"))
+|#
 
 (let ()
   (define multiples-of-seven?
