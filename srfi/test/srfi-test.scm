@@ -12,7 +12,6 @@
     (define non-linear-field #t)
     (define record-implemented #t)
     (define test-name "srfi-test")
-    (define (square x) (* x x))
     (define scheme-version-name (string-append "guile-" (version)))
     (include-from-path "./test/srfi-common.scm"))
   (gauche

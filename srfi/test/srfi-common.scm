@@ -1,3 +1,7 @@
+;;; most of false branches were tested with (util match) from
+;;; gauche, some syntax differences (no internal ellipses) made
+;;; it so I never got a clean run, even using 
+;;; test-read-eval-string
 (test-begin (string-append test-name "-" scheme-version-name))
 (test-equal "Introduction" #t (let ((ls (list 1 2 3)))
 				(match ls
@@ -16,19 +20,17 @@
 (test-equal "Quasi-quote variable pass"
 	    2
 	    (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)))
-#|
 (if (not non-linear-pattern) (test-skip 4))
-(test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
+(test-equal "repeated pattern" 'A (test-read-eval-string "(match (list 'A 'B 'A) ((a b a) a))"))
 (test-equal "quasi-quote fail repeated pattern" 
 	    'fail
-	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail))"))
 (test-equal "quasi-quote repeated pattern 1"
 	    'A
-	    (match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)))
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail))"))
 (test-equal "quasi-quote repeated pattern 2"
 	    'A
-	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
-|#
+	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail))"))
 (if non-linear-pattern (test-skip 4))
 (test-error "error repeated pattern"
 	    #t 
@@ -84,33 +86,33 @@
 	      '((1 4) (2 5) (3 6))
 	      (transpose '((1 2 3) (4 5 6)))))
 
-#|
 (let ((palindrome? 
 	(if non-linear-pattern
-	    (lambda (str)
-	      (let loop ((chars (filter char-alphabetic?
-					(string->list (string-foldcase str)))))
-		(match chars
-		       (() #t)
-		       ((a) #t)
-		       ((a a) #t)
-		       ((a b ... a) (loop b))
-		       (_ #f))))
-	    (lambda (str)
-	      (let loop ((chars (filter char-alphabetic?
-					(string->list (string-foldcase str)))))
-		(match chars
-		       (() #t)
-		       ((a) #t)
-		       ((a b) (eqv? a b))
-		       ((a b ... c) (if (eqv? a c) (loop b) #f))
-		       (_ #f)))))))
+	    (test-read-eval-string
+	      "(lambda (str)
+		(let loop ((chars (filter char-alphabetic?
+					  (string->list (string-foldcase str)))))
+		  (match chars
+			 (() #t)
+			 ((a) #t)
+			 ((a a) #t)
+			 ((a b ... a) (loop b))
+			 (_ #f))))")
+	    (test-read-eval-string
+	      "(lambda (str)
+		(let loop ((chars (filter char-alphabetic?
+					  (string->list (string-foldcase str)))))
+		  (match chars
+			 (() #t)
+			 ((a) #t)
+			 ((a b) (eqv? a b))
+			 ((a b ... c) (if (eqv? a c) (loop b) #f))
+			 (_ #f))))"))))
 
 (test-equal "middle ellipsis" #t (palindrome? "Able was I, ere I saw Elba."))
 (test-equal "middle ellipsis fail"
 	    #f
 	    (palindrome? "Napoleon")))
-|#
 
 (let ()
   (define first-column
@@ -193,42 +195,38 @@
 	    (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 		   ((_ *** `(sqrt . ,rest)) rest)))
 	
-#|
-(test-equal "empty and match" #t (match 1 ((and) #t)))
-|#
+;;; using (util match) to test false branch, a number of boolean patterns
+;;; that are OK in (chibi match) gave errors, so did t-r-e-s conversion.
+(test-equal "empty and match" #t (test-read-eval-string "(match 1 ((and) #t))"))
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
 (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
-#|
-(test-equal "and false match" #t (match #f ((and) #t) (_ #f)))
-|#
+(test-equal "and false match" #t (test-read-eval-string "(match #f ((and) #t) (_ #f))"))
 (test-equal "and false catch via failure"
 	    #f
 	    (match #f ((and x) (=> fail) (if x #t (fail))) (_ #f)))
-#|
-(test-equal "empty or fail" #f (match 1 ((or) #t) (else #f)))
+(test-equal "empty or fail" #f (test-read-eval-string "(match 1 ((or) #t) (else #f))"))
 (test-equal "or identifier match" 1 (match 1 ((or x) x)))
-(test-equal "or identifier mis-matched literal match" 1 (match 1 ((or x 2) x)))
+(test-equal "or identifier mis-matched literal match" 1 (test-read-eval-string "(match 1 ((or x 2) x))"))
 
 (let ((last-matches-one-of-first-three
 	(if non-linear-pattern
-	    (match-lambda ((a a) #t)
+	    (test-read-eval-string "(match-lambda ((a a) #t)
 			  ((a b c ... (or a b)) #t)
 			  ((a b c d ... c) #t)
-			  (_ #f))
+			  (_ #f))")
 
-	    (match-lambda ((a a) #t)
-			  ((a b c ... d)
-			   (=> fail)
-			   (if (or (equal? d a) (equal? d b))
-			       #t
-			       (fail)))
-			  ((a b c d ... e) (equal? c e))
-			  (_ #f)))))
+	    (test-read-eval-string
+	      "(match-lambda ((a b) (equal? a b))
+			     ((a b c ... d)
+			      (=> fail)
+			      (if (or (equal? d a) (equal? d b))
+				  #t
+				  (fail)))
+			     ((a b c d ... e) (equal? c e))
+			     (_ #f))"))))
   (test-equal "or pattern with repetition"
 	      #t
 	      (last-matches-one-of-first-three '(1 2 3 4 5 2))))
-|#
-
 
 (test-equal "not #f match" 1 (match 1 ((and x (not #f)) x) (_ 'fail)))
 (test-equal "not #f fail" 'fail (match #f ((and x (not #f)) x) (_ 'fail)))
@@ -253,21 +251,19 @@
 	      (eval-sexpr '(+ (* 3 4 5) (- 10 3)))))
 
 (if non-linear-pred
-    (letrec ((fibby?
-	    (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
-			   (fibby? (cons b (cons c rest))))
-			  ((a b) #t)
-			  ((a) #t)
-			  (() #t)
-			  (_ #f))))
+    (test-read-eval-string
+      "(letrec ((fibby?  (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
+					(fibby? (cons b (cons c rest))))
+      ((a b) #t)
+      ((a) #t)
+      (() #t)
+      (_ #f))))
 
-      (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47)))))
-
-(if (not non-linear-pred)
+	 (test-equal \"non-linear pred match\" #t (fibby? '(4 7 11 18 29 47))))")
     (test-error "error non-linear pred"
 		#t
 		(test-read-eval-string "(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
-		       (_ #f))")))
+					       (_ #f))")))
 
 (let ()
   (define fibby?
@@ -387,9 +383,8 @@
 			      (if (= (car a) 1) (fail) 'ok))
 		   (_ 'fail)))
 
-#|
-(if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
-(let ()
+(test-read-eval-string
+"(let ()
   (cond-expand
   ((or r7rs (not r6rs))
    (define-record-type checkable
@@ -398,26 +393,26 @@
      (pred checkable-pred)
      (value checkable-value)))
   (else (define-record-type checkable (fields pred value))))
+  (define check (if non-linear-pred
+		 (match-lambda (($ checkable pred (? pred ok)) ok) (($ checkable) 'bad-data))
+		 (lambda arg #f)))
 
-(define check
-  (match-lambda (($ checkable pred (? pred ok)) ok)
-                (($ checkable) 'bad-data)))
-
-(test-equal "match-lambda non-linear pred match"
+(if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
+(test-equal \"match-lambda non-linear pred match\"
 	    1
 	    (check (make-checkable odd? 1)))
-(test-equal "match-lambda non-linear pred fail"
+(test-equal \"match-lambda non-linear pred fail\"
 	    'bad-data
-	    (check (make-checkable odd? 2))))
+	    (check (make-checkable odd? 2))))")
 
 (if (not non-linear-field) (test-skip 1))
-(let ()
-  (define zero-to-three-cycle
-    (match-lambda ((and c (= car c)) 0)
+(let ((zero-to-three-cycle (if non-linear-field
+			       (test-read-eval-string "(match-lambda ((and c (= car c)) 0)
 		  ((and c (= cdr c)) 1)
 		  ((and c (= cddr c)) 2)
 		  ((and c (= cdddr c)) 3)
-		  (_ 'fail)))
+		  (_ 'fail))")
+			       (lambda arg #f))))
 
   (define l3 (list 1 2 3))
   (set-cdr! (cddr l3) l3)
@@ -428,7 +423,6 @@
 (test-error "error repeated pattern in field"
 	    #t
 	    (test-read-eval-string "(match '((1 2) 1) ((a (= car a)) 'ok) (_ 'fail))"))
-|#
 
 (let ()
   (define multiples-of-seven?
