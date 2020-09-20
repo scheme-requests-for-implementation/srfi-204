@@ -9,6 +9,7 @@
 (define-library (cyclone0.19 srfi-204)
   (import
     (scheme base)
+    ;(rename (scheme base) (slot-set! cyc-slot-set!))
     ;(scheme write)
   )
   ;(export match match-lambda match-lambda* match-let match-letrec match-let*)
@@ -60,6 +61,7 @@
     match-check-identifier
     match-check-ellipsis
     match-bound-identifier=?
+    new-slot-set!
   )
   (begin
 
@@ -307,6 +309,7 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
+;; 2020/09/20 - fix slot-set! to handle names
 ;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
 ;; 2020/08/21 - handle underscores separately, not as literals
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
@@ -342,6 +345,15 @@
 (define-syntax match-syntax-error
   (syntax-rules ()
     ((_) (match-syntax-error "invalid match-syntax-error usage"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; new slot-set!
+(define-syntax new-slot-set!
+  (syntax-rules ()
+    ((new-slot-set! rtd rec n value)
+     (if (integer? n)
+	 (slot-set! rtd rec n value)
+	 (slot-set! rtd rec (type-slot-offset rtd n) value)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -895,7 +907,7 @@
   (syntax-rules ()
     ((_ v rec n (p . q) g+s sk fk i)
      (let ((w (slot-ref rec v n)))
-       (match-one w p ((slot-ref rec v n) (slot-set! rec v n))
+       (match-one w p ((slot-ref rec v n) (new-slot-set! rec v n))
                   (match-record-refs v rec (+ n 1) q g+s sk fk) fk i)))
     ((_ v rec n () g+s (sk ...) fk i)
      (sk ... i))))
@@ -904,7 +916,7 @@
   (syntax-rules ()
     ((_ v rec ((f p) . q) g+s sk fk i)
      (let ((w (slot-ref rec v 'f)))
-       (match-one w p ((slot-ref rec v 'f) (slot-set! rec v 'f))
+       (match-one w p ((slot-ref rec v 'f) (new-slot-set! rec v 'f))
                   (match-record-named-refs v rec q g+s sk fk) fk i)))
     ((_ v rec () g+s (sk ...) fk i)
      (sk ... i))))

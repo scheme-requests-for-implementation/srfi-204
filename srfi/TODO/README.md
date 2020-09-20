@@ -27,9 +27,9 @@
    <!-- - ellipses **fixed** -->
 - refactor for srfi-206
 <!-- - make srfi-test.scm in srfi/test containing all example code. -->
-- run #f branches of srfi-test using (util match) and record-less implementation
-  - test skip isn't enough to stop erroneous conditions from giving an error.
-    Commented all errors out until tests ran. Convert to test-read-eval-string form.
+<!-- - run #f branches of srfi-test using (util match) and record-less implementation -->
+  <!-- - test skip isn't enough to stop erroneous conditions from giving an error. -->
+    <!-- Commented all errors out until tests ran. Convert to test-read-eval-string form. -->
 <!-- - close out threads move to maybe, answered, or no-answer, depending on how handled -->
    <!-- - milestone handle files that start with 1 -->
    <!-- - milestone handle files that start with 2 -->
