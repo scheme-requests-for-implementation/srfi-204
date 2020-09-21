@@ -40,14 +40,38 @@
 			       value)
 		 (gb-slot-set! inst n value))))))
       (include "srfi-204/srfi-204.scm")))
+  ;; current record methods are correct according to
+  ;; core function description, but named record test
+  ;; doesn't pass and trying
+  ;; (struct-field-ref rtd rec (struct-field-offset rtd n))
+  ;; in gxi gives segmentation fault.
   (gerbil
     (define-library (srfi-204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
 	      ___ **1 =.. *.. *** ? $ struct object get!)
-      (import (scheme base))
+      (import (scheme base)
+	      (rename (gerbil core)
+		      (slot-ref ger-slot-ref)
+		      (slot-set! ger-slot-set!)))
       (include "auxiliary-syntax.scm")
       (begin
-	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))
+	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
+	(define-syntax is-a?
+	  (syntax-rules ()
+	    ((_ rec rtd)
+	     ((make-struct-predicate rtd) rec))))
+	(define-syntax slot-ref
+	  (syntax-rules ()
+	  ((_ rtd rec n)
+	   (if (integer? n)
+	       (struct-field-ref rtd rec n)
+	       (struct-field-ref rtd rec (struct-field-offset rtd n))))))
+	(define-syntax slot-set!
+	  (syntax-rules ()
+	  ((_ rtd rec n)
+	   (if (integer? n)
+	       (struct-field-set! rtd rec n)
+	       (struct-field-set! rtd rec (struct-field-offset rtd n)))))))
       (include "srfi-204/srfi-204.scm")))
   (guile
     (define-module (srfi-204))

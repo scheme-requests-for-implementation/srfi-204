@@ -227,12 +227,19 @@ Test case: test: match-named-let
 ... 1 checks OK
 Test case: match-letrec
 ... check (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) is equal? to (2 1 1 2)
-*** FAILED: (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "test.ss"@309.14; value: (#<procedure #12 #:b152918> #<procedure #12 #:b152918> #<procedure #12 #:b152918> #<procedure #12 #:b152918>)
+*** FAILED: (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "../gerbil-test.ss"@309.14; value: (#<procedure #12 #:b154893> #<procedure #12 #:b154893> #<procedure #12 #:b154893> #<procedure #12 #:b154893>)
 Test case: test: match-letrec quote
 ... check (match-letrec (((x 'x) (list #t 'x))) x) is equal? to #t
 ... 1 checks OK
+Test case: record positional
+... check (match (make-point 0 1) (($ Point x y) (list y x))) is equal? to (1 0)
+... 1 checks OK
+Test case: record named
+... check (match (make-point 0 1) ((@ Point (x x) (y y)) (list y x))) is equal? to (1 0)
+*** ERROR: (check equal? (match (make-point 0 1) ((@ Point (x x) (y y)) (list y x))) '(1 0)) at "../gerbil-test.ss"@332.5: match "no matching pattern"
 *** Test FAILED
 --- Test Summary
 gerbil-match-test: FAILED
-match-letrec: Check FAILED (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "test.ss"@309.14
+record named: ERROR (check equal? (match (make-point 0 1) ((@ Point (x x) (y y)) (list y x))) '(1 0)) at "../gerbil-test.ss"@332.5: match "no matching pattern"
+match-letrec: Check FAILED (check equal? (match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) '(2 1 1 2)) at "../gerbil-test.ss"@309.14
 FAILURE

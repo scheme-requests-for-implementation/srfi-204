@@ -323,17 +323,14 @@
                            (append (y) (b)))))))
         (check (foo a) => '(2 1 1 2))))
 
-      (cond-expand
-	(chibi
-	  (test "record positional"
-		'(1 0)
-		(match (make-point 0 1)
-		       (($ Point x y) (list y x))))
-	  (test "record named"
-		'(1 0)
-		(match (make-point 0 1)
-		       ((@ Point (x x) (y y)) (list y x)))))
-	(else))
-      ))
+	  (test-case "record positional"
+		(check
+		  (match (make-point 0 1)
+		       (($ Point x y) (list y x))) => '(1 0)))
+	  (test-case "record named"
+		(check
+		  (match (make-point 0 1)
+		       ((@ Point (x x) (y y)) (list y x))) => '(1 0))))
+      )
 (run-test-suite! gerbil-tests)
 (test-report-summary!)

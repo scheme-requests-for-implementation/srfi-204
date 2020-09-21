@@ -6,3 +6,6 @@ got new module to compile, and got tests to run.
 
 not keeping c files in repo since they distort composition
 of project.
+
+ran tests by opening match-test.sld and sending appropriate sections
+to icyc -I ..
