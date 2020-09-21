@@ -1,6 +1,6 @@
 <!-- - check not-working **fixed** -->
 - try to get all srfi-64 on same test-runner
-- Gerbil and Cyclone record methods
+<!-- - Gerbil and Cyclone record methods -->
  <!-- - try to integrate chez into testing framework **fixed** -->
 - update srfi:
    <!-- - (pat1 ... patN patN+1 ooo \[patN+2 ...]) **fixed** -->

@@ -65,13 +65,13 @@
 	  ((_ rtd rec n)
 	   (if (integer? n)
 	       (struct-field-ref rtd rec n)
-	       (struct-field-ref rtd rec (struct-field-offset rtd n))))))
+	       (error "named record access not implemented" n)))))
 	(define-syntax slot-set!
 	  (syntax-rules ()
 	  ((_ rtd rec n)
 	   (if (integer? n)
 	       (struct-field-set! rtd rec n)
-	       (struct-field-set! rtd rec (struct-field-offset rtd n)))))))
+	       (error "named record access not implemented" n))))))
       (include "srfi-204/srfi-204.scm")))
   (guile
     (define-module (srfi-204))
