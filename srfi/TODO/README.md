@@ -15,10 +15,10 @@
    <!-- second case makes even less sense  since ^    and  ^ would match to '(1 2 3 4) -->
    <!-- and 1, respectively.] **fixed** added info and examples about patvars in -->
    <!-- fields and predicates. -->
-   - figure out how to handle match-letrec/match-letrec\* in specification
-      - leave as is
-      - make optional, refer to use of internal define + match-lambda/match-lambda*
-        or named match-let by vast majority of users
+   <!-- - figure out how to handle match-letrec/match-letrec\* in specification -->
+      <!-- - leave as is -->
+      <!-- - make optional, refer to use of internal define + match-lambda/match-lambda* -->
+        <!-- or named match-let by vast majority of users -->
    <!-- - srfi should give implementors more guidance **fixed** -->
    <!-- - find and show example of match with failure -does this figure into call/cc (escape continuations,etc?)? **fixed** -->
    <!-- - flesh out: -->
@@ -26,6 +26,7 @@
    <!-- - not patterns **fixed** -->
    <!-- - ellipses **fixed** -->
 - refactor for srfi-206
+- work some on benchmarking
 <!-- - make srfi-test.scm in srfi/test containing all example code. -->
 <!-- - run #f branches of srfi-test using (util match) and record-less implementation -->
   <!-- - test skip isn't enough to stop erroneous conditions from giving an error. -->

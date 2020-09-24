@@ -71,6 +71,12 @@ $9 = (0 1 2 3)
 ;; 0.694322s real time, 0.701682s run time.  0.253721s spent in GC.
 scheme@(guile-user)>
 
+using time-it macro like:
+>(define list10M (iota 10000000))
+> (time-it (= 20) (let ((a (chunk4 list10M))) (car a)))
+in guile both srfi-204 and ice-9 match take ~0.26 sec per run
+after first run.
+
 to a first approximation, anyway, it doesn't look like the underscore
 macros had a big effect on the code.
 |#
