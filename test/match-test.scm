@@ -3,15 +3,15 @@
     ;;export TEST_VERBOSE=true to get verbose output
     (import (match-test)))
   (guile
-    (use-modules (srfi-204)
+    (use-modules (srfi srfi-204)
 	    (srfi srfi-64)
 	    (srfi srfi-9))
     (define test-name "guile-match-test")
     (define scheme-version-name (string-append "guile-" (version)))
-    (include-from-path "./test/match-common.scm"))
+    (include-from-path "test/match-common.scm"))
   (gauche
     (import (only (gauche base) gauche-version)
-	    (srfi-204)
+	    (srfi 204)
 	    (scheme base)
 	    (srfi-64))
     (define test-name "gauche-match-test")
@@ -39,8 +39,8 @@
 	       (((? symbol? (? is-version? sym)) . rest) (symbol->string sym))
 	       ((this . rest) (lp rest)))))
     (begin
-      (include "srfi-204.sld")
-      (import (srfi-204))
+      (include "srfi/204.sld")
+      (import (srfi 204))
       (include "test/match-common.scm"))))
 (cond-expand
   (chibi

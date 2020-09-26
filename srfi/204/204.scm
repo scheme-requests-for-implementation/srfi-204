@@ -1028,6 +1028,24 @@
      (match expr (pat (match-let* rest . body))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; procedures for handling types where equal? is not guaranteed
+
+(define (make-equality pred)
+  (case-lambda
+    ((a) (lambda (b) (pred a b)))
+    ((a b) (pred a b))))
+
+(define (make-get getter)
+  (case-lambda
+    ((key) (lambda (obj) (lambda () (getter obj key))))
+    ((obj key) (lambda () (getter obj key)))))
+
+(define (make-set setter)
+  (case-lambda
+    ((key) (lambda (obj) (lambda (value) (setter obj key value))))
+    ((obj key) (lambda (value) (setter obj key value)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Challenge stage - unhygienic insertion.
 ;;
 ;; It's possible to implement match-letrec without unhygienic

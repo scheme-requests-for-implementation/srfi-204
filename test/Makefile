@@ -3,12 +3,12 @@
 ############################################################
 
 # environment
-top_srcdir = ..
+top_srcdir = $(abspath ../)
 SHELL := bash
 
 # interpreters and flags
 GUILE = guile
-GUILE-3 = ../../../../tgzs/guile-3.0.4/meta/guile
+GUILE-3 = ../../../tgzs/guile-3.0.4/meta/guile
 GUILEFLAGS = --no-auto-compile -L $(top_srcdir) -x .sld
 GOSH = gosh
 GOSHFLAGS = -I $(top_srcdir)
@@ -17,8 +17,8 @@ GOSHFLAGS = -I $(top_srcdir)
 #     (include "test/match-test.scm")
 LARCENY = larceny-scheme-script
 LARCENYFLAGS = -r7rs -I $(top_srcdir)
-CHEZSCHEME = chezscheme
-CHEZSCHEMEFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
+CHEZ = chezscheme
+CHEZFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
 GXI = gxi
@@ -67,9 +67,6 @@ endif
 endif
 endif
 
-# used in help target
-MAKEFILE_LIST = Makefile
-
 # grab all files ending in -test.scm and use them to make targets
 # so tests in example-test.scm can be run with make example-test
 TESTS := $(wildcard *-test.scm)
@@ -97,8 +94,40 @@ check: $(LOGS)  ## run all tests
 clean:  ## get rid of log files
 	rm -f *.log
 
-$(NAMES): $(TESTS) ## the name of a particular test (minus .scm) runs that test
-	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
+# $(NAMES): $(TESTS) ## the name of a particular test (minus .scm) runs that test
+# 	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
+
+test:
+	echo $(mkfile_dir)
+	echo $(top_srcdir)
+
+match-test: match-test.scm ## run tests for srfi 204 library using TESTSCHEME
+	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
+
+srfi-test: srfi-test.scm ## run examle code in srfi 204 spec using TESTSCHEME
+	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
+
+chez-match-test: chez-match-test.scm ## run tests for srfi 204 library using chezscheme
+	@$(CHEZ) $(CHEZFLAGS) $^ |& $(HANDLE_RES)
+
+chez-srfi-test: chez-srfi-test.scm ## run examle code in srfi 204 spec using chezscheme
+	@$(CHEZ) $(CHEZFLAGS) $^ |& $(HANDLE_RES)
+
+
+loko-match-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
+loko-match-test: export LOKO_LIBRARY_PATH :=\
+       	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
+loko-match-test: loko-match-test.scm ## run tests for srfi 204 library using loko
+	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
+
+loko-srfi-test: loko-srfi-test.scm ## run examle code in srfi 204 spec using loko
+	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
+
+false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
+	@$(GOSH) $(GOSHFLAGS) $^ |& $(HANDLE_RES)
+
+hello-test: hello-test.scm ## run a passing test using TESTSCHEME
+	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
 %.log: %.scm
 	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)

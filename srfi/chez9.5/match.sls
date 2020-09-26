@@ -1,5 +1,5 @@
 (library
-  (chez9.5 match)
+  (srfi chez9.5 match)
   (export match
 	  match-lambda
 	  match-lambda*

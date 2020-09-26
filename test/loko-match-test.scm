@@ -1,4 +1,4 @@
-(import (loko0.5 match)
+(import (srfi loko0.5 match)
 	(srfi :64)
 	(srfi :0)
 	(loko))
