@@ -1,7 +1,8 @@
 Gerbil is now passing all tests, except match-letrec,
 match-letrec mnieper (had to be quoted out for tests
-to run). Also haven't figured out how to do slot-ref,
-is-a?, slot-set! so haven't run record tests.
+to run). Got record methods to work except named, (there
+was no low-level way to go from names to positions I could
+find in struct base lib.)
 
-also haven't figured out how to make tests recognize
-module when it is in a different directory.
+Going from (srfi-204) to (srfi 204) broke library import
+"Bad syntax: module id mismatch"
