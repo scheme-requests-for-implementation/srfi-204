@@ -1,7 +1,7 @@
 (cond-expand
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output
-    (import (match-test)))
+    (import (srfi match-test)))
   (guile
     (use-modules (srfi srfi-204)
 	    (srfi srfi-64)
@@ -18,7 +18,7 @@
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
     (include "match-common.scm"))
   (gerbil
-    (include "../gerbil-test.ss")) ; doesn't work
+    (include "../srfi/gerbil-test.ss")) ; doesn't work
   (larceny
     ;;NOTE run like:
     ;; $rlwrap larceny -r7rs -I ..

@@ -3,11 +3,10 @@
     (define-library (srfi 204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
 	      ___ **1 =.. *.. *** ? $ struct object get!)
-      (import (chibi))
-      (include  "204/204.scm")
-      (include "auxiliary-syntax.scm")
-      (begin
-	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!))))
+      (import (chibi)
+	      (scheme case-lambda)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!))
+      (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
       (export match match-lambda match-lambda* match-let match-letrec match-let*
@@ -51,12 +50,11 @@
       (export match match-lambda match-lambda* match-let match-letrec match-let*
 	      ___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!)
 	      (rename (gerbil core)
 		      (slot-ref ger-slot-ref)
 		      (slot-set! ger-slot-set!)))
-      (include "auxiliary-syntax.scm")
       (begin
-	(define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
 	(define-syntax is-a?
 	  (syntax-rules ()
 	    ((_ rec rtd)
@@ -107,6 +105,7 @@
       (export match match-lambda match-lambda* match-let match-letrec match-let*
 	      ___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!)
 	      (srfi 99 records))
       (begin
 	(define-syntax is-a?
@@ -125,7 +124,5 @@
 	     (if (integer? n)
 		 ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
 		 ((rtd-mutator rtd n) rec value))))))
-      (include "auxiliary-syntax.scm")
-      (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
       (include "srfi-204/srfi-204.scm")))
   (else))

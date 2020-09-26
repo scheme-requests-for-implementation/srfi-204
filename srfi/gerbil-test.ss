@@ -1,7 +1,7 @@
 (add-load-path ".")
 (import (scheme base)
 	(scheme write)
-	(srfi-204)
+	(srfi srfi-204)
 	(std test)
 	(std srfi 9))
 (define gerbil-tests

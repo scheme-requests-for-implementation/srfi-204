@@ -104,13 +104,13 @@ test:
 match-test: match-test.scm ## run tests for srfi 204 library using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
-srfi-test: srfi-test.scm ## run examle code in srfi 204 spec using TESTSCHEME
+srfi-test: srfi-test.scm ## run example code in srfi 204 spec using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
 chez-match-test: chez-match-test.scm ## run tests for srfi 204 library using chezscheme
 	@$(CHEZ) $(CHEZFLAGS) $^ |& $(HANDLE_RES)
 
-chez-srfi-test: chez-srfi-test.scm ## run examle code in srfi 204 spec using chezscheme
+chez-srfi-test: chez-srfi-test.scm ## run example code in srfi 204 spec using chezscheme
 	@$(CHEZ) $(CHEZFLAGS) $^ |& $(HANDLE_RES)
 
 
@@ -120,7 +120,7 @@ loko-match-test: export LOKO_LIBRARY_PATH :=\
 loko-match-test: loko-match-test.scm ## run tests for srfi 204 library using loko
 	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
 
-loko-srfi-test: loko-srfi-test.scm ## run examle code in srfi 204 spec using loko
+loko-srfi-test: loko-srfi-test.scm ## run example code in srfi 204 spec using loko
 	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
 
 false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
