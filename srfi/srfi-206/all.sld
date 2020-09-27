@@ -20,6 +20,33 @@
 ;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
+(library
+  (srfi srfi-206 all)
+  (export
+    ;; R7RS
+    else => unquote unquote-splicing _ ...
+    ;; syntax-case
+    unsyntax unsyntax-splicing
+    ;; SRFI 26
+    <> <...>
+    ;; SRFI 190
+    yield
+    ;; SRFI 204
+    $ ? get! *** ___ **1 =.. *.. struct object)
+  (import (guile))
+  (define-syntax define-identifier-syntax-parameter
+    (syntax-rules ()
+      ((_ name e)
+       (define-syntax name
+	 (syntax-rules ()
+	   ((_ . _) e))))))
+  (define-syntax define-auxiliary-syntax
+    (syntax-rules ()
+      ((_ name)
+       (define-identifier-syntax-parameter name
+					   (syntax-error "invalid use of auxiliary syntax" name)))))
+  (include-from-path "srfi/srfi-206/all-definitions.scm")
+  )
 ;#|
 (define-module (srfi srfi-206 all))
   (include-from-path "srfi/srfi-206/all-exports.scm")
