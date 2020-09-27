@@ -20,11 +20,10 @@
 ;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
-
-(define-library (srfi srfi-206 all)
-  (include-library-declarations "all-exports.scm")
+;#|
+(define-module (srfi srfi-206 all))
+  (include-from-path "srfi/srfi-206/all-exports.scm")
   (import (guile))
-  (begin
     (define-syntax define-identifier-syntax-parameter
       (syntax-rules ()
 	((_ name e)
@@ -35,8 +34,28 @@
       (syntax-rules ()
 	((_ name)
 	 (define-identifier-syntax-parameter name
-					     (syntax-error "invalid use of auxiliary syntax" name))))))
-(include"all-definitions.scm"))
+					     (syntax-error "invalid use of auxiliary syntax" name)))))
+(include-from-path "srfi/srfi-206/all-definitions.scm")
+;|#
+#|
+(define-library (srfi srfi-206 all)
+  (include-library-declarations "all-exports.scm")
+  (import (guile))
+  (cond-expand
+    (else
+      (define-syntax define-identifier-syntax-parameter
+	(syntax-rules ()
+	  ((_ name e)
+	   (define-syntax name
+	     (syntax-rules ()
+	       ((_ . _) e))))))
+    (define-syntax define-auxiliary-syntax
+      (syntax-rules ()
+	((_ name)
+	 (define-identifier-syntax-parameter name
+					     (syntax-error "invalid use of auxiliary syntax" name)))))))
+(include "all-definitions.scm"))
+|#
 #|
 (define-library (srfi srfi-206 all)
   (cond-expand
