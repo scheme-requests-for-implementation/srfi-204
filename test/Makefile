@@ -18,7 +18,8 @@ GOSHFLAGS = -I $(top_srcdir)
 LARCENY = larceny-scheme-script
 LARCENYFLAGS = -r7rs -I $(top_srcdir)
 CHEZ = chezscheme
-CHEZFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
+CHEZFLAGS = --libdirs\
+	    $(top_srcdir):$$HOME/.akku/lib
 CHIBISHCEME = chibi-scheme
 CHIBISHCEMEFLAGS = -I $(top_srcdir)
 GXI = gxi
@@ -108,6 +109,7 @@ srfi-test: srfi-test.scm ## run example code in srfi 204 spec using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
 chez-match-test: chez-match-test.scm ## run tests for srfi 204 library using chezscheme
+	@echo $(CHEZFLAGS)
 	@$(CHEZ) $(CHEZFLAGS) $^ |& $(HANDLE_RES)
 
 chez-srfi-test: chez-srfi-test.scm ## run example code in srfi 204 spec using chezscheme

@@ -26,11 +26,11 @@
     ;; R7RS
     else => unquote unquote-splicing _ ...
     ;; syntax-case
-    unsyntax unsyntax-splicing
+    ;unsyntax unsyntax-splicing
     ;; SRFI 26
     <> <...>
     ;; SRFI 190
-    yield
+    ;yield
     ;; SRFI 204
     $ ? get! *** ___ **1 =.. *.. struct object)
   (import (guile))
@@ -47,7 +47,7 @@
 					   (syntax-error "invalid use of auxiliary syntax" name)))))
   (include-from-path "srfi/srfi-206/all-definitions.scm")
   )
-;#|
+#|
 (define-module (srfi srfi-206 all))
   (include-from-path "srfi/srfi-206/all-exports.scm")
   (import (guile))
@@ -63,7 +63,7 @@
 	 (define-identifier-syntax-parameter name
 					     (syntax-error "invalid use of auxiliary syntax" name)))))
 (include-from-path "srfi/srfi-206/all-definitions.scm")
-;|#
+|#
 #|
 (define-library (srfi srfi-206 all)
   (include-library-declarations "all-exports.scm")

@@ -22,15 +22,15 @@
 ;; SOFTWARE.
 
 ;; syntax-case
-(define-auxiliary-syntax unsyntax)
-(define-auxiliary-syntax unsyntax-splicing)
+;(define-auxiliary-syntax unsyntax)
+;(define-auxiliary-syntax unsyntax-splicing)
 
 ;; SRFI 26
 (define-auxiliary-syntax <>)
 (define-auxiliary-syntax <...>)
 
 ;; SRFI 190
-(define-auxiliary-syntax yield)
+;(define-auxiliary-syntax yield)
 
 ;; SRFI 204
 (define-auxiliary-syntax $)

@@ -30,5 +30,6 @@
 		(eq? (struct-vtable rec) rtd)))))
       (include-from-path "./srfi/auxiliary-syntax.scm")
       (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
-      (include-from-path "./srfi/204/204.scm")))
+      (include-from-path "./srfi/204/204.scm")
+      ))
   (else))
