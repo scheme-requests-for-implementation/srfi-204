@@ -368,7 +368,14 @@
 	((_ x kt kf) kf))))
   (r6rs
     ;some r7rs's don't like #' syntax
-    (import (srfi-204 underscore)))
+    (define-syntax underscore?
+	   (lambda (stx)
+	     (syntax-case stx ()
+			  ((_ x kt kf)
+			   (if (and (identifier? (syntax x))
+				    (free-identifier=? (syntax x) (syntax _)))
+			       (syntax kt)
+			       (syntax kf)))))))
   (else
     (define-syntax underscore?
       (syntax-rules (_)

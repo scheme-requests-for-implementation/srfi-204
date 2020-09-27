@@ -18,9 +18,9 @@ GOSHFLAGS = -I $(top_srcdir)
 LARCENY = larceny-scheme-script
 LARCENYFLAGS = -r7rs -I $(top_srcdir)
 CHEZ = chezscheme
-CHEZFLAGS = --libdirs $(top_srcdir):$(CHEZSCHEMELIBDIRS)
+CHEZFLAGS = --libdirs $(top_srcdir):$(HOME)/.akku/lib:$(CHEZSCHEMELIBDIRS)
 CHIBISHCEME = chibi-scheme
-CHIBISHCEMEFLAGS = -I $(top_srcdir)
+CHIBISHCEMEFLAGS = -I $(top_srcdir) 
 GXI = gxi
 GXIFLAGS = --lang r7rs
 LOKO = loko
@@ -97,10 +97,7 @@ clean:  ## get rid of log files
 # $(NAMES): $(TESTS) ## the name of a particular test (minus .scm) runs that test
 # 	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
 
-test:
-	echo $(mkfile_dir)
-	echo $(top_srcdir)
-
+match-test: export GERBIL_LOADPATH=$(top_srcdir):$$GERBIL_LOADPATH
 match-test: match-test.scm ## run tests for srfi 204 library using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 

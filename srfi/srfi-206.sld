@@ -20,7 +20,11 @@
 ;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
-
+(define-module (srfi srfi-206))
+(export define-auxiliary-syntax)
+(import (guile))
+(error  "define-auxiliary-syntax not implemented")
+#|
 (define-library (srfi srfi-206)
   (export define-auxiliary-syntax)
   (cond-expand
@@ -28,3 +32,4 @@
      (import (scheme base))
      (begin
        (error "define-auxiliary-syntax not implemented")))))
+|#

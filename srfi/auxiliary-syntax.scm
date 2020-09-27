@@ -7,7 +7,6 @@
 ;;; Scheme's implementation of Alex Shinn's (Public Domain) match
 ;;; and code John Cowan shared in "In favor of explicit argument" thread
 ;;; on SRFI 197 forum.
-
 (define-syntax define-auxiliary-keyword
   (syntax-rules ()
     ((_ name)

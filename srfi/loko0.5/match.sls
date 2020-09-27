@@ -19,9 +19,8 @@
   (import (except (loko) define-record-type)
 	  (srfi :0)
 	  ;(only (srfi srfi-206 all) ___ **1 =.. *..  *** ? $ struct object get!)
-	  )
+	  (srfi auxiliary-syntax))
   (begin
-    (load "../auxiliary-syntax.scm")
     (define-auxiliary-keywords ___ **1 =.. *..  *** ? $ struct object get!)
     (define-syntax is-a?
       (syntax-rules ()
