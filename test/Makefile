@@ -102,9 +102,11 @@ test:
 	echo $(mkfile_dir)
 	echo $(top_srcdir)
 
+match-test: export TEST_VERBOSE=true # for chibi
 match-test: match-test.scm ## run tests for srfi 204 library using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
+srfi-test: export TEST_VERBOSE=true # for chibi
 srfi-test: srfi-test.scm ## run example code in srfi 204 spec using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $^ |& $(HANDLE_RES)
 
@@ -122,6 +124,9 @@ loko-match-test: export LOKO_LIBRARY_PATH :=\
 loko-match-test: loko-match-test.scm ## run tests for srfi 204 library using loko
 	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
 
+loko-srfi-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
+loko-srfi-test: export LOKO_LIBRARY_PATH :=\
+       	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-srfi-test: loko-srfi-test.scm ## run example code in srfi 204 spec using loko
 	@$(LOKO) $(LOKOFLAGS) $^ |& $(HANDLE_RES)
 
