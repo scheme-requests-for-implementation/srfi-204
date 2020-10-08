@@ -1,5 +1,5 @@
 (library
-  (srfi loko0.5 match)
+  (srfi :204)
   (export match
 	  match-lambda
 	  match-lambda*
@@ -19,8 +19,9 @@
   (import (except (loko) define-record-type)
 	  (srfi :0)
 	  ;(only (srfi srfi-206 all) ___ **1 =.. *..  *** ? $ struct object get!)
-	  (srfi auxiliary-syntax))
+	  )
   (begin
+    (include/resolve ("srfi") "auxiliary-syntax.scm")
     (define-auxiliary-keywords ___ **1 =.. *..  *** ? $ struct object get!)
     (define-syntax is-a?
       (syntax-rules ()
@@ -50,4 +51,4 @@
 	       ((> i len) (error "name not in record" n))
 	       ((eq? n (vector-ref names i)) i)
 	       (else (lp (+ i 1 )))))))))
-    (include "../srfi/204/204.scm")))
+    (include/resolve ("srfi" "204") "204.scm")))
