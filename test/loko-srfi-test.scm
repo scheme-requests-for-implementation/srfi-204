@@ -1,4 +1,4 @@
-(import (loko0.5 match)
+(import (srfi :204)
 	(srfi :64)
 	(srfi :0)
 	(only (srfi :1) iota)

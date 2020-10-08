@@ -55,6 +55,7 @@ dt {
 		<li><a href="#Pred">Predicates and Fields</a></li>
 		<li><a href="#g-and-s">Getters and Setters</a></li>
 		<li><a href="#records">Record Patterns</a></li>
+		<li><a href="#extension">Extension Helpers</a></li>
 		</ul></li>
 		<li><a href="#Grammar">Pattern Grammar</a></li>
 		<li><a href="#Syntax">Syntax</a>
@@ -397,6 +398,36 @@ only defined for identifiers from the subpattern which matched.
                 ((a b c d ... e) (equal? c e))
                 (_ #f)))
 </code></pre>
+<p>Since all variables in an <code>or</code> pattern are bound but only one is defined, using <code>or</code> in combination with ellipsis patterns (as below) leads to results with large numbers of undefined values.
+<pre><code>
+(match (get-environment-variables)
+  (((or ("PATH" . path)
+        ("HOMEPROFILE" . home)
+	("HOME" . home)
+	("USER" . user)
+	("USERNAME" . user)
+	(_ . _) ...))
+   (list path home user)))
+=> [three large lists of mostly undefined values]
+</code></pre>
+We can clean up the lists as below but this is not an ideal solution:
+<pre><code>
+(define (clean lst)
+  (let ((undef (when #f)))
+    (remove (lambda (i) (equal? i undef)) lst)))
+
+(match (get-environment-variables)
+  (((or ("PATH" . path)
+        ("HOMEPROFILE" . home)
+	("HOME" . home)
+	("USER" . user)
+	("USERNAME" . user)
+	(_ . _) ...))
+   (list (clean path) (clean home) (clean user))))
+=> [three lists of one value]
+
+</code></pre>
+</p>
 <p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body. This pattern also gives us a way to eliminate values (like false above) in a more streamlined way:
@@ -563,6 +594,62 @@ operator, originally a Gauche extension:
 		(set-x 7)
 		(match p (($ &lt;posn&gt; x y) (list x y))))))
 =&gt; (7 4)
+</code></pre>
+<h4 id="extension">Extension Helpers</h4>
+<p>For data types or matching that isn't covered by <code>equal?</code> there are three procedures to help extend the pattern matcher &emdash; <code>make-match-pred, make-match-get,</code> and <code>make-match-set.</code></p>
+<h5><code>(make-match-pred pred)</code></h5>
+<p>Takes a binary(+) predicate and creates a procedure which either takes one argument and returns a predicate to take the second, or takes both at once.
+<pre><code>
+(import (srfi 1))
+
+(define contains? 
+  (make-match-pred
+    (lambda (items lst) (every (lambda (i) (member i lst)) items))))
+
+(define is
+  (make-match-pred
+    (lambda (included item) (if (member item included) item #f))))
+
+(define is-not  
+  (make-match-pred
+    (lambda (excluded item) (if (member item excluded) #f item))))
+
+(define (trues lst) (filter (lambda (i) i) lst))
+
+(match (iota 7)
+       ((and (? (contains? '(2 6)) a)
+             ((= (is-not '(2 6)) b) ...)) (trues b)))
+=> (0 1 3 4 5)
+
+(import (scheme process-context))
+
+(define (select-on n)
+  (lambda args-lists
+    (apply fold
+    `(,(lambda args
+            (let* ((sgra (reverse args))
+	           (end (car sgra))
+		   (rest (reverse (cdr sgra))))
+	       (if (list-ref args n) (cons rest end) end)))
+	   ()
+	   ,@args-lists))))
+
+(match (get-environment-variables)
+       ((and a (((= (is '("HOME" "USER")) b) . c) ...))
+       ((select-on 0) b c))) 
+
+</code></pre>
+</p>
+<h5><code>(make-match-get getter)</code></h5>
+<p>Takes a getter (with the signature <code>(getter obj key) -> value</code>) and returns a procedure which will satisfy either of these signatures:
+<ul>
+	<li>((get key) obj) -> (labmda () (getter obj key))</li>
+	<li>(get obj key) -> (lambda () (getter obj key)) </li>
+</ul>
+</p><pre><code>
+</code></pre>
+<h5><code>(make-match-set setter)</code></h5>
+<pre><code>
 </code></pre>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
