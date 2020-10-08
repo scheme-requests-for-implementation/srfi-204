@@ -26,7 +26,14 @@
    <!-- - not patterns **fixed** -->
    <!-- - ellipses **fixed** -->
 - refactor for srfi-206
-- work some on benchmarking
+  <!-- - guache, chibi, larceny -->
+  - guile
+  - chez
+  - loko
+- document and test make-match-pred make-match-get make-match-set
+- get all srfi tests to run for all implementations (can be post last call)
+- figure out how to make verbose test-runner like Guile's
+<!-- - work some on benchmarking -->
 <!-- - make srfi-test.scm in srfi/test containing all example code. -->
 <!-- - run #f branches of srfi-test using (util match) and record-less implementation -->
   <!-- - test skip isn't enough to stop erroneous conditions from giving an error. -->
@@ -41,3 +48,8 @@
    <!-- - milestone handle files that start with 7 -->
    <!-- - milestone handle files that start with 8 -->
    <!-- - milestone handle files that start with 9 -->
+- Questions for Last Call
+  - Code review on macros?
+  - Export auxiliary syntax always (so auxiliary-syntax.scm is part of library)
+    or only when srfi-206 is available?
+  - make-match-pred make-match-get make-match-set?
