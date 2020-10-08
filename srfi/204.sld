@@ -1,16 +1,26 @@
 (cond-expand
   (chibi
     (define-library (srfi 204)
-      (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ **1 =.. *.. *** ? $ struct object get!)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; extension helpers
+	make-match-pred make-match-get make-match-set
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get!)
       (import (chibi)
 	      (scheme case-lambda)
 	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!))
       (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
-      (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ **1 =.. *.. *** ? struct object get!)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; extension helpers
+	make-match-pred make-match-get make-match-set
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get!)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
 	      (scheme base)
 	      (only (srfi 206 all) ___ **1 =.. *.. *** ? struct object get!)
@@ -70,8 +80,13 @@
     (include "204/204.scm"))
   (larceny
     (define-library (srfi 204)
-      (export match match-lambda match-lambda* match-let match-letrec match-let*
-	      ___ **1 =.. *.. *** ? $ struct object get!)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; extension helpers
+	make-match-pred make-match-get make-match-set
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)
 	      (scheme case-lambda)
 	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!)
