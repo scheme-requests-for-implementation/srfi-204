@@ -1,14 +1,18 @@
-;;; guile and gerbil versions (srfi 204) didn't work
-(cond-expand
-  (guile
-    (library 
+(library 
       (srfi srfi-204)
-      (export match match-lambda match-lambda* match-let match-let*
-	      match-letrec
-	      ___ **1 =.. *.. *** ? $ struct object get!)
-      (import (guile)
-	      ;(only (srfi srfi-206 all) ___ **1 =.. *.. *** ? $ struct object get!)
-	      )
+      (export
+	;; (chibi match) exports
+	match match-lambda match-lambda* match-let
+	match-let* match-letrec
+
+	;;extension helpers
+	make-match-pred make-match-get make-match-set
+	
+	;;auxiliary syntax
+	___ **1 =.. *.. *** ? $ struct object get!)
+
+      (import (guile))
+
       (define-syntax slot-ref
 	(syntax-rules ()
 	  ((_ rtd rec n)
@@ -28,8 +32,25 @@
 	  ((_ rec rtd)
 	   (and (struct? rec)
 		(eq? (struct-vtable rec) rtd)))))
+
       (include-from-path "./srfi/auxiliary-syntax.scm")
       (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
-      (include-from-path "./srfi/204/204.scm")
-      ))
-  (else))
+      (include-from-path "./srfi/204/204.scm"))
+
+;; derived from Guile's (ice-9 match), so falls under this license
+
+;;; Copyright (C) 2010, 2011, 2012, 2020 Free Software Foundation, Inc.
+;;;
+;;; This library is free software; you can redistribute it and/or
+;;; modify it under the terms of the GNU Lesser General Public
+;;; License as published by the Free Software Foundation; either
+;;; version 3 of the License, or (at your option) any later version.
+;;;
+;;; This library is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;;; Lesser General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU Lesser General Public
+;;; License along with this library; if not, write to the Free Software
+;;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA

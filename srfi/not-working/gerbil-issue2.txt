@@ -1,8 +1,0 @@
-Gerbil is now passing all tests, except match-letrec,
-match-letrec mnieper (had to be quoted out for tests
-to run). Got record methods to work except named, (there
-was no low-level way to go from names to positions I could
-find in struct base lib.)
-
-Going from (srfi-204) to (srfi 204) broke library import
-"Bad syntax: module id mismatch"

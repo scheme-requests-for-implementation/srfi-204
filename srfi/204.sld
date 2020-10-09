@@ -27,9 +27,7 @@
 	      (rename (gauche base)
 		      (slot-ref gb-slot-ref)
 		      (slot-set! gb-slot-set!)))
-      ;(include "auxiliary-syntax.scm")
       (begin
-	;(define-auxiliary-keywords ___ **1 =.. *.. *** ? struct object get!)
 	(define-syntax slot-ref
 	  (syntax-rules ()
 	    ((_ class inst n)
