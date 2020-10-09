@@ -9,14 +9,14 @@ SHELL := bash
 # interpreters and flags
 GUILE = guile
 GUILE-3 = ../../../tgzs/guile-3.0.4/meta/guile
-GUILEFLAGS = --no-auto-compile -L $(top_srcdir) -x .sld
+GUILEFLAGS = --no-auto-compile -L $(top_srcdir) -x .guile.sls
 GOSH = gosh
 GOSHFLAGS = -I $(top_srcdir)
 #TODO have not found a way to make larceny work from Makefile
 #     open "larceny -r7rs -I .." instead and
 #     (include "test/match-test.scm")
-LARCENY = larceny-scheme-script
-LARCENYFLAGS = -r7rs -I $(top_srcdir)
+LARCENY = larceny
+LARCENYFLAGS = -r7 -I $(top_srcdir) <
 CHEZ = chezscheme
 CHEZFLAGS = --libdirs\
 	    $(top_srcdir):$$HOME/.akku/lib

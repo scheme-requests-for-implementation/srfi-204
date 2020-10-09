@@ -3,7 +3,7 @@
     ;;export TEST_VERBOSE=true to get verbose output
     (import (srfi-test)))
   (guile
-    (use-modules (srfi-204)
+    (use-modules (srfi srfi-204)
 		 (srfi srfi-64)
 		 (srfi srfi-9)
 		 (rnrs unicode))
@@ -37,10 +37,11 @@
     (import (scheme base)
 	    (scheme char)
 	    (scheme cxr)
-	    ;(srfi-204) doesn't work
+	    ;(srfi 204) doesn't work
 	    (srfi 64)
 	    (srfi 115)
-	    (only (srfi 1) iota filter))
+	    (only (srfi 1) iota filter)
+	    )
     (define (is-version? sym)
       (regexp-matches?
 	'(seq "larceny-" (one-or-more (or numeric ".")))
@@ -57,8 +58,8 @@
 	  ((is-version? (car has)) (symbol->string (car has)))
 	  (else (lp (cdr has))))))
     (begin
-      (include "srfi-204.sld")
-      (import (srfi-204))
+      (include "srfi/204.sld")
+      (import (srfi 204))
       (include "test/srfi-common.scm")))
   (else))
 (cond-expand
