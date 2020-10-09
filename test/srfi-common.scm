@@ -7,11 +7,13 @@
 				(match ls
 				       ((1 2 3) #t))))
 
+;; literal patterns
 (test-equal "Literal Patterns" '(ok ok)
 	    (let ((ls (list 'a "b" #f 2 '() #\c)))
 	      (list (match ls (('a "b" #f 2 () #\c) 'ok))
 		    (match ls (`(a "b" #f 2 () #\c) 'ok)))))
 
+;; variable patterns
 (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
 (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
 (test-equal "Quasi-quote variable fail"
@@ -20,6 +22,8 @@
 (test-equal "Quasi-quote variable pass"
 	    2
 	    (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)))
+
+;; non-linear patterns
 (if (not non-linear-pattern) (test-skip 4))
 (test-equal "repeated pattern" 'A (test-read-eval-string "(match (list 'A 'B 'A) ((a b a) a))"))
 (test-equal "quasi-quote fail repeated pattern" 
@@ -51,6 +55,7 @@
 		((a b c) (=> fail) (if (equal? a c) a (fail)))
 		(_ 'fail)))
 
+;; ellipsis patterns
 (test-equal "empty ellipsis match"
 	    #t
 	    (match (list 1 2) ((1 2 3 ...) #t)))
@@ -195,8 +200,9 @@
 	    (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 		   ((_ *** `(sqrt . ,rest)) rest)))
 	
-;;; using (util match) to test false branch, a number of boolean patterns
-;;; that are OK in (chibi match) gave errors, so did t-r-e-s conversion.
+;; boolean operators
+;; using (util match) to test false branch, a number of boolean patterns
+;; that are OK in (chibi match) gave errors, so did t-r-e-s conversion.
 (test-equal "empty and match" #t (test-read-eval-string "(match 1 ((and) #t))"))
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
 (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
@@ -232,6 +238,7 @@
 (test-equal "not #f fail" 'fail (match #f ((and x (not #f)) x) (_ 'fail)))
 (test-equal "not match" #t (match 1 ((not 2) #t)))
 
+;; predicate and field operators
 (test-equal "predicate match" 1 (match 1 ((? odd? x) x)))
 
 (let ()
@@ -322,6 +329,7 @@
   (test-equal "alist get value after set" 7 (get-c))
   (test-equal "alist get list after set" '((a . 1) (b . 2) (c . 7)) alist))
 
+;; record operators
 (let ()
   (cond-expand
     ((or r7rs (not r6rs))
@@ -368,6 +376,7 @@
 		     (set-x 7)
 		     (match p (($ posn x y) (list x y)))))))
 
+;; match/match-lambda(*)/match-let (*)/match-letrec
 (test-equal "simple match" 'ok (match '(1 1 1) ((a =.. 3) 'ok) (_ 'fail)))
 
 (test-equal "simple match + failure fail"
@@ -450,6 +459,7 @@
 	      1
 	      (fact 0)))
 
+;; error conditions
 (test-error "error missing match expression" #t (test-read-eval-string "(match)"))
 (test-error "error no match clauses" #t (test-read-eval-string "(match (list 1 2 3))"))
 (test-error "error no matching pattern" #t (test-read-eval-string "(match (list 1 2 3) ((a b)))"))
@@ -467,7 +477,15 @@
 	    #t
 	    (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
 
-;;; screen for match w/o body behavior 1 of these 3 tests should pass, 2 should fail
+(define message
+"match w/o body screen (3 possibilities):
+  undefined value
+  last value
+  error
+  
+  whichever passes is the behavior of this implementation.")
+(display message)
+(newline)
 (test-equal "match w/o body has undefined value" 
 	    (if #f #t)
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
