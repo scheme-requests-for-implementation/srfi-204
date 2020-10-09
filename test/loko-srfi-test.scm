@@ -9,6 +9,6 @@
 (define record-implemented #t)
 (define scheme-version-name (string-append "loko" (loko-version)))
 (define test-name "srfi-test")
-(include "srfi-common.scm")
+(include "r6rs-srfi-common.scm")
 
 ;;; set library directories via environment

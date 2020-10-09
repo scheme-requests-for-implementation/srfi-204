@@ -8,6 +8,6 @@
 (define record-implemented #t)
 (define test-name "srfi-test")
 (define scheme-version-name (scheme-version))
-(include "srfi-common.scm")
+(include "r6rs-srfi-common.scm")
 (exit)
 ;;; $~/.akku/env

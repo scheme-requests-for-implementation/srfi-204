@@ -23,3 +23,4 @@
 		- <code>non-linear-field</code>
 		- <code>non-linear-pred</code>
 		- <code>record-implemented</code>
+       - some modules may need to use r6rs-srfi-common.scm if test-read-eval-string does not function properly.
