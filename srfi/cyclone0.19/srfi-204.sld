@@ -14,6 +14,9 @@
   )
   ;(export match match-lambda match-lambda* match-let match-letrec match-let*)
   (export
+    make-match-pred
+    make-match-get
+    make-match-set
     match-syntax-error
     match
     match-next
@@ -344,7 +347,7 @@
 
 (define-syntax match-syntax-error
   (syntax-rules ()
-    ((_) (match-syntax-error "invalid match-syntax-error usage"))))
+    ((_) (syntax-error "invalid match-syntax-error usage"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; new slot-set!
@@ -442,7 +445,14 @@
 	((_ x kt kf) kf))))
   (r6rs
     ;some r7rs's don't like #' syntax
-    (import (srfi-204 underscore)))
+    (define-syntax underscore?
+	   (lambda (stx)
+	     (syntax-case stx ()
+			  ((_ x kt kf)
+			   (if (and (identifier? (syntax x))
+				    (free-identifier=? (syntax x) (syntax _)))
+			       (syntax kt)
+			       (syntax kf)))))))
   (else
     (define-syntax underscore?
       (syntax-rules (_)
@@ -493,7 +503,8 @@
     ((match-two v (or p ...) g+s sk fk i)
      (match-extract-underscore (or p ...) (match-gen-or v (p ...) g+s sk fk i) i ()))
     ((match-two v (not p) g+s (sk ...) fk i)
-     (match-one v p g+s (match-drop-ids fk) (sk ... i) i))
+     (let ((fk2 (lambda () (sk ... i))))
+       (match-one v p g+s (match-drop-ids fk) (fk2) i)))
     ((match-two v (get! getter) (g s) (sk ...) fk i)
      (let ((getter (lambda () g))) (sk ... i)))
     ((match-two v (set! setter) (g (s ...)) (sk ...) fk i)
@@ -665,25 +676,25 @@
 
 (define-syntax match-gen-ellipsis
   (syntax-rules ()
-    ((_ v p () g+s (sk ...) fk i ((id id-ls) ...))
-     (match-check-identifier p
-       ;; simplest case equivalent to (p ...), just bind the list
-       (let ((p v))
-         (if (list? p)
-             (sk ... i)
-             fk))
-       ;; simple case, match all elements of the list
-       (let loop ((ls v) (id-ls '()) ...)
-         (cond
-           ((null? ls)
-            (let ((id (reverse id-ls)) ...) (sk ... i)))
-           ((pair? ls)
-            (let ((w (car ls)))
-              (match-one w p ((car ls) (set-car! ls))
-                         (match-drop-ids (loop (cdr ls) (cons id id-ls) ...))
-                         fk i)))
-           (else
-            fk)))))
+    ;; ((_ v p () g+s (sk ...) fk i ((id id-ls) ...))
+    ;;  (match-check-identifier p
+    ;;    ;; simplest case equivalent to (p ...), just bind the list
+    ;;    (let ((p v))
+    ;;      (if (list? p)
+    ;;          (sk ... i)
+    ;;          fk))
+    ;;    ;; simple case, match all elements of the list
+    ;;    (let loop ((ls v) (id-ls '()) ...)
+    ;;      (cond
+    ;;        ((null? ls)
+    ;;         (let ((id (reverse id-ls)) ...) (sk ... i)))
+    ;;        ((pair? ls)
+    ;;         (let ((w (car ls)))
+    ;;           (match-one w p ((car ls) (set-car! ls))
+    ;;                      (match-drop-ids (loop (cdr ls) (cons id id-ls) ...))
+    ;;                      fk i)))
+    ;;        (else
+    ;;         fk)))))
     ((_ v p r g+s sk fk (i ...) ((id id-ls) ...))
      ;; general case, trailing patterns to match, keep track of the
      ;; remaining list length so we don't need any backtracking
@@ -1098,6 +1109,24 @@
      (let () . body))
     ((_ ((pat expr) . rest) . body)
      (match expr (pat (match-let* rest . body))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; procedures for handling types where equal? is not guaranteed
+
+(define (make-match-pred pred)
+  (case-lambda
+    ((a) (lambda (b) (pred a b)))
+    ((a b) (pred a b))))
+
+(define (make-match-get getter)
+  (case-lambda
+    ((key) (lambda (obj) (lambda () (getter obj key))))
+    ((obj key) (lambda () (getter obj key)))))
+
+(define (make-match-set setter)
+  (case-lambda
+    ((key) (lambda (obj) (lambda (value) (setter obj key value))))
+    ((obj key) (lambda (value) (setter obj key value)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Challenge stage - unhygienic insertion.

@@ -30,6 +30,9 @@
   - guile **these are on hold until (srfi :206) is available**
   - chez **meanwhile, get in r6rs file form**
   - loko
+ 
+  - cyclone **post last call, or maybe not at all**
+  - unsyntax **post last call**
 - document and test make-match-pred make-match-get make-match-set
 - get all srfi tests to run for all implementations (can be post last call)
 - figure out how to make verbose test-runner like Guile's
