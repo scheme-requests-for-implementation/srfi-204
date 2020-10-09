@@ -1,7 +1,7 @@
 (import (chezscheme)
 	(srfi :0)
 	(srfi :64)
-	(chez9.5 match))
+	(srfi :204))
 (define non-linear-pattern #t)
 (define non-linear-pred #t)
 (define non-linear-field #t)

@@ -359,8 +359,6 @@
 ;; this may need to be changed, I've had trouble with cond-expand and
 ;; R6RS
 (cond-expand
-  (gerbil 
-    (include "gerbil-underscore.scm"))
   (r7rs
     (define-syntax underscore?
       (syntax-rules (_)
