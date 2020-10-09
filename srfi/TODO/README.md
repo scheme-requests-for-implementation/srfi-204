@@ -27,8 +27,8 @@
    <!-- - ellipses **fixed** -->
 - refactor for srfi-206
   <!-- - guache, chibi, larceny -->
-  - guile
-  - chez
+  - guile **these are on hold until (srfi :206) is available**
+  - chez **meanwhile, get in r6rs file form**
   - loko
 - document and test make-match-pred make-match-get make-match-set
 - get all srfi tests to run for all implementations (can be post last call)
