@@ -193,7 +193,7 @@
 			       #f)))))
 ;;; first-pass benchmarking using a list of the first 10 000 Fibonacci numbers shows
 ;;; little difference between all these methods, possibly because doing arithmetic
-;;; with numbers whose log is +inf.0
+;;; with page-long numbers
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -420,13 +420,13 @@
       (get-environment-variables))
 
 (fold (match-lambda*
-	((("PATH" . path) (a b c)) (list path b c))
-	((("USERPROFILE" . home)  (a b c)) (list a home c)) 
-	((("HOME" . home)  (a b c)) (list a home c))
-	((("USER" . user)  (a b c))  (list a b user))
-	((("USERNAME" . user)  (a b c))  (list a b user))
+	((("PATH" . path) (p h u)) (list path h u))
+	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+	((("HOME" . home)  (p h u)) (list p home u))
+	((("USER" . user)  (p h u))  (list p h user))
+	((("USERNAME" . user)  (p h u))  (list p h user))
 	(_ out) out)
-      (list #f #f #f)
+      (list #f #f #f) ; (p h u) init
       (get-environment-variables))
 
 (import (srfi 69))
