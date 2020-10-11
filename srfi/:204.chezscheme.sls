@@ -9,8 +9,6 @@
     ___ **1 =..  *..  *** ?
     $ struct object get!
 
-    ;; helper procedures
-    make-match-pred make-match-get make-match-set
     )
   (import (chezscheme)
 	  (srfi :0)

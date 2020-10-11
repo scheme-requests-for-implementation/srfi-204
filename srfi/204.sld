@@ -4,8 +4,6 @@
       (export 
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; extension helpers
-	make-match-pred make-match-get make-match-set
 	;; auxiliary syntax 
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (chibi)
@@ -17,8 +15,6 @@
       (export 
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; extension helpers
-	make-match-pred make-match-get make-match-set
 	;; auxiliary syntax 
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
@@ -53,8 +49,6 @@
       (export 
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; extension helpers
-	make-match-pred make-match-get make-match-set
 	;; auxiliary syntax 
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)

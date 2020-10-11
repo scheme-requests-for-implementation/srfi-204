@@ -14,9 +14,6 @@
   )
   ;(export match match-lambda match-lambda* match-let match-letrec match-let*)
   (export
-    make-match-pred
-    make-match-get
-    make-match-set
     match-syntax-error
     match
     match-next

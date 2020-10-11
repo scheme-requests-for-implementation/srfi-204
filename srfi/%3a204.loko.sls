@@ -1,24 +1,13 @@
 (library
   (srfi :204)
-  (export match
-	  match-lambda
-	  match-lambda*
-	  match-let
-	  match-letrec
-	  match-let*
-	  ___
-	  **1
-	  =..
-	  *..
-	  ***
-	  ?
-	  $
-	  struct
-	  object
-	  get!)
+  (export 
+    ;; (chibi match) forms
+    match match-lambda match-lambda* match-let match-letrec match-let*
+    ;; auxiliary syntax
+    ___ **1 =..  *..  ***
+    ?  $ struct object get!)
   (import (except (loko) define-record-type)
 	  (srfi :0)
-	  ;(only (srfi srfi-206 all) ___ **1 =.. *..  *** ? $ struct object get!)
 	  )
   (begin
     (include/resolve ("srfi" "204") "auxiliary-syntax.scm")
