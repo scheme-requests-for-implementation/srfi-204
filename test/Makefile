@@ -90,6 +90,9 @@ srfi-test: export TEST_VERBOSE=true # for chibi
 srfi-test: srfi-test.scm ## run example code in srfi 204 spec using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
 
+guile-srfi-test: srfi-test.scm $(guile_deps)
+	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+
 chez-match-test: chez-match-test.scm ## run tests for srfi 204 library using chezscheme
 	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES)
 
