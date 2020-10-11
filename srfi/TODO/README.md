@@ -33,7 +33,7 @@
  
   - cyclone **post last call, or maybe not at all**
   - unsyntax **post last call**
-- document and test make-match-pred make-match-get make-match-set
+<!-- - document and test make-match-pred make-match-get make-match-set (decided cut was better option)-->
 - get all srfi tests to run for all implementations (can be post last call)
 - figure out how to make verbose test-runner like Guile's
 <!-- - work some on benchmarking -->
@@ -55,4 +55,4 @@
   - Code review on macros?
   - Export auxiliary syntax always (so auxiliary-syntax.scm is part of library)
     or only when srfi-206 is available?
-  - make-match-pred make-match-get make-match-set?
+  - can generic functions affect equal? used by matcher?
