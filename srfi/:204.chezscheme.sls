@@ -16,7 +16,7 @@
 	  (srfi :0)
 	  (srfi private include))
   (begin
-    (include/resolve ("srfi") "auxiliary-syntax.scm")
+    (include/resolve ("srfi" "204") "auxiliary-syntax.scm")
     (define-auxiliary-keywords ___ **1 =.. *..  *** ? $ struct object get!)
     (define-syntax is-a?
       (syntax-rules ()

@@ -445,3 +445,17 @@
 		  (and (not #f) user))
 		 (= (get-from-table "USERNAME")
 		  (and (not #f) user)))) (list path home user)))
+
+(define (binary->unary binary-string)
+  (let loop ((digits (cons #\^ (string->list binary-string)))
+	     (prev '()))
+    (define (markov char-list)
+      (match char-list
+	     ((#\| #\0 . rest) (cons #\0 (cons #\| (cons #\| rest))))
+	     ((#\1 . rest) (cons #\0 (cons #\| rest)))
+	     ((#\^ #\0 . rest) (cons #\^ rest))
+	     ((any . rest) (cons any (markov rest)))
+	     (() '())))
+    (if (equal? digits prev)
+	(list->string (cdr digits))
+	(loop (markov digits) digits))))
