@@ -93,6 +93,7 @@ compound data structures.</p>
 		in srfi/204.sld, and .sls files same in srfi/cyclone0.19/srfi-204.sld except <code>new-slot-set!</code> macros in srfi/204/auxiliary-syntax.scm)</li>
 	<li>Always specify export of auxiliary syntax, even if SRFI 206 is not available? (So srfi/204/auxiliary-syntax.scm is a permanent part of library)</li>
 	<li>Can generic functions affect <code>equal?</code> used by matcher?</li>
+	<li>There is an issue with <code>extract-imports</code>, there is one import at the end of the file inside a begin that it doesn't find.</li>
 </ul>
 
 <h2 id="Rationale">Rationale</h2>
@@ -634,6 +635,7 @@ is described in the next section.
        (_ 'fail))
 =&gt; ok
 
+;case for no nonlinear predicates
 (match (list (box 1) (box 1))
        ((a b) (if (box-equal? a b) 'ok 'fail)))
 =&gt; ok
