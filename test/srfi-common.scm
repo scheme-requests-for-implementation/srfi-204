@@ -35,6 +35,7 @@
 (test-equal "quasi-quote repeated pattern 2"
 	    'A
 	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail))"))
+
 (if non-linear-pattern (test-skip 4))
 (test-error "error repeated pattern"
 	    #t 

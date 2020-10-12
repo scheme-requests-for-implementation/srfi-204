@@ -3,11 +3,13 @@
 				(match ls
 				       ((1 2 3) #t))))
 
+;; literal patterns
 (test-equal "Literal Patterns" '(ok ok)
 	    (let ((ls (list 'a "b" #f 2 '() #\c)))
 	      (list (match ls (('a "b" #f 2 () #\c) 'ok))
 		    (match ls (`(a "b" #f 2 () #\c) 'ok)))))
 
+;; variable patterns
 (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
 (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
 (test-equal "Quasi-quote variable fail"
@@ -17,6 +19,7 @@
 	    2
 	    (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)))
 
+;; non-linear patterns
 (if (not non-linear-pattern) (test-skip 4))
 (test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
 (test-equal "quasi-quote fail repeated pattern" 
@@ -47,6 +50,7 @@
 		((a b c) (=> fail) (if (equal? a c) a (fail)))
 		(_ 'fail)))
 
+;; ellipsis patterns
 (test-equal "empty ellipsis match"
 	    #t
 	    (match (list 1 2) ((1 2 3 ...) #t)))
@@ -188,7 +192,38 @@
 	    '((+ (sqr x) (sqr y)))
 	    (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 		   ((_ *** `(sqrt . ,rest)) rest)))
+
+(test-equal "extract imports"
+	    '(((srfi srfi-204)
+		   (srfi srfi-64)
+		   (srfi srfi-9)
+		   (rnrs unicode))
+		  ((gauche base)
+		   (scheme base)
+		   (scheme char)
+		   (scheme cxr)
+		   (srfi 204)
+		   (srfi 64))
+		  ((scheme base)
+		   (scheme char)
+		   (scheme cxr)
+		   (srfi 64)
+		   (srfi 115)
+		   (only (srfi 1) iota filter))
+		  ((srfi 204)))
+	    (let ()
+	      (define (extract-imports file-name)
+		(define extract
+		  (match-lambda
+		    (((_ *** `(import . ,imports)) . rest)
+		     (cons imports (extract rest)))
+		    ((this . rest) (extract rest))
+		    (() '())))
+		(call-with-input-file file-name
+				      (lambda (port) (extract (read port)))))
+	      (extract-imports "data/srfi-test.scm")))
 	
+;; boolean operators
 (test-equal "empty and match" #t (match 1 ((and) #t)))
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
 (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
@@ -219,11 +254,47 @@
 	      #t
 	      (last-matches-one-of-first-three '(1 2 3 4 5 2))))
 
+(test-assert "or ellipsis, many undef values"
+	     (match (get-environment-variables)
+		    (((or ("PATH" . path)
+			  ("HOMEPROFILE" . home)
+			  ("HOME" . home)
+			  ("USER" . user)
+			  ("USERNAME" . user)
+			  (_ . _)) ...)
+		     (list path home user))))
+
+(define check-output
+  (match-lambda (((? string?) (or (? string?) #f) (or (? string?) #f))
+		 #t)
+		(_ #f)))
+
+(test-assert "fold match-lambda* as or ellipsis"
+	     (check-output
+	       (fold (match-lambda*
+		       ((("PATH" . path) (p h u)) (list path h u))
+		       ((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+		       ((("HOME" . home)  (p h u)) (list p home u))
+		       ((("USER" . user)  (p h u))  (list p h user))
+		       ((("USERNAME" . user)  (p h u))  (list p h user))
+		       ((_ out) out))
+		     (list #f #f #f) ; (p h u) init
+		     (get-environment-variables))))
+
+(let ()
+  (define (clean lst)
+  (let ((undef (if #f #f)))
+    (remove (lambda (item) (equal? item undef)) lst)))
+  (test-equal "mostly defined or ellipsis"
+	      (list 0 1 3 4 5)
+	      (match (iota 7)
+		     (((or 2 6 rest) ...) (clean rest)))))
 
 (test-equal "not #f match" 1 (match 1 ((and x (not #f)) x) (_ 'fail)))
 (test-equal "not #f fail" 'fail (match #f ((and x (not #f)) x) (_ 'fail)))
 (test-equal "not match" #t (match 1 ((not 2) #t)))
 
+;; predicate and field operators
 (test-equal "predicate match" 1 (match 1 ((? odd? x) x)))
 
 (let ()
@@ -251,13 +322,11 @@
 			  (() #t)
 			  (_ #f))))
 
-      (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47)))))
-
-(if (not non-linear-pred)
+      (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47))))
     (test-error "error non-linear pred"
 		#t
-		(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
-		       (_ #f))))
+		(test-read-eval-string "(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
+					       (_ #f))")))
 
 (let ()
   (define fibby?
@@ -316,6 +385,7 @@
   (test-equal "alist get value after set" 7 (get-c))
   (test-equal "alist get list after set" '((a . 1) (b . 2) (c . 7)) alist))
 
+;; record operators
 (let ()
   (cond-expand
     ((or r7rs (not r6rs))
@@ -362,6 +432,42 @@
 		     (set-x 7)
 		     (match p (($ posn x y) (list x y)))))))
 
+(let ()
+  (cond-expand
+    ((or r7rs (not r6rs))
+     (define-record-type box-type
+       (box value)
+       box?
+       (value unbox set-box!)))
+    (else (define-record-type (box-type box box?)
+	    (fields (mutable value unbox set-box!)))))
+  (define (box-equal? a b)
+    (if (and (box? a) (box? b))
+	(box-equal? (unbox a) (unbox b))
+	(equal? a b)))
+  (define-values (get-value set-value!)
+  (match (box 1)
+         ((and (= (lambda (box) (cut unbox box)) get)
+	       (= (lambda (box) (cut set-box! box <>)) set))
+	  (values get set))))
+  (test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
+  (test-equal "non-linear equality predicate"
+	      'ok
+	      (match (list (box 1) (box 1))
+		     ((a (? (cut box-equal? a <>))) 'ok)
+		     (_ 'fail)))
+  (test-equal "equality predicate in body"
+	      'ok
+	      (match (list (box 1) (box 1))
+		     ((a b) (if (box-equal? a b) 'ok 'fail))))
+  (test-equal "box value via field"
+	      1
+	      (match (box 1) ((= unbox value) value)))
+  (test-equal "getter via field" 1 (get-value))
+  (set-value! 18)
+  (test-equal "setter via field" 18 (get-value)))
+
+;; match/match-lambda(*)/match-let (*)/match-letrec
 (test-equal "simple match" 'ok (match '(1 1 1) ((a =.. 3) 'ok) (_ 'fail)))
 
 (test-equal "simple match + failure fail"
@@ -444,6 +550,7 @@
 	      1
 	      (fact 0)))
 
+;; error conditions
 (test-error "error missing match expression" #t (test-read-eval-string "(match)"))
 (test-error "error no match clauses" #t (test-read-eval-string "(match (list 1 2 3))"))
 (test-error "error no matching pattern" #t (test-read-eval-string "(match (list 1 2 3) ((a b)))"))
@@ -461,7 +568,15 @@
 	    #t
 	    (test-read-eval-string "(match '(1 1 1 2 2 2) (`(,@a . b) a))"))
 
-;;; screen for match w/o body behavior 1 of these 3 tests should pass, 2 should fail
+(define message
+"match w/o body screen (3 possibilities):
+  undefined value
+  last value
+  error
+  
+  whichever passes is the behavior of this implementation.")
+(display message)
+(newline)
 (test-equal "match w/o body has undefined value" 
 	    (if #f #t)
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
