@@ -283,7 +283,7 @@
 
 (let ()
   (define (clean lst)
-  (let ((undef (if #f #f)))
+  (let ((undef (when #f #f)))
     (remove (lambda (item) (equal? item undef)) lst)))
   (test-equal "mostly defined or ellipsis"
 	      (list 0 1 3 4 5)
@@ -445,27 +445,26 @@
     (if (and (box? a) (box? b))
 	(box-equal? (unbox a) (unbox b))
 	(equal? a b)))
-  (define-values (get-value set-value!)
-  (match (box 1)
-         ((and (= (lambda (box) (cut unbox box)) get)
-	       (= (lambda (box) (cut set-box! box <>)) set))
-	  (values get set))))
-  (test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
-  (test-equal "non-linear equality predicate"
-	      'ok
-	      (match (list (box 1) (box 1))
-		     ((a (? (cut box-equal? a <>))) 'ok)
-		     (_ 'fail)))
-  (test-equal "equality predicate in body"
-	      'ok
-	      (match (list (box 1) (box 1))
-		     ((a b) (if (box-equal? a b) 'ok 'fail))))
-  (test-equal "box value via field"
-	      1
-	      (match (box 1) ((= unbox value) value)))
-  (test-equal "getter via field" 1 (get-value))
-  (set-value! 18)
-  (test-equal "setter via field" 18 (get-value)))
+  (match-let (((and (= (lambda (box) (cut unbox box)) get-value)
+		    (= (lambda (box) (cut set-box! box <>)) set-value!))
+	       (box 1)))
+
+	     (test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
+	     (test-equal "non-linear equality predicate"
+			 'ok
+			 (match (list (box 1) (box 1))
+				((a (? (cut box-equal? a <>))) 'ok)
+				(_ 'fail)))
+	     (test-equal "equality predicate in body"
+			 'ok
+			 (match (list (box 1) (box 1))
+				((a b) (if (box-equal? a b) 'ok 'fail))))
+	     (test-equal "box value via field"
+			 1
+			 (match (box 1) ((= unbox value) value)))
+	     (test-equal "getter via field" 1 (get-value))
+	     (set-value! 18)
+	     (test-equal "setter via field" 18 (get-value))))
 
 ;; match/match-lambda(*)/match-let (*)/match-letrec
 (test-equal "simple match" 'ok (match '(1 1 1) ((a =.. 3) 'ok) (_ 'fail)))

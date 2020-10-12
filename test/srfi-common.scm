@@ -294,7 +294,7 @@
 
 (let ()
   (define (clean lst)
-  (let ((undef (if #f #f)))
+  (let ((undef (when #f #f)))
     (remove (lambda (item) (equal? item undef)) lst)))
   (test-equal "mostly defined or ellipsis"
 	      (list 0 1 3 4 5)

@@ -30,6 +30,7 @@
 	    (scheme char)
 	    (scheme process-context)
 	    (scheme cxr)
+	    (scheme write)
 	    (srfi 1)
 	    (srfi 204)
 	    (srfi 26)
@@ -51,6 +52,7 @@
 	    (scheme char)
 	    (scheme cxr)
 	    (scheme process-context)
+	    (scheme write)
 	    ;(srfi 204) doesn't work
 	    (srfi 64)
 	    (srfi 115)

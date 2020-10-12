@@ -245,6 +245,12 @@ Test end:
   actual-value: ((+ (sqr x) (sqr y)))
   expected-value: ((+ (sqr x) (sqr y)))
 Test begin:
+  test-name: "extract imports"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: (((srfi srfi-204) (srfi srfi-64) (srfi srfi-9) (rnrs unicode)) ((gauche base) (scheme base) (scheme char) (scheme cxr) (srfi 204) (srfi 64)) ((scheme base) (scheme char) (scheme cxr) (srfi 64) (srfi 115) (only (srfi 1) iota filter)) ((srfi 204)))
+Test begin:
   test-name: "empty and match"
 Test end:
   result-kind: pass
@@ -298,6 +304,24 @@ Test end:
   result-kind: pass
   actual-value: #t
   expected-value: #t
+Test begin:
+  test-name: "or ellipsis, many undef values"
+Test end:
+  result-kind: pass
+  actual-value: ((#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/fthibault1969/playground/git/gerbil/bin:/home/fthibault1969/.cabal/bin" #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/home/fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>))
+  expected-value: #t
+Test begin:
+  test-name: "fold match-lambda* as or ellipsis"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "mostly defined or ellipsis"
+Test end:
+  result-kind: pass
+  actual-value: (0 1 3 4 5)
+  expected-value: (0 1 3 4 5)
 Test begin:
   test-name: "not #f match"
 Test end:
@@ -430,6 +454,42 @@ Test end:
   result-kind: pass
   actual-value: (7 4)
   expected-value: (7 4)
+Test begin:
+  test-name: "boxes not eqv"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "non-linear equality predicate"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "equality predicate in body"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
+  test-name: "box value via field"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "getter via field"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "setter via field"
+Test end:
+  result-kind: pass
+  actual-value: 18
+  expected-value: 18
 Test begin:
   test-name: "simple match"
 Test end:
@@ -585,6 +645,6 @@ Test end:
   actual-value: #t
   expected-value: #t
 Group end: srfi-test-gauche-0.9.6
-# of expected passes      90
-# of unexpected failures  4
+# of expected passes      99
+# of unexpected failures  5
 # of skipped tests        5
