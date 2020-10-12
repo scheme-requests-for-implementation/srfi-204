@@ -35,6 +35,7 @@
 (test-equal "quasi-quote repeated pattern 2"
 	    'A
 	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail))"))
+
 (if non-linear-pattern (test-skip 4))
 (test-error "error repeated pattern"
 	    #t 
@@ -293,7 +294,7 @@
 
 (let ()
   (define (clean lst)
-  (let ((undef (if #f #f)))
+  (let ((undef (when #f #f)))
     (remove (lambda (item) (equal? item undef)) lst)))
   (test-equal "mostly defined or ellipsis"
 	      (list 0 1 3 4 5)

@@ -28,23 +28,25 @@ GXIFLAGS = --lang r7rs
 LOKO = loko
 LOKOFLAGS = --script
 
+# change when testing a new interpreter
+SCM := $(GUILE)
+SCMFLAGS := $(GUILEFLAGS)
+
 # dependencies
 srfi-206 := $(wildcard srfi/206/*)
 r7rs_deps := srfi/204.sld srfi/204/204.scm srfi/206.sld $(srfi-206)
 chibi_deps := srfi/match-test.sld $(r7rs_deps)
 r6rs_deps := srfi/204/204.scm srfi/204/auxiliary-syntax.scm
 guile_deps := srfi/srfi-204.guile.sls $(r6rs_deps)
-chez_deps := srfi/204/:204.chezscheme.sls $(r6rs_deps)
-loko_deps := srfi/204/%3a204.loko.sls $(r6rs_deps)
+chez_deps := srfi/204/:204.chezscheme.sls $(r6rs_deps) # currently these two don't work
+loko_deps := srfi/204/%3a204.loko.sls $(r6rs_deps)     # due to special chars
 match_all :=  chibi-match-test chez-match-test gauche-match-test\
 	guile-match-test larceny-match-test loko-match-test
+srfi_all := chez-srfi-test gauche-srfi-test guile-srfi-test\
+	guile-3-srfi-test loko-srfi-test
 match := match-common.scm
-
-# grab all files ending in -test.scm and use them to make targets
-# so tests in example-test.scm can be run with make example-test
-TESTS := $(wildcard *-test.scm)
-NAMES := $(subst .scm,,$(TESTS))
-LOGS := $(addsuffix .log,$(NAMES))
+srfi := srfi-common.scm
+r6rs_srfi := r6rs-srfi-common.scm
 
 # add red/green [FAIL]/[PASS] to output based on the words
 # unexpected|ERROR/expected
@@ -71,7 +73,7 @@ clean:  ## get rid of log files
 # 	@$(SCM) $(SCMFLAGS) $@.scm |& $(HANDLE_RES)
 
 match-all: $(match_all) ## run srfi 204 library test suite with all implementations
-       	
+srfi-all: $(srfi_all)       	
 
 chibi-match-test: export TEST_VERBOSE=true
 chibi-match-test: match-test.scm $(chibi_deps) ## run srfi 204 library test suite with chibi
@@ -80,36 +82,41 @@ chibi-match-test: match-test.scm $(chibi_deps) ## run srfi 204 library test suit
 gauche-match-test: match-test.scm $(match) $(r7rs_deps)
 	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
 
+gauche-srfi-test: srfi-test.scm $(srfi) $(r7rs_deps)
+	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
+
 guile-match-test: match-test.scm $(match) $(guile_deps)
+	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+
+guile-srfi-test: srfi-test.scm $(srfi) $(guile_deps)
 	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 larceny-match-test: match-test.scm $(match) $(r7rs_deps)
 	@$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
 
-srfi-test: export TEST_VERBOSE=true # for chibi
-srfi-test: srfi-test.scm ## run example code in srfi 204 spec using TESTSCHEME
-	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
+larceny-srfi-test: srfi-test.scm $(srfi) $(r7rs_deps)
+	@$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
 
-guile-srfi-test: srfi-test.scm $(guile_deps)
-	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+guile-3-srfi-test: srfi-test.scm $(srfi) $(guile_deps)
+	@$(GUILE-3) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
-chez-match-test: chez-match-test.scm ## run tests for srfi 204 library using chezscheme
+chez-match-test: chez-match-test.scm $(match) ## run tests for srfi 204 library using chezscheme
 	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES)
 
-chez-srfi-test: chez-srfi-test.scm ## run example code in srfi 204 spec using chezscheme
+chez-srfi-test: chez-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using chezscheme
 	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES)
 
 
 loko-match-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-match-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
-loko-match-test: loko-match-test.scm ## run tests for srfi 204 library using loko
+loko-match-test: loko-match-test.scm $(match)  ## run tests for srfi 204 library using loko
 	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
 
 loko-srfi-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-srfi-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
-loko-srfi-test: loko-srfi-test.scm ## run example code in srfi 204 spec using loko
+loko-srfi-test: loko-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using loko
 	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
 
 false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
@@ -117,7 +124,3 @@ false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ u
 
 hello-test: hello-test.scm ## run a passing test using TESTSCHEME
 	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
-
-%.log: %.scm
-	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
-
