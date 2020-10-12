@@ -614,7 +614,7 @@ operator, originally a Gauche extension:
 </code></pre>
 is described in the next section.
 <h4 id="extension">Extension</h4>
-<p>For data types or matching not covered by <code>equal?</code> SRFI 26 in combination with user-defined functions predicates, and fields can be useful.</p> For example, SRFI 111 (boxes) is opaque to record pattern matching, but can be handled as below:
+<p>For data types or matching not covered by <code>equal?</code>, SRFI 26 in combination with user-defined procedures, predicates, and fields can be useful.</p> For example, SRFI 111 (boxes) is opaque to record pattern matching, but can be handled as below:
 <pre><code>
 (define (box-equal? a b)
   (if (and (box? a) (box? b))
@@ -809,7 +809,7 @@ clause.</p>
 <h4 id="match-let"><code>(match-let ((pattern value) ...) . body)<br>(match-let loop ((pattern init) ...) . body)</code></h4><p>Matches each pattern to the corresponding expression, and evaluates
 the body with all match variables in scope.  Raises an error if
 any of the expressions fail to match.  Syntax analogous to named
-let can also be used for recursive functions which match on their
+let can also be used for recursive procedures which match on their
 arguments as in <code>match-lambda*</code>.</p>
 <pre><code>
 (define (fact n)
