@@ -89,7 +89,10 @@ compound data structures.</p>
 <h2 id="Issues">Issues</h2>
 <ul>
 	<li>get all SRFI-64 tests on same runner</li>
-	<li>refactor for SRFI-206</li>
+	<li>need code review on macros (<code>underscore?</code> in srfi/204/204.scm, <code>slot-ref</code>, <code>slot-set!</code>, and <code>is-a?</code>
+		in srfi/204.sld, and .sls files same in srfi/cyclone0.19/srfi-204.sld except <code>new-slot-set!</code> macros in srfi/204/auxiliary-syntax.scm)</li>
+	<li>Always specify export of auxiliary syntax, even if SRFI 206 is not available? (So srfi/204/auxiliary-syntax.scm is a permanent part of library)</li>
+	<li>Can generic functions affect <code>equal?</code> used by matcher?</li>
 </ul>
 
 <h2 id="Rationale">Rationale</h2>
