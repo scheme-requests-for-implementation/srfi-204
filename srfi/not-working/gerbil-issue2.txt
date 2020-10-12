@@ -1,7 +1,0 @@
-Gerbil is now passing all tests, except match-letrec,
-match-letrec mnieper (had to be quoted out for tests
-to run). Also haven't figured out how to do slot-ref,
-is-a?, slot-set! so haven't run record tests.
-
-also haven't figured out how to make tests recognize
-module when it is in a different directory.

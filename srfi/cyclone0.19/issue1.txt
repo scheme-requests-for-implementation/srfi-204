@@ -1,5 +1,0 @@
-Never could get text file to load in icyc, or compile.
-Copied Cyclone's version and it did compile but that isn't a solution.
-Worked more on getting text file in archive to load, got same "define-library undefined"
-as for rapid.
-

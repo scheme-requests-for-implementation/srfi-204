@@ -1,70 +1,3 @@
-;;;; Cyclone Scheme
-;;;; https://github.com/justinethier/cyclone
-;;;; https://github.com/scheme-requests-for-implementation/srfi-204
-;;;;
-;;;; This module provides a hygienic pattern matcher based on
-;;;; code from Chibi Scheme's (chibi match) library. Which in
-;;;; turn was built using Alex Shinn's match.scm.
-;;;;
-(define-library (cyclone0.19 srfi-204)
-  (import
-    (scheme base)
-    ;(rename (scheme base) (slot-set! cyc-slot-set!))
-    ;(scheme write)
-  )
-  ;(export match match-lambda match-lambda* match-let match-letrec match-let*)
-  (export
-    match-syntax-error
-    match
-    match-next
-    match-one
-    match-underscore
-    match-two
-    match-quasiquote
-    match-quasiquote-step
-    match-drop-ids
-    match-tuck-ids
-    match-drop-first-arg
-    match-gen-or
-    match-gen-or-step
-    match-gen-ellipsis/qq
-    match-gen-ellipsis/range
-    match-gen-ellipsis
-    match-verify-no-ellipsis
-    match-gen-search
-    match-vector
-    match-vector-two
-    match-vector-step
-    match-gen-vector-ellipsis
-    match-vector-tail
-    match-vector-tail-two
-    match-record-refs
-    match-record-named-refs
-    match-extract-underscore
-    match-extract-vars
-    match-extract-vars-step
-    match-extract-quasiquote-vars
-    match-extract-quasiquote-vars-step
-    match-lambda
-    match-lambda*
-    match-let
-    match-letrec
-    match-let/aux
-    match-named-let
-    match-let*
-    match-letrec-one
-    match-letrec-two
-    match-letrec-two-step
-    match-rewrite
-    match-rewrite2
-    match-cons
-    match-check-identifier
-    match-check-ellipsis
-    match-bound-identifier=?
-    new-slot-set!
-  )
-  (begin
-
 ;;;; match.scm -- portable hygienic pattern matcher -*- coding: utf-8 -*-
 ;;
 ;; This code is written by Alex Shinn and placed in the
@@ -309,7 +242,7 @@
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
 ;;
-;; 2020/09/20 - fix slot-set! to handle names
+;; 2020/09/04 - perf fix for `not`; rename `..=', `..=', `..1' per SRFI 204
 ;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
 ;; 2020/08/21 - handle underscores separately, not as literals
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
@@ -345,15 +278,6 @@
 (define-syntax match-syntax-error
   (syntax-rules ()
     ((_) (syntax-error "invalid match-syntax-error usage"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; new slot-set!
-(define-syntax new-slot-set!
-  (syntax-rules ()
-    ((new-slot-set! rtd rec n value)
-     (if (integer? n)
-	 (slot-set! rtd rec n value)
-	 (slot-set! rtd rec (type-slot-offset rtd n) value)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -673,6 +597,7 @@
 
 (define-syntax match-gen-ellipsis
   (syntax-rules ()
+    ;; TODO: restore fast path when p is not already bound
     ;; ((_ v p () g+s (sk ...) fk i ((id id-ls) ...))
     ;;  (match-check-identifier p
     ;;    ;; simplest case equivalent to (p ...), just bind the list
@@ -915,7 +840,7 @@
   (syntax-rules ()
     ((_ v rec n (p . q) g+s sk fk i)
      (let ((w (slot-ref rec v n)))
-       (match-one w p ((slot-ref rec v n) (new-slot-set! rec v n))
+       (match-one w p ((slot-ref rec v n) (slot-set! rec v n))
                   (match-record-refs v rec (+ n 1) q g+s sk fk) fk i)))
     ((_ v rec n () g+s (sk ...) fk i)
      (sk ... i))))
@@ -924,7 +849,7 @@
   (syntax-rules ()
     ((_ v rec ((f p) . q) g+s sk fk i)
      (let ((w (slot-ref rec v 'f)))
-       (match-one w p ((slot-ref rec v 'f) (new-slot-set! rec v 'f))
+       (match-one w p ((slot-ref rec v 'f) (slot-set! rec v 'f))
                   (match-record-named-refs v rec q g+s sk fk) fk i)))
     ((_ v rec () g+s (sk ...) fk i)
      (sk ... i))))
@@ -1108,24 +1033,6 @@
      (match expr (pat (match-let* rest . body))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; procedures for handling types where equal? is not guaranteed
-
-(define (make-match-pred pred)
-  (case-lambda
-    ((a) (lambda (b) (pred a b)))
-    ((a b) (pred a b))))
-
-(define (make-match-get getter)
-  (case-lambda
-    ((key) (lambda (obj) (lambda () (getter obj key))))
-    ((obj key) (lambda () (getter obj key)))))
-
-(define (make-match-set setter)
-  (case-lambda
-    ((key) (lambda (obj) (lambda (value) (setter obj key value))))
-    ((obj key) (lambda (value) (setter obj key value)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Challenge stage - unhygienic insertion.
 ;;
 ;; It's possible to implement match-letrec without unhygienic
@@ -1210,9 +1117,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
 
-(cond-expand ;; old er cyclone macros had TODO: good enough, used
- (chibi      ;; symbol? where chibi uses identifier. Using portable version
-  (define-syntax match-check-ellipsis ;; for now
+(cond-expand
+ (chibi
+  (define-syntax match-check-ellipsis
     (er-macro-transformer
      (lambda (expr rename compare)
        (if (compare '... (cadr expr))
@@ -1256,7 +1163,6 @@
   ;;
   ;; This is the R7RS version.  For other standards, and
   ;; implementations not yet up-to-spec we have to use some tricks.
-
   ;;
   ;;   (define-syntax match-check-ellipsis
   ;;     (syntax-rules (...)
@@ -1312,4 +1218,3 @@
                             ((eq _) fk))))
            (eq a))))))
   ))
-))

@@ -1,0 +1,138 @@
+%%%% Starting test false-branch-srfi-test-gauche-0.9.6
+Group begin: false-branch-srfi-test-gauche-0.9.6
+Test begin:
+  test-name: "Introduction"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "Literal Patterns"
+Test end:
+  result-kind: pass
+  actual-value: (ok ok)
+  expected-value: (ok ok)
+Test begin:
+  test-name: "Simple Variable"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Throwaway Variable"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "Quasi-quote variable fail"
+Test end:
+  result-kind: pass
+  actual-value: fail
+  expected-value: fail
+Test begin:
+  test-name: "Quasi-quote variable pass"
+Test end:
+  result-kind: pass
+  actual-value: 2
+  expected-value: 2
+Test begin:
+  test-name: "repeated pattern"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "quasi-quote fail repeated pattern"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "quasi-quote repeated pattern 1"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "quasi-quote repeated pattern 2"
+Test end:
+  result-kind: skip
+Test begin:
+  test-name: "error repeated pattern"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "error quasi-quote fail repeated pattern"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "error quasi-quote repeated pattern 1"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "error quasi-quote repeated pattern 2"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "repeated pattern->failure"
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "empty ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "empty quasi-quote splicing match"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: #t
+Test begin:
+  test-name: "single ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "single quasi-quote splicing match"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: #t
+Test begin:
+  test-name: "triple ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: #t
+  expected-value: #t
+Test begin:
+  test-name: "triple quasi-quote splicing match"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: #t
+Test begin:
+  test-name: "subexpression ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: ((a stitch in) (time saves nine))
+  expected-value: ((a stitch in) (time saves nine))
+Test begin:
+  test-name: "subexpression quasi-quote splicing match"
+Test end:
+  result-kind: fail
+  actual-value: #f
+  expected-value: ((a c e) (b d f))
+Test begin:
+  test-name: "double ellipsis match"
+Test end:
+  result-kind: pass
+  actual-value: ((1 4) (2 5) (3 6))
+  expected-value: ((1 4) (2 5) (3 6))

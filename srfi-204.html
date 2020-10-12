@@ -55,6 +55,7 @@ dt {
 		<li><a href="#Pred">Predicates and Fields</a></li>
 		<li><a href="#g-and-s">Getters and Setters</a></li>
 		<li><a href="#records">Record Patterns</a></li>
+		<li><a href="#extension">Extension</a></li>
 		</ul></li>
 		<li><a href="#Grammar">Pattern Grammar</a></li>
 		<li><a href="#Syntax">Syntax</a>
@@ -158,7 +159,7 @@ The following terms will be used in describing pattern matching:
 	<dt>pattern clause</dt><dd>a pattern and its body.</dd>
 	<dt>non-linear</dt><dd>matching which involves repetition either through a variable that is used more than once in a pattern, or a pattern which may match an indeterminate number of values.</dd>
 	<dt>variable</dt><dd>an identifier in a pattern which may be used in the body. May not be <code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>,  <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>.</dd>
-	<dt>operator<dt><dd>the auxiliary $ struct object = and or not ? set! get! ... ___ **1 =.. *.. which are exported (if not already defined) via SRFI 206.<dd>
+	<dt>operator<dt><dd>the auxiliary $ struct object = and or not ? set! get! ... ___ **1 =.. *.. which are exported (if not already defined) via SRFI 206, if available.<dd>
 </dl>
 <h3 id="Patterns">Patterns</h3>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
@@ -341,6 +342,15 @@ used.</p>
 (match '(+ (* (+ 7 2) (/ 5 4)) (sqrt (+ (sqr x) (sqr y))))
 	  ((_ *** `(sqrt . ,rest)) rest))
 =&gt; ((+ (sqr x) (sqr y)))
+
+(define (extract-imports file-name)
+  (define extract
+    (match-lambda
+      (((_ *** `(import . ,imports)) . rest) (cons imports (extract rest)))
+      ((this . rest) (extract rest))
+      (() '())))
+  (call-with-input-file file-name (lambda (port) (extract (read port)))))
+
 </code></pre>
 <h4 id="Boolean">Boolean Patterns</h4>
 <p>
@@ -397,6 +407,44 @@ only defined for identifiers from the subpattern which matched.
                 ((a b c d ... e) (equal? c e))
                 (_ #f)))
 </code></pre>
+<p>Since all variables in an <code>or</code> pattern are bound but only one is defined, using <code>or</code> in combination with ellipsis patterns (as below) can lead to results with large numbers of undefined values:
+<pre><code>
+(match (get-environment-variables)
+  (((or ("PATH" . path)
+        ("HOMEPROFILE" . home)
+	("HOME" . home)
+	("USER" . user)
+	("USERNAME" . user)
+	(_ . _)) ...)
+   (list path home user)))
+=> [three large lists of mostly undefined values]
+</code></pre>
+One way to get the intended results is shown below:
+<pre><code>
+
+(fold (match-lambda*
+	((("PATH" . path) (p h u)) (list path h u))
+	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+	((("HOME" . home)  (p h u)) (list p home u))
+	((("USER" . user)  (p h u))  (list p h user))
+	((("USERNAME" . user)  (p h u))  (list p h user))
+	(_ out) out)
+      (list #f #f #f) ; (p h u) init
+      (get-environment-variables))
+=&gt; [List of 3 strings]
+
+</code></pre>
+In other cases, it may make sense to use <code><strong>((or <var>pats</var>) ...)</strong></code> patterns with clean-up:
+<pre><code>
+(define (clean lst)
+  (let ((undef (when #f)))
+    (remove (lambda (item) (equal? item undef)) lst)))
+
+(match (iota 7)
+   (((or 2 6 rest) ...) (clean rest)))
+=&gt; (0 1 3 4 5)
+</code></pre>
+</p>
 <p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body. This pattern also gives us a way to eliminate values (like false above) in a more streamlined way:
@@ -551,7 +599,7 @@ operator, originally a Gauche extension:
 	(list t n)))
 =&gt; ("Doctor" "Bob")
 </code></pre>
-<p>But this technique cannot be used to emulate setter patterns like:</p>
+<p>Emulating setter patterns like:</p>
 <pre><code>
 (let () (define-record-type &lt;posn&gt;
            (make-posn x y)
@@ -564,6 +612,43 @@ operator, originally a Gauche extension:
 		(match p (($ &lt;posn&gt; x y) (list x y))))))
 =&gt; (7 4)
 </code></pre>
+is described in the next section.
+<h4 id="extension">Extension</h4>
+<p>For data types or matching not covered by <code>equal?</code> SRFI 26 in combination with user-defined functions predicates, and fields can be useful.</p> For example, SRFI 111 (boxes) is opaque to record pattern matching, but can be handled as below:
+<pre><code>
+(define (box-equal? a b)
+  (if (and (box? a) (box? b))
+      (box-equal? (unbox a) (unbox b))
+      (equal? a b)))
+
+;r6rs
+(match (list (box 1) (box 1)) 
+       ((a a) 'ok) (_ 'fail))
+=&gt; fail
+
+(match (list (box 1) (box 1))
+       ((a (? (cut box-equal? a &lt;&gt;))) 'ok)
+       (_ 'fail))
+=&gt; ok
+
+(match (list (box 1) (box 1))
+       ((a b) (if (box-equal? a b) 'ok 'fail)))
+=&gt; ok
+
+(match (box 1) ((= unbox value) value))
+=&gt; 1
+
+(define-values (get-value set-value!)
+  (match (box 1)
+         ((and (= (lambda (box) (cut unbox box)) get)
+	       (= (lambda (box) (cut set-box! box &lt;&gt;)) set))
+	  (values get set))))
+
+(get-value) =&gt; 1
+(set-value! 18)
+(get-value) =&gt; 18
+</code></pre>
+</p>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var
@@ -818,7 +903,28 @@ A
 <a href="https://github.com/scheme-requests-for-implementation/srfi-204/tree/master/srfi">Sample implementation</a>
 is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-204.tgz">this .tgz file</a>.</p>
 <p>
-Any implementation of SRFI 204 should use SRFI 206 to export whatever of the auxiliary syntax needs to be defined (from <code>$, ?, ***, ___, **1, =.., *.., get!, struct, object </code>).  To use the <code><b>$,</b></code>  <code><b>struct</b></code>, and <code><b>object</b></code> syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
+Any implementation of SRFI 204 should use SRFI 206 to export whatever of the auxiliary syntax needs to be defined (from <code>$, ?, ***, ___, **1, =.., *.., get!, struct, object </code>) or the included auxiliary-syntax.scm file, if SRFI 206 is not available. SRFI 206 is used as follows:
+<pre><code>
+(import (only (srfi 206 all) $ ? *** ___ **1 =.. etc.))
+</pre></code>
+and auxiliary-syntax.scm is used as follows:
+<pre><code>
+
+;; from Akku
+(import (srfi private include))
+(begin
+  (include/resolve ("srfi" "204") "auxiliary-syntax.scm")
+  (define-auxiliary-keywords $ ? *** ___ **1 =.. etc.)
+  ...)
+
+;; in Guile
+(begin
+  (include-from-path "srfi/204/auxiliary-syntax.scm")
+  (define-auxiliary-keywords $ ? *** ___ **1 =.. etc.)
+  ...)
+</pre></code>
+</p>
+<p>To use the <code><b>$,</b></code>  <code><b>struct</b></code>, and <code><b>object</b></code> syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
 <pre><code>
 (is-a? <var>rec</var> <var>rtd</var>) =&gt; <var>#t if type of rec matches rtd, #f otherwise</var>
 

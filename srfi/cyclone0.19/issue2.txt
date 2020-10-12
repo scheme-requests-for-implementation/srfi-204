@@ -2,7 +2,10 @@ got new module to compile, and got tests to run.
 3 are failing:
    match-letrec
    match-letrec mnieper
-   setter record named
+   setter record named FIXED
 
 not keeping c files in repo since they distort composition
 of project.
+
+ran tests by opening match-test.sld and sending appropriate sections
+to icyc -I ..

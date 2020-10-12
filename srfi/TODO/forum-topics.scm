@@ -193,7 +193,7 @@
 			       #f)))))
 ;;; first-pass benchmarking using a list of the first 10 000 Fibonacci numbers shows
 ;;; little difference between all these methods, possibly because doing arithmetic
-;;; with numbers whose log is +inf.0
+;;; with page-long numbers
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -321,6 +321,36 @@
 
 (define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
 
+;;;emulate 
+(import (scheme case-lambda))
+(define (make-pred pred)
+  (case-lambda
+    ((a) (lambda (b) (pred a b)))
+    ((a b) (pred a b))))
+
+(define (make-get proc)
+  (lambda (ref)
+    (lambda (obj)
+      (lambda ()
+	(proc obj ref)))))
+
+(define (make-set proc)
+  (lambda (ref)
+    (lambda (obj)
+      (lambda (value)
+	(proc obj ref value)))))
+
+(import (srfi 69))
+(define get-key (make-getter (lambda (obj ref) (hash-table-ref obj ref (lambda () #f)))))
+(define set-key (make-setter hash-table-set!))
+
+(define ht (make-hash-table))
+
+(define get-mode
+  (match ht ((= (get-key 'mode) gm) gm)))
+(define set-mode!
+  (match ht ((= (set-key 'mode) sm!) sm!)))
+
 (define-record-type <posn> (make-posn x y) posn? (x posn-x set-posn-x!) (y posn-y set-posn-y!))
 ;;; (define-record-type (<posn> make-posn posn?) (fields (mutable x) (mutable y)))
 
@@ -341,3 +371,91 @@
 	 (('cross a (? (posn-equal? a))) (make-posn 0 0))
 	 (('cross a (? (slope-equal? a))) (make-posn 0 0))
 	 (other other)))
+
+(match (call-with-input-file "srfi/204.sld" read)
+       (`(cond-expand ,@(_ *** `(import . ,rest)) (else)) rest))
+
+(define (extract-imports file-name)
+  (define extract
+    (match-lambda
+      (((_ *** `(import . ,imports)) . rest) (cons imports (extract rest)))
+      ((this . rest) (extract rest))
+      (() '())))
+  (call-with-input-file file-name (lambda (port) (extract (read port)))))
+
+(define in? (make-pred (lambda (lst obj) (member obj lst))))
+(define not-in? (make-pred (lambda (lst obj) (not (member obj lst)))))
+
+(define (clean l)
+  (let ((u (if #f #f)))
+    (remove (lambda (i) (equal? i u)) l)))
+
+(match (iota 7)
+       (((or (? (in? (list 2 6)) a)
+	    (? (not-in? (list 2 6)) b)) ...)
+	(list (clean a) (clean b))))
+;; hmm...3 passes over list/derived list
+
+(define my-part
+  (match-lambda
+    (((? )))))
+
+(match (get-environment-variables)
+        (((or ("PATH" . path)
+	      ("USERPROFILE" . home)
+	      ("HOME" . home)
+	      ("USER" . user)
+	      ("USERNAME" . user)
+	      (_ . _)) ...) (list (clean path) (clean home) (clean user))))
+
+(fold (lambda (env-var out)
+	(match env-var
+	      (("PATH" . path) (match-let (((a b c) out)) (list path b c)))
+	      (("USERPROFILE" . home) (match-let (((a b c) out)) (list a home c))) 
+	      (("HOME" . home) (match-let (((a b c) out)) (list a home c)))
+	      (("USER" . user)  (match-let (((a b c) out))  (list a b user)))
+	      (("USERNAME" . user)  (match-let (((a b c) out))  (list a b user)))
+	      (_ out)))
+      (list #f #f #f)
+      (get-environment-variables))
+
+(fold (match-lambda*
+	((("PATH" . path) (p h u)) (list path h u))
+	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+	((("HOME" . home)  (p h u)) (list p home u))
+	((("USER" . user)  (p h u))  (list p h user))
+	((("USERNAME" . user)  (p h u))  (list p h user))
+	(_ out) out)
+      (list #f #f #f) ; (p h u) init
+      (get-environment-variables))
+
+(import (srfi 69))
+(define (get-from-table key)
+  (lambda (table)
+    (hash-table-ref/default table key #f)))
+
+(match (alist->hash-table (get-environment-variables))
+       ((and (= (get-from-table "PATH")
+		  (and (not #f) path))
+	    (or (= (get-from-table "USERPROFILE")
+		  (and (not #f) home))
+		 (= (get-from-table "HOME")
+		  (and (not #f) home)))
+	     (or (= (get-from-table "USER")
+		  (and (not #f) user))
+		 (= (get-from-table "USERNAME")
+		  (and (not #f) user)))) (list path home user)))
+
+(define (binary->unary binary-string)
+  (let loop ((digits (cons #\^ (string->list binary-string)))
+	     (prev '()))
+    (define (markov char-list)
+      (match char-list
+	     ((#\| #\0 . rest) (cons #\0 (cons #\| (cons #\| rest))))
+	     ((#\1 . rest) (cons #\0 (cons #\| rest)))
+	     ((#\^ #\0 . rest) (cons #\^ rest))
+	     ((any . rest) (cons any (markov rest)))
+	     (() '())))
+    (if (equal? digits prev)
+	(list->string (cdr digits))
+	(loop (markov digits) digits))))

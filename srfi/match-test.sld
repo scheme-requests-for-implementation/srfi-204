@@ -1,10 +1,9 @@
-(define-library (match-test)
+(define-library (srfi match-test)
   (export run-match-tests)
   (import (except (scheme base) equal?)
 	  (scheme write)
-          (srfi-204)
-	  (only (chibi process) process->string)
-	  (srfi 115)
+          (srfi 204)
+	  (only (chibi ast) chibi-version)
           (only (chibi test)
 		test-begin
 		test
@@ -12,13 +11,7 @@
   (cond-expand
    (chibi
     (begin
-      (define (version)
-	"get version string"
-        (let* ((version-re '(: bow (+ (or num "."))))
-	      (process-string (process->string '(chibi-scheme "-V")))
-	      (matches (regexp-extract version-re process-string)))
-          (string-append "chibi-" (car matches))))
-      (display (version))
+      (display (string-append "chibi-" chibi-version))
       (newline)
       (define-record-type Point
        (make-point x y)
