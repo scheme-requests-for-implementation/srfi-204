@@ -438,7 +438,7 @@ One way to get the intended results is shown below:
 =&gt; [List of 3 strings]
 
 </code></pre>
-In other cases, it may make sense to use <code><strong>((or <var>pats</var>) ...)</strong></code> patterns with clean-up:
+<p>In other cases, it may make sense to use <code><strong>((or <var>pats</var>) ...)</strong></code> patterns with clean-up:</p>
 <pre><code>
 (define (clean lst)
   (let ((undef (when #f #f)))
@@ -448,7 +448,6 @@ In other cases, it may make sense to use <code><strong>((or <var>pats</var>) ...
    (((or 2 6 rest) ...) (clean rest)))
 =&gt; (0 1 3 4 5)
 </code></pre>
-</p>
 <p>
 The <code>not</code> operator succeeds if the given pattern doesn't
 match.  None of the identifiers used are available in the body. This pattern also gives us a way to eliminate values (like false above) in a more streamlined way:
@@ -618,7 +617,7 @@ operator, originally a Gauche extension:
 </code></pre>
 is described in the next section.
 <h4 id="extension">Extension</h4>
-<p>For data types or matching not covered by <code>equal?</code>, SRFI 26 in combination with user-defined procedures, predicates, and fields can be useful.</p> For example, SRFI 111 (boxes) is opaque to record pattern matching, but can be handled as below:
+<p>For data types or matching not covered by <code>equal?</code>, SRFI 26 in combination with user-defined procedures, predicates, and fields can be useful.</p> <p>For example, SRFI 111 (boxes) is opaque to record pattern matching, but can be handled as below:</p>
 <pre><code>
 (define (box-equal? a b)
   (if (and (box? a) (box? b))
@@ -653,7 +652,6 @@ is described in the next section.
 (set-value! 18)
 (get-value) =&gt; 18
 </code></pre>
-</p>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var
@@ -911,7 +909,7 @@ is available on Github and in <a href="https://srfi.schemers.org/srfi-204/srfi-2
 Any implementation of SRFI 204 should use SRFI 206 to export whatever of the auxiliary syntax needs to be defined (from <code>$, ?, ***, ___, **1, =.., *.., get!, struct, object </code>) or the included auxiliary-syntax.scm file, if SRFI 206 is not available. SRFI 206 is used as follows:
 <pre><code>
 (import (only (srfi 206 all) $ ? *** ___ **1 =.. etc.))
-</pre></code>
+</code></pre>
 and auxiliary-syntax.scm is used as follows:
 <pre><code>
 
@@ -927,8 +925,7 @@ and auxiliary-syntax.scm is used as follows:
   (include-from-path "srfi/204/auxiliary-syntax.scm")
   (define-auxiliary-keywords $ ? *** ___ **1 =.. etc.)
   ...)
-</pre></code>
-</p>
+</code></pre>
 <p>To use the <code><b>$,</b></code>  <code><b>struct</b></code>, and <code><b>object</b></code> syntax, an implementation needs to provide the forms <code>is-a?</code>, <code>slot-ref</code>, and <code>slot-set!</code>. These forms have the following syntax:</p>
 <pre><code>
 (is-a? <var>rec</var> <var>rtd</var>) =&gt; <var>#t if type of rec matches rtd, #f otherwise</var>
@@ -1102,7 +1099,7 @@ Nils M. Holm. <cite>matcher.scm (source code).</cite> Retrieved from <a href="ht
 Rafik Naccache <cite>unifier.cljc (source code).</cite> Retrieved from <a href="https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc">https://github.com/turbopape/scheje/blob/master/src/scheje/unifier.cljc</a>.
 </p>
 <p id="STklos">
-Erick Gallesio. <cite>STklos Reference Manual.</cite> Chapter 6 "Pattern Matching." Retrieved from <a href="https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching">https://stklos.net/Doc/html/stklos-ref-6.html#Pattern-Matching</a>.
+Erick Gallesio. <cite>STklos Reference Manual.</cite> Chapter 6 "Pattern Matching." Retrieved from <a href="https://stklos.net/Doc/html/stklos-ref-6.html">https://stklos.net/Doc/html/stklos-ref-6.html</a>.
 </p>
 <p id="Norvig">
   Peter Norvig. 1992 <cite>Paradigms of Artificial intelligence.</cite> (1st Ed.). ELIZA,Dialog with a Machine, Chap. 5. Morgan Kaufmann Publishers, San Francisco, CA. Retrieved on July 15 2020 from <a href="https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md">https://github.com/norvig/paip-lisp/blob/master/docs/chapter5.md</a>.
