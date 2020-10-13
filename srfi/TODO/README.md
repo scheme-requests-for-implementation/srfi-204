@@ -36,10 +36,11 @@
 <!-- - document and test make-match-pred make-match-get make-match-set (decided cut was better option)-->
 - get all srfi tests to run for all implementations (can be post last call)
 - figure out how to make verbose test-runner like Guile's
-- add forum credits in ack section
+<!-- - add forum credits in ack section -->
 - make sure all new nonlinear tests have skips
-- set up srfi tests like match tests in Makefile, document Makefile
-- get all srfi tests to pass
+<!-- - set up srfi tests like match tests in Makefile -->
+- document Makefile
+<!-- - get all srfi tests to pass --> **except extract-imports**
 - make srfi tests for chibi-scheme and cyclone (maybe)
 <!-- - work some on benchmarking -->
 <!-- - make srfi-test.scm in srfi/test containing all example code. -->
