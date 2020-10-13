@@ -71,8 +71,12 @@ match-all: $(match_all) ## run all targets for (chibi match) library test suite
 srfi-all: $(srfi_all) ## run all targets for examples from srfi
 
 chibi-match-test: export TEST_VERBOSE=true
-chibi-match-test: match-test.scm $(chibi_deps) ## run srfi 204 library test suite with chibi
+chibi-match-test: match-test.scm $(chibi_deps) ## run (chibi match) test suite with chibi
 	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-match-test.log
+
+chibi-srfi-test: export TEST_VERBOSE=true
+chibi-srfi-test: srfi-test.scm $(chibi_deps) ## run example code in srfi 204 spec using chibi
+	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
 
 gauche-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with gauche
 	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)

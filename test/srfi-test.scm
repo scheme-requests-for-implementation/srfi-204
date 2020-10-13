@@ -1,7 +1,11 @@
 (cond-expand
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output
-    (import (srfi-test)))
+    (import (srfi 204)
+	    (scheme red)
+	    (only (chibi ast) chibi-version)
+	    (chibi test))
+    )
   (guile
     (use-modules (srfi srfi-204)
 		 (srfi srfi-64)
@@ -81,5 +85,11 @@
   (else))
 (cond-expand
   (chibi
-    (run-match-tests))
+    (define non-linear-pattern #t)
+    (define non-linear-pred #t)
+    (define non-linear-field #t)
+    (define record-implemented #t)
+    (define test-name "srfi-test")
+    (define scheme-version-name (string-append "chibi-" chibi-version))
+    (include "srfi-chibi.scm"))
   (else))
