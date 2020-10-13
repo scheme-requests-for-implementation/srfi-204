@@ -428,7 +428,7 @@ One way to get the intended results is shown below:
 
 (fold (match-lambda*
 	((("PATH" . path) (p h u)) (list path h u))
-	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+	((("USERPROFILE" . home)  (p h u)) (list p home u))
 	((("HOME" . home)  (p h u)) (list p home u))
 	((("USER" . user)  (p h u))  (list p h user))
 	((("USERNAME" . user)  (p h u))  (list p h user))
@@ -625,7 +625,7 @@ is described in the next section.
       (equal? a b)))
 
 ;r6rs
-(match (list (box 1) (box 1)) 
+(match (list (box 1) (box 1))
        ((a a) 'ok) (_ 'fail))
 =&gt; fail
 
