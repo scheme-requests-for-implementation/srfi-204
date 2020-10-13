@@ -13,6 +13,8 @@
 	      (list (match ls (('a "b" #f 2 () #\c) 'ok))
 		    (match ls (`(a "b" #f 2 () #\c) 'ok)))))
 
+(test-equal "Self-evaluating Vector Literal" 'ok (match #(1) (#(1) 'ok)))
+
 ;; variable patterns
 (test-equal "Simple Variable" 2 (match (list 1 2 3) ((a b c) b)))
 (test-equal "Throwaway Variable" 2 (match (list 1 2 3) ((_ b _) b)))
