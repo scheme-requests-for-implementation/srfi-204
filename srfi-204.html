@@ -485,7 +485,7 @@ predicate are then matched as in an <code>and</code> pattern.
                  (() #t)
 		 (_ #f)))
 
-;;;doesn't refer to pattern variables in predicate
+;;; doesn't refer to pattern variables in predicate
 (define fibby?
   (match-lambda ((a b c . rest)
 		  (if (= (+ a b) c)
@@ -716,7 +716,7 @@ ooo : <b>...</b>                          ;; zero or more
     (*) extended syntax not originally part of
         Wright-Cartwright pattern matcher.
     <b>Note: </b> a list can contain only one ellipsis pattern which includes the
-             patterns above, tail patterns and unquote-splicing patterns.
+             patterns above, tail patterns, and unquote-splicing patterns.
 
 qp  : ()                           ;; the empty list
     | #t                           ;; #t
@@ -1024,7 +1024,7 @@ is an example from  Gauche, where records are implemented on top of native CLOS-
 	       (else (lp (+ i 1 )))))))))
 </code></pre>
 
-<code>match-letrec</code> uses the technique described in [<a href="#Oleg2013">Kiselyov, 2013</a>]. This form gets used the least by users, so it may be a useful exercise for for implementors to look for internal defines and other items that can be translated into match-letrec to build up a testing library.
+<code>match-letrec</code> uses the technique described in [<a href="#Oleg2013">Kiselyov, 2013</a>]. This form gets used the least by users, so it may be a useful exercise for implementors to look for internal defines and other items that can be translated into match-letrec to build up a testing library.
 
 <h2 id="References">References</h2>
 <p id="SCG">
