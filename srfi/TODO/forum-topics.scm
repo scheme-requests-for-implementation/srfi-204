@@ -396,10 +396,6 @@
 	(list (clean a) (clean b))))
 ;; hmm...3 passes over list/derived list
 
-(define my-part
-  (match-lambda
-    (((? )))))
-
 (match (get-environment-variables)
         (((or ("PATH" . path)
 	      ("USERPROFILE" . home)
@@ -459,3 +455,57 @@
     (if (equal? digits prev)
 	(list->string (cdr digits))
 	(loop (markov digits) digits))))
+
+(define-syntax make-chunker-two
+  (syntax-rules ()
+    ((_ s ...)
+     (lambda (l)
+       (let lp ((l l))
+	 (match l (() '())
+		  ((s ... . rest) (cons (list s ...) (lp rest)))
+		  (end (list end))))))))
+
+(define (list-tree->vector-tree tree)
+  (if (list? tree)
+      (list->vector (map list-tree->vector-tree tree))
+      tree))
+
+(define get-close
+  (match-lambda
+    ((key *** (`(value . "Close") b ...)) key)
+    ((key *** (k . (? vector? v)))
+     (let ((len (vector-length v)))
+       (let lp ((i 0))
+	 (cond
+	   ((= i len) 7)
+	   ((get-close (vector-ref v i))
+	    => (lambda (r) (append key (list k i) r)))
+	   (else (lp (+ i 1)))))))
+    (_ #f)))
+
+(get-close (car example-2))
+
+(define-syntax json-key
+  (syntax-rules ()
+    ((_ expr)
+     (let ()
+       (define get-key 
+	 (match-lambda
+	    ((key *** expr) key)
+	    ((? vector? v)
+	     (=> fail)
+	     (let ((len (vector-length v)))
+	       (let loop ((i 0))
+		 (cond
+		   ((= i len) (fail))
+		   ((get-key (vector-ref v i))
+		    => (lambda (r) (cons i r)))
+		   (else (loop (+ i 1)))))))
+	    ((key *** (k . (? vector? v)))
+	     (=> fail)
+	     (let ((res (get-key v)))
+	       (if res (append key (cons k res)) (fail))))
+	    (_ #f)))
+       get-key))))
+
+((json-key (`(value . "Open") b ...)) (car example-2))
