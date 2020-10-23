@@ -531,3 +531,29 @@
 	       (if res (append key (cons k res)) (fail))))
 	    (_ #f)))
        get-key))))
+
+(define (handle-vector val mk fk)
+  (match val
+	  ((? vector? v)
+	   (let* ((i (vector-index mk v))
+		  (r (if i (mk (vector-ref v i)) #f)))
+	     (if i (cons i r) (fk))))
+	  ((key *** (k . (? vector? v)))
+	   (let ((r (handle-vector v mk fk)))
+	     (if r (append key (cons k r)) (fk))))
+	  (_ (fk))))
+
+((letrec ((matcher (match-lambda
+		       ((key *** ('(value . "Close") . rest)) key)
+		       (val (=> fail) (handle-vector val matcher fail))
+		       (_ #f))))
+   matcher)
+ (car example-2))
+
+(((menu (id . "file")
+	(value . "File")
+	(popup
+	  (menuitem .
+		    #(((value . "New") (onclick . " CreateNewDoc()"))
+		      ((value . "Open") (onclick . "OpenDoc()"))
+		      ((value . "Close") (onclick . "CloseDoc()"))))))))

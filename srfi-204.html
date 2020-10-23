@@ -319,16 +319,18 @@ Tail patterns will match dotted pairs, and ellipsis patterns won't:
 (keys '((a 1) (b 2) (c 3))) =&gt; (a b c)
 (keys '((a . 1) (b . 2) (c . 3))) =&gt; (a b c)
 </code></pre>
-<p>Tail patterns also don't require any special treatment in quasi-patterns</p>
+<p id="handle-arithmetic-sexpr">Tail patterns also don't require any special treatment in quasi-patterns</p>
 <pre><code>
 (define handle-arithmetic-sexpr
- (match-lambda (`(+ . ,operands) (apply + (map eval-sexpr operands)))
+ (match-lambda (`(+ . ,operands) (apply + (map <a href="#eval-sexpr ">eval-sexpr</a> operands)))
                (`(- . ,operands) (apply - (map eval-sexpr operands)))
                (`(* . ,operands) (apply * (map eval-sexpr operands)))
                (`(/ . ,operands) (apply / (map eval-sexpr operands)))))
 </code></pre>
 <h3 id="Tree">Tree Patterns</h3>
 <p>
+<em>Note: tree patterns are considered experimental at this stage and so are an
+	optional part of this SRFI</em>
 The new operator <code>***</code> can be used to search a tree for
 subpatterns.  A pattern of the form <code>(x *** y)</code> represents
 the subpattern <code>y</code> located somewhere in a tree where the path
@@ -356,6 +358,47 @@ used.</p>
       (() '())))
   (call-with-input-file file-name (lambda (port) (extract (read port)))))
 
+</code></pre>
+<p>
+Since the tree operator acts on pairs, when the data consists of pairs mixed with
+other composite data types, helper functions will be needed. For instance, JSON is
+ translated by various libraries (including SRFI 180) into a mixture of pairs,
+ vectors, and atoms. Taking this JSON example:
+</p>
+<pre><code>{&quot;menu&quot;: {
+  &quot;id&quot;: &quot;file&quot;,
+  &quot;value&quot;: &quot;File&quot;,
+  &quot;popup&quot;: {
+    &quot;menuitem&quot;: [
+      {&quot;value&quot;: &quot;New&quot;, &quot;onclick&quot;: &quot;CreateNewDoc()&quot;},
+      {&quot;value&quot;: &quot;Open&quot;, &quot;onclick&quot;: &quot;OpenDoc()&quot;},
+      {&quot;value&quot;: &quot;Close&quot;, &quot;onclick&quot;: &quot;CloseDoc()&quot;}
+    ]
+  }
+}}
+
+;; in scheme
+(define example-json
+'(((menu (id . "file")
+ 	 (value . "File")
+	 (popup
+	   (menuitem .
+		    #(((value . "New") (onclick . " CreateNewDoc()"))
+		      ((value . "Open") (onclick . "OpenDoc()"))
+		      ((value . "Close") (onclick . "CloseDoc()"))))))))
+)
+</code></pre>
+ <p id="key-close">
+one way to write a procedure to find the path to menuitem "Close" is as follows:
+ </p>
+<pre><code>
+(define key-close
+  (match-lambda
+    ((key *** ('(value . "Close") . rest)) key)
+    (val (=&gt; fail) (<a href="#handle-vector">handle-vector</a> val key-close fail))
+    (_ #f)))
+
+(key-close (car example-json)) =&gt; (menu popup menuitem 2)
 </code></pre>
 <h4 id="Boolean">Boolean Patterns</h4>
 <p>
@@ -465,15 +508,32 @@ predicate.  The usage is <code>(? predicate pat ...)</code> where
 called on the value to match, and any optional patterns after the
 predicate are then matched as in an <code>and</code> pattern.
 </p><pre><code>(match 1 ((? odd? x) x)) =&gt; 1</code></pre>
-<p>Along with boolean patterns, the predicate pattern is enough to make the other half of the math expression evaluator started in the section on dotted pairs:</p>
+<p id="eval-sexpr">Along with boolean patterns, the predicate pattern is enough to make the other half of the math expression evaluator started in the section on dotted pairs:</p>
 <pre><code>
 (define eval-sexpr
   (match-lambda ((? number? n) n)
                 ((and pair ((or '+ '- '* '/) . rest))
-		 (handle-arithmetic-sexpr pair))
+		 (<a href="#handle-arithmetic-sexpr">handle-arithmetic-sexpr</a> pair))
 		(_ (error "not implemented yet"))))
 
 (eval-sexpr '(+ (* 3 4 5) (- 10 3))) =&gt; 67
+</code></pre>
+<p id="handle-vector">
+Predicates also can be used to make the <code>handle-vector</code> procedure used
+by the <code><a href="#key-close">key-close</a></code> procedure defined earlier:
+<pre><code>
+;; vector-index is defined in SRFI 133/R7RS Large: Red Edition
+
+(define (handle-vector val matcher fail-k)
+  (match val
+	  ((? vector? v)
+	   (let* ((i (vector-index matcher v))
+		  (r (if i (matcher (vector-ref v i)) #f)))
+	     (if i (cons i r) (fail-k))))
+	  ((key *** (k . (? vector? v)))
+	   (let ((r (handle-vector v matcher fail-k)))
+	     (if r (append key (cons k r)) (fail-k))))
+	  (_ (fail-k))))
 </code></pre>
 <p>A predicate may be called multiple times on matching and non-matching expressions and sub-expressions, in any order, so side effects should be avoided unless there is some overriding interest (debugging, logging, short-cutting, etc.). Predicates can also be written using references to pattern variables, if repetition is supported:</p>
 <pre><code>
