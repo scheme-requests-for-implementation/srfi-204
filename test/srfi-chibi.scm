@@ -624,4 +624,4 @@
 	      #t
 	      ((make-chunker a b c ___) (iota 20))))
 
-(test-end (string-append test-name "-" scheme-version-name))
+(test-end)

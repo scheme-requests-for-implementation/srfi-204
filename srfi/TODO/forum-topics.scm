@@ -483,7 +483,7 @@
 	   (else (lp (+ i 1)))))))
     (_ #f)))
 
-(get-close (car example-2))
+;(get-close (car example-2)) => (menu popup menuitem 2)
 
 (define-syntax json-key
   (syntax-rules ()
@@ -508,4 +508,26 @@
 	    (_ #f)))
        get-key))))
 
-((json-key (`(value . "Open") b ...)) (car example-2))
+ ((json-key (`(value . "Close") b ...)) (car example-2))
+; (menu popup menuitem 2)
+
+;; using srfi 133 syntax included in r7rs red:
+
+(define-syntax json-key
+  (syntax-rules ()
+    ((_ expr)
+     (let ()
+       (define get-key 
+	 (match-lambda
+	    ((key *** expr) key)
+	    ((? vector? v)
+	     (=> fail)
+	     (let* ((i (vector-index get-key v))
+		    (res (get-key (vector-ref v i))))
+	       (if i (cons i res) (fail))))
+	    ((key *** (k . (? vector? v)))
+	     (=> fail)
+	     (let ((res (get-key v)))
+	       (if res (append key (cons k res)) (fail))))
+	    (_ #f)))
+       get-key))))

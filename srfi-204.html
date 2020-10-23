@@ -159,10 +159,10 @@ The following terms will be used in describing pattern matching:
 <dl>
 	<dt>pattern</dt><dd>an expression that is supposed to match against the first argument to the <code>match</code> form.</dd>
 	<dt>body</dt><dd>the set of expressions that is evaluated when a pattern matches.</dd>
-	<dt>failure</dt><dd>a thunk that can be called in the body to signal that a match was not successful, and restart matching at the next pattern.</dd>
+	<dt>failure</dt><dd>a thunk that can be called in the body to signal that a match was not successful, and restart matching at the next pattern clause.</dd>
 	<dt>next, subsequent, etc.</dt><dd>patterns are matched in the order they are listed. Matching stops at the first match unless a call is made to failure.</dd>
 	<dt>pattern clause</dt><dd>a pattern and its body.</dd>
-	<dt>non-linear</dt><dd>matching which involves repetition either through a variable that is used more than once in a pattern.</dd>
+	<dt>non-linear</dt><dd>matching which involves repetition through a variable that is used more than once in a pattern.</dd>
 	<dt>variable</dt><dd>an identifier in a pattern which may be used in the body. May not be <code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>,  <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>.</dd>
 	<dt>operator<dt><dd>the auxiliary syntax <code>$ struct object = and or not ? set! get! ... ___ **1 =.. *..</code> which are exported (if not already defined) via SRFI 206, if available.<dd>
 </dl>
