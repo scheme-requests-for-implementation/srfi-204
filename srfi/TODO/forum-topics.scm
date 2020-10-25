@@ -378,10 +378,24 @@
 (define (extract-imports file-name)
   (define extract
     (match-lambda
-      (((_ *** `(import . ,imports)) . rest) (cons imports (extract rest)))
+      (`(import . ,imports) imports)
+      (((and (key *** `(import . ,imports)) inner) . rest)
+       (append (if (null? key)
+		   (list imports)
+		   (extract inner)) (extract rest)))
       ((this . rest) (extract rest))
-      (() '())))
-  (call-with-input-file file-name (lambda (port) (extract (read port)))))
+      (any '())))
+  (call-with-input-file file-name
+			(lambda (port)
+			  (let loop ((port port) (out '()))
+			    (if (eof-object? (peek-char port))
+				out
+				(loop port (append out (extract (read port)))))))))
+
+
+(extract-imports "test/data/srfi-test.scm")
+
+(extract-imports "srfi/TODO/forum-topics.scm")
 
 (define in? (make-pred (lambda (lst obj) (member obj lst))))
 (define not-in? (make-pred (lambda (lst obj) (not (member obj lst)))))
@@ -532,28 +546,73 @@
 	    (_ #f)))
        get-key))))
 
-(define (handle-vector val mk fk)
+(define (handle-vector val matcher fail-k)
   (match val
 	  ((? vector? v)
-	   (let* ((i (vector-index mk v))
-		  (r (if i (mk (vector-ref v i)) #f)))
-	     (if i (cons i r) (fk))))
+	   (let* ((i (vector-index matcher v))
+		  (r (if i (matcher (vector-ref v i)) #f)))
+	     (if i (cons i r) (fail-k))))
 	  ((key *** (k . (? vector? v)))
-	   (let ((r (handle-vector v mk fk)))
-	     (if r (append key (cons k r)) (fk))))
-	  (_ (fk))))
+	   (let ((r (handle-vector v matcher fail-k)))
+	     (if r (append key (cons k r)) (fail-k))))
+	  (_ (fail-k))))
 
 ((letrec ((matcher (match-lambda
 		       ((key *** ('(value . "Close") . rest)) key)
 		       (val (=> fail) (handle-vector val matcher fail))
 		       (_ #f))))
    matcher)
- (car example-2))
+ (car example-json))
 
-(((menu (id . "file")
-	(value . "File")
-	(popup
-	  (menuitem .
-		    #(((value . "New") (onclick . " CreateNewDoc()"))
-		      ((value . "Open") (onclick . "OpenDoc()"))
-		      ((value . "Close") (onclick . "CloseDoc()"))))))))
+(define example-json
+  '(((menu (id . "file")
+	  (value . "File")
+	  (popup
+	    (menuitem .
+		      #(((value . "New") (onclick . " CreateNewDoc()"))
+			((value . "Open") (onclick . "OpenDoc()"))
+			((value . "Close") (onclick . "CloseDoc()")))))))))
+
+(define get-close
+  (match-lambda
+    ((key *** ('(value . "Close") . rest)) key)
+    ((? vector? v)
+       (display "vector block")
+       (newline)
+     (let ((i (vector-index get-close v)))
+       (if i
+	   (cons i (get-close (vector-ref v i)))
+	   #f)))
+    ((key *** (k . (? vector? v)))	
+       (display "vector pair block")
+       (newline)
+     (let ((r (get-close v)))
+       (if r
+	   (append key (cons k r))
+	   #f)))
+    (_ #f)))
+
+(get-close (car ex-2))
+
+(define-syntax handle-json
+  (syntax-rules ()
+    ((handle-json expr sk vk vpk fk)
+     (define do-json
+       (match-lambda
+	 ((key *** ( 'expr . out) . rest) (sk key out rest do-json))
+	 ((? vector? v) (=> fail)
+	  (vk v do-json fail))
+	 ((key *** ((k . (? vector? v)) . out) . rest)
+	  (=> fail)
+	  (vpk key k v out rest do-json fail))
+	 (any (fk any)))))))
+
+((handle-json (value . "Close")
+	      (lambda (k o . rest) o)
+	      (lambda (v do-json fail)
+		(vector-any do-json v))
+	      (lambda (key k v out rest do-json fail)
+		(let ((r (do-json v)))
+		  (if r r (do-json rest))))
+	      (lambda arg #f))
+ (car example-json))
