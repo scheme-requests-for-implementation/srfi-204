@@ -62,3 +62,8 @@
   - Export auxiliary syntax always (so auxiliary-syntax.scm is part of library)
     or only when srfi-206 is available?
   - can generic functions affect equal? used by matcher?
+- Feedback from Alex
+  -Add definition of literal pattern to top and in literal patterns section: any quoted or self-quoting datum.
+  -Add note that quasiquoted cyclic literals are explicitly illegal by R7RS.
+  -Add note about ordering of patterns (a (? (cut pred a)) not ((? (cut pred a)) a)
+  -
