@@ -420,9 +420,9 @@
 
 (import (srfi 204) (scheme red) (chibi json))
 
-(extract-imports "../test/data/srfi-test.scm")
+(get-imports "../test/data/srfi-test.scm")
 
-(extract-imports "TODO/forum-topics.scm")
+(get-imports "TODO/forum-topics.scm")
 
 (define in? (make-pred (lambda (lst obj) (member obj lst))))
 (define not-in? (make-pred (lambda (lst obj) (not (member obj lst)))))
@@ -618,8 +618,41 @@
      ((new-json) json))
     (get-close new-json)))
 
+(define (get-close json)
+  (define get-close-inner
+    (match-lambda
+		  ((key *** ('(value . "Close") . rest)) key)
+		  ((? vector? v)
+		   (let ((i (vector-index get-close-inner v)))
+		     (if i
+			 (cons i (get-close-inner (vector-ref v i)))
+			 #f)))
+		  ((key *** (k . (? vector? v)))	
+		   (let ((r (get-close-inner v)))
+		     (if r
+			 (append key (cons k r))
+			 #f)))
+		  (_ #f)))
+  (get-close-inner (car json)))
+
 (get-close example-json)
 ;(menu popup menuitem 2)
+
+(define-syntax make-json-handler
+  (syntax-rules ()
+    ((handle-json expr sk vk vpk fk)
+     (define handler
+       (match-lambda
+		  ((key *** ('(value . "Close") . rest))
+		   (=> fail) (sk key rest handler fail))
+		  ((? vector? v)
+		   (=> fail) (vk v handler fail))
+		  ((key *** (k . (? vector? v)))	
+		   (=> fail) (vpk key k v handler fail))
+		  (any (fk handler fail))))
+     handler)))
+
+((make-json-handler))
 
 (define-syntax handle-json
   (syntax-rules ()
