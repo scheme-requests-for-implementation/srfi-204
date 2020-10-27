@@ -392,10 +392,37 @@
 				out
 				(loop port (append out (extract (read port)))))))))
 
+(define (file->sexpr filename)
+  (call-with-input-file
+    filename
+    (lambda (port) 
+      (let loop ((port port) (out '()))
+	(if (eof-object? (peek-char port))
+	    (reverse out)
+	    (loop port (cons (read port) out)))))))
 
-(extract-imports "test/data/srfi-test.scm")
+(define extract-imports
+  (match-lambda
+      (`(import . ,imports) imports)
+      (((and (key *** `(import . ,imports)) inner) . rest)
+       (append (if (null? key)
+		   (list imports)
+		   (extract-imports inner)) (extract-imports rest)))
+      ((this . rest) (extract-imports rest))
+      (any '())))
 
-(extract-imports "srfi/TODO/forum-topics.scm")
+(define (get-imports filename)
+  (extract-imports (file->sexpr filename)))
+
+(extract-imports (file->sexpr  "../test/data/srfi-test.scm"))
+
+(extract-imports (file->sexpr  "TODO/forum-topics.scm"))
+
+(import (srfi 204) (scheme red) (chibi json))
+
+(extract-imports "../test/data/srfi-test.scm")
+
+(extract-imports "TODO/forum-topics.scm")
 
 (define in? (make-pred (lambda (lst obj) (member obj lst))))
 (define not-in? (make-pred (lambda (lst obj) (not (member obj lst)))))
@@ -565,34 +592,34 @@
  (car example-json))
 
 (define example-json
-  '(((menu (id . "file")
+  '((menu (id . "file")
 	  (value . "File")
 	  (popup
 	    (menuitem .
 		      #(((value . "New") (onclick . " CreateNewDoc()"))
 			((value . "Open") (onclick . "OpenDoc()"))
-			((value . "Close") (onclick . "CloseDoc()")))))))))
+			((value . "Close") (onclick . "CloseDoc()"))))))))
 
-(define get-close
-  (match-lambda
-    ((key *** ('(value . "Close") . rest)) key)
-    ((? vector? v)
-       (display "vector block")
-       (newline)
-     (let ((i (vector-index get-close v)))
-       (if i
-	   (cons i (get-close (vector-ref v i)))
-	   #f)))
-    ((key *** (k . (? vector? v)))	
-       (display "vector pair block")
-       (newline)
-     (let ((r (get-close v)))
-       (if r
-	   (append key (cons k r))
-	   #f)))
-    (_ #f)))
+(define (get-close json)
+  (match-letrec 
+    ((get-close (match-lambda
+		  ((key *** ('(value . "Close") . rest)) key)
+		  ((? vector? v)
+		   (let ((i (vector-index get-close v)))
+		     (if i
+			 (cons i (get-close (vector-ref v i)))
+			 #f)))
+		  ((key *** (k . (? vector? v)))	
+		   (let ((r (get-close v)))
+		     (if r
+			 (append key (cons k r))
+			 #f)))
+		  (_ #f)))
+     ((new-json) json))
+    (get-close new-json)))
 
-(get-close (car ex-2))
+(get-close example-json)
+;(menu popup menuitem 2)
 
 (define-syntax handle-json
   (syntax-rules ()
@@ -616,3 +643,21 @@
 		  (if r r (do-json rest))))
 	      (lambda arg #f))
  (car example-json))
+
+
+(define extract-num-addends
+  (match-lambda
+    (((and (k *** `(+ . ,addends)) ('+ (? number? i) ...)) . rest)
+     (cons addends (extract-num-addends rest)))
+    (((and (k *** `(+ . ,addends)) inner) . rest)
+     (append (extract-num-addends inner)
+	     (extract-num-addends rest)))
+    ((this . rest) (extract-num-addends rest))
+    (() '())))
+
+(extract-num-addends '((+ (* 1 (+ 2 3)) (+ 4 5)) (- (/ 6 (+ 7 8)) (+ 9 10))))
+
+(extract-num-addends '((+ (* 1 (+ 2 3)) (+ 4 5)) (- (/ 6 (+ 7 8)) (+ 9 10))))
+
+; => ((2 3) (4 5) )
+
