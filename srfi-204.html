@@ -164,20 +164,21 @@ The following terms will be used in describing pattern matching:
 	<dt>pattern clause</dt><dd>a pattern and its body.</dd>
 	<dt>non-linear</dt><dd>matching which involves repetition through a variable that is used more than once in a pattern.</dd>
 	<dt>variable</dt><dd>an identifier in a pattern which may be used in the body. May not be <code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>,  <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>.</dd>
-	<dt>operator<dt><dd>the auxiliary syntax <code>$ struct object = and or not ? set! get! ... ___ **1 =.. *..</code> which are exported (if not already defined) via SRFI 206, if available.<dd>
+	<dt>operator</dt><dd>the auxiliary syntax <code>$ struct object = and or not ? set! get! ... ___ **1 =.. *..</code> which are exported (if not already defined) via SRFI 206, if available.</dd>
+	<dt>literal</dt><dd>any quoted or self-quoting datum</dd>
 </dl>
 <h3 id="Patterns">Patterns</h3>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
 <h4 id="Literals">Literal Patterns</h4>
-<p>Literal patterns are patterns like the example above, where the content of the pattern is <code>equal?</code> to the content of the expression being matched. In this case, quasi-patterns and patterns are very similar (except symbols don't need quoting in quasi-patterns):</p>
+<p>Literal patterns are patterns like the example above, where the content of the pattern is only quoted or self-quoting data. In this case, quasi-patterns and patterns are very similar (except symbols don't need quoting in quasi-patterns):</p>
 <pre><code>
-(let ((ls (list 'a "b" #f 2 '() #\c #(1))))
+(let ((ls (list 'a "b" #f 2 '() #\c '#(1))))
   (list (match ls (('a "b" #f 2 () #\c #(1)) 'ok))
         (match ls (`(a "b" #f 2 () #\c #(1)) 'ok))))
 =&gt; (ok ok)
 </code></pre>
 <p>The above expression will not work for R6RS, because the vector literal [<code>#(1)</code>] in <code>ls</code> is not quoted. Note also that the empty list does not need to be quoted in either type of pattern.
-At the time of this writing, cyclic literals seem irregularly implemented, at least in the repl, but this is one area where quasi-patterns and other literal patterns differ, since even those repls which handle cyclic literals [eg '0#=(1 . #0#)] with no trouble have stack overflow, segfaults, etc. with quasi-quoted cyclic literals [eg `0#=(1 . #0#)] due to the difference between quotation and quasi-quotation. So cyclic literals should be avoided inside quasi-patterns.
+At the time of this writing, cyclic literals seem irregularly implemented, at least in the repl, but this is one area where quasi-patterns and other literal patterns differ, since cyclic literals are illegal in quasiquote (R7RS, Sect. 2.4) and will lead to some kind of error/crash when they occur in quasi-patterns.
 </p>
 <h4 id="Variables">Pattern Variables</h4>
 <p>Identifiers in patterns that are not one of the operators (<code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>) will match anything and their corresponding binding is available in the body. The special variable <b>_</b> matches anything and does not bind the result. It can be used to get rid of unintersting values or in a block of match expressions, <b>_</b> is often used like <code>else</code> if the result is not needed. Pattern variables have to be unquoted in quasi-patterns.</p>
@@ -798,6 +799,14 @@ Below is an example using a one procedure to match imports, and another to <code
 	(if (eof-object? (peek-char port))
 	    out
 	    (loop (append out <b>(matcher (read port))</b>)))))))
+
+;; filename relative to top of SRFI 204 repo
+(match-on-file "test/data/forum-topics.scm" extract-imports)
+=&gt; (((srfi srfi-9))
+       ((scheme case-lambda))
+       ((srfi 69))
+       ((srfi 204) (scheme red) (chibi json))
+       ((srfi 69)))
 </code> </pre>
 <p>
 A future SRFI will specify a method similar to this one using the pattern operators <code>-&gt;</code> and <code>=&gt;</code> to set up views on data.
