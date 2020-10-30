@@ -360,12 +360,14 @@ used.</p>
 
 </code></pre>
 <p>
-Since the tree operator acts on pairs, when the data consists of pairs mixed with
-other composite data types, helper functions will be needed. For instance, JSON is
+Other examples of tree patterns that handle mixed data types or retrieve all
+matches are given in the <a href="#Pred">predicate</a> and <a href="#Extension">extension</a> sections.
+For instance, JSON is
  translated by various libraries (including SRFI 180) into a mixture of pairs,
  vectors, and atoms. Taking this JSON example:
 </p>
-<pre><code>{&quot;menu&quot;: {
+<pre><code>
+{&quot;menu&quot;: {
   &quot;id&quot;: &quot;file&quot;,
   &quot;value&quot;: &quot;File&quot;,
   &quot;popup&quot;: {
@@ -379,14 +381,13 @@ other composite data types, helper functions will be needed. For instance, JSON 
 
 ;; in scheme
 (define example-json
-'(((menu (id . "file")
+'((menu (id . "file")
  	 (value . "File")
 	 (popup
 	   (menuitem .
 		    #(((value . "New") (onclick . " CreateNewDoc()"))
 		      ((value . "Open") (onclick . "OpenDoc()"))
 		      ((value . "Close") (onclick . "CloseDoc()"))))))))
-)
 </code></pre>
  <p id="key-close">
 one way to write a procedure to find the path to menuitem "Close" is as follows:
@@ -519,23 +520,71 @@ predicate are then matched as in an <code>and</code> pattern.
 (eval-sexpr '(+ (* 3 4 5) (- 10 3))) =&gt; 67
 </code></pre>
 <p id="handle-vector">
-Predicates also can be used to make the <code>handle-vector</code> procedure used
-by the <code><a href="#key-close">key-close</a></code> procedure defined earlier:
+Predicates also can be used to make a tree pattern that finds all matches:
 <pre><code>
-;; vector-index is defined in SRFI 133/R7RS Large: Red Edition
+(define extract-num-addends
+  (match-lambda
+    (((and (k *** `(+ . ,addends)) ('+ (? number? i) ...)) . rest)
+     (cons addends (extract-num-addends rest)))
+    (((and (k *** `(+ . ,addends)) inner) . rest)
+     (append (extract-num-addends inner)
+	     (extract-num-addends rest)))
+    ((this . rest) (extract-num-addends rest))
+    (() '())))
 
-(define (handle-vector val matcher fail-k)
-  (match val
-	  ((? vector? v)
-	   (let* ((i (vector-index matcher v))
-		  (r (if i (matcher (vector-ref v i)) #f)))
-	     (if i (cons i r) (fail-k))))
-	  ((key *** (k . (? vector? v)))
-	   (let ((r (handle-vector v matcher fail-k)))
-	     (if r (append key (cons k r)) (fail-k))))
-	  (_ (fail-k))))
+(extract-num-addends '((+ (* 1 (+ 2 3)) (+ 4 5)) (- (/ 6 (+ 7 8)) (+ 9 10))))
+=&gt; ((2 3) (4 5) (7 8) (9 10))
 </code></pre>
-<p>A predicate may be called multiple times on matching and non-matching expressions and sub-expressions, in any order, so side effects should be avoided unless there is some overriding interest (debugging, logging, short-cutting, etc.). Predicates can also be written using references to pattern variables, if repetition is supported:</p>
+<p>
+or do tree matching on heterogenous data. This example uses the following JSON,
+which is converted by several packages into the subsequent list:
+</p>
+<pre><code>
+{&quot;menu&quot;: {
+  &quot;id&quot;: &quot;file&quot;,
+  &quot;value&quot;: &quot;File&quot;,
+  &quot;popup&quot;: {
+    &quot;menuitem&quot;: [
+      {&quot;value&quot;: &quot;New&quot;, &quot;onclick&quot;: &quot;CreateNewDoc()&quot;},
+      {&quot;value&quot;: &quot;Open&quot;, &quot;onclick&quot;: &quot;OpenDoc()&quot;},
+      {&quot;value&quot;: &quot;Close&quot;, &quot;onclick&quot;: &quot;CloseDoc()&quot;}
+    ]
+  }
+}}
+
+;; in scheme
+(define example-json
+'((menu (id . "file")
+ 	 (value . "File")
+	 (popup
+	   (menuitem .
+		    #(((value . "New") (onclick . " CreateNewDoc()"))
+		      ((value . "Open") (onclick . "OpenDoc()"))
+		      ((value . "Close") (onclick . "CloseDoc()"))))))))
+
+;; vector-index is from (srfi 133)/(scheme red)
+
+(define (get-close json)
+  (define get-close-inner
+    (match-lambda
+		  ((key *** ('(value . "Close") . rest)) key)
+		  ((? vector? v)
+		   (let ((i (vector-index get-close-inner v)))
+		     (if i
+			 (cons i (get-close-inner (vector-ref v i)))
+			 #f)))
+		  ((key *** (k . (? vector? v)))	
+		   (let ((r (get-close-inner v)))
+		     (if r
+			 (append key (cons k r))
+			 #f)))
+		  (_ #f)))
+  (get-close-inner (car json)))
+
+(get-close example-json)
+=&gt; (menu popup menuitem 2)
+</code></pre>
+<p>A predicate may be called multiple times on matching and non-matching expressions and sub-expressions, in any order, so side effects should be avoided unless there is some overriding interest (debugging, logging, short-cutting, etc.). Predicates can also be written using references to preceding pattern variables, if repetition is supported:</p>
 <pre><code>
 (define fibby?
   (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
@@ -703,16 +752,56 @@ is described in the next section.
 (match (box 1) ((= unbox value) value))
 =&gt; 1
 
-(define-values (get-value set-value!)
-  (match (box 1)
-         ((and (= (lambda (box) (cut unbox box)) get)
-	       (= (lambda (box) (cut set-box! box &lt;&gt;)) set))
-	  (values get set))))
+(define box-1 (box 1))
+
+(define make-get-value
+  (match-lambda
+   ((and (? box?)
+         (= (lambda (box) (cut unbox box)) get))
+    get)))
+
+(define make-set-value
+  (match-lambda
+   ((and (? box?)
+         (= (lambda (box) (cut set-box! box &lt;&gt;)) set))
+    set)))
+
+(define get-value (make-get-value box-1))
+(define set-value! (make-set-value box-1))
+
 
 (get-value) =&gt; 1
 (set-value! 18)
 (get-value) =&gt; 18
 </code></pre>
+<p>
+Another approach is to convert the data type to a form that can be matched against, analagous to <code>(match (<var>proc</var> <var>data</var>) (<var>pat</var> ...))</code>.
+Below is an example using a one procedure to match imports, and another to <code>read</code> objects from a file to be matched:
+</p>
+<pre> <code>
+
+(define extract-imports
+  (match-lambda
+      (`(import . ,imports) imports)
+      (((and (key *** `(import . ,imports)) inner) . rest)
+       (append (if (null? key)
+		   (list imports)
+		   (extract-imports inner)) (extract-imports rest)))
+      ((this . rest) (extract-imports rest))
+      (any '())))
+
+(define (match-on-file filename matcher)
+  (call-with-input-file
+    filename
+    (lambda (port) 
+      (let loop ((out '()))
+	(if (eof-object? (peek-char port))
+	    out
+	    (loop (append out <b>(matcher (read port))</b>)))))))
+</code> </pre>
+<p>
+A future SRFI will specify a method similar to this one using the pattern operators <code>-&gt;</code> and <code>=&gt;</code> to set up views on data.
+</p>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds pattern var

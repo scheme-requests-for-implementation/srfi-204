@@ -403,13 +403,21 @@
 
 (define extract-imports
   (match-lambda
-      (`(import . ,imports) imports)
+      (`(import . ,imports) (list imports))
       (((and (key *** `(import . ,imports)) inner) . rest)
        (append (if (null? key)
 		   (list imports)
 		   (extract-imports inner)) (extract-imports rest)))
       ((this . rest) (extract-imports rest))
       (any '())))
+
+(match-on-file "forum-topics.scm" extract-imports)
+
+#| (((srfi srfi-9))
+    ((scheme case-lambda))
+    ((srfi 69))
+    ((srfi 204) (scheme red) (chibi json))
+    ((srfi 69)))|#
 
 (define (get-imports filename)
   (extract-imports (file->sexpr filename)))
