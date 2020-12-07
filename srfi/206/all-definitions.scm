@@ -43,3 +43,4 @@
 (define-auxiliary-syntax *..)
 (define-auxiliary-syntax struct)
 (define-auxiliary-syntax object)
+(define-auxiliary-syntax var)

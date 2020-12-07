@@ -408,7 +408,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get!)
+  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get! var)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -469,6 +469,18 @@
      (if (is-a? v rec)
          (match-record-named-refs v rec (p ...) g+s sk fk i)
          fk))
+    ((match-two v (var x) g+s (sk ...) fk (id ...))
+     (match-check-identifier
+      x
+      (let-syntax
+          ((new-sym?
+            (syntax-rules (id ...)
+              ((new-sym? x sk2 fk2) sk2)
+              ((new-sym? y sk2 fk2) fk2))))
+        (new-sym? random-sym-to-match
+                  (let ((x v)) (sk ... (id ... x)))
+                  (if (equal? v x) (sk ... (id ...)) fk)))
+      (if (equal? v x) (sk ... (id ...)) fk)))
     ((match-two v (p . q) g+s sk fk i)
      (if (pair? v)
          (let ((w (car v)) (x (cdr v)))
@@ -877,7 +889,7 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set!)
+  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set! var)
     ((match-extract-vars (? pred . p) . x)
      (match-extract-underscore p . x))
     ((match-extract-vars ($ rec . p) . x)
@@ -898,6 +910,15 @@
      (match-extract-underscore p . x))
     ((match-extract-vars (not . p) . x)
      (match-extract-underscore p . x))
+    ((match-extract-vars (var p) (k ...) (i ...) v)
+     (let-syntax
+         ((new-sym?
+           (syntax-rules (i ...)
+             ((new-sym? p sk fk) sk)
+             ((new-sym? any sk fk) fk))))
+       (new-sym? random-sym-to-match
+                 (k ... ((p p-ls) . v))
+                 (k ... v))))
     ;; A non-keyword pair, expand the CAR with a continuation to
     ;; expand the CDR.
     ((match-extract-vars (p q . r) k i v)
