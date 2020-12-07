@@ -135,7 +135,7 @@ with a pattern.
 <p>
 WCS is already part of Chibi<sup><a href="#Chibi">4</a></sup>, Guile,<sup><a href="#Guile">5</a></sup> Cyclone<sup><a href="#Cyclone">6</a></sup>, Chicken<sup><a href="#Chicken:matchable">7</a></sup>,
 LispKit<sup><a href="#LispKit">8</a></sup>, Loko<sup><a href="#Loko">9</a></sup>, Mosh<sup><a href="#Mosh">10</a></sup>, and Sagittarius<sup><a href="#Sagittarius">11</a></sup>. There are other pattern-matching
-libraries that are part of Armpit Scheme<sup><a href="#Armpit">12</a></sup>, Gerbil<sup><a href="#Gerbil">13</a></sup>, Bigloo<sup><a href="#Bigloo">14</a></sup>, STklos<sup><a href="#STklos">15</a></sup>, Chicken<sup><a href="#Chicken:bindings">16</a></sup>, Kawa<sup><a href="#Kawa">17</a></sup>, Gambit<sup><a href="#Gambit">18</a></sup>, Gauche<sup><a href="#Gauche">19</a></sup>, Picrin<sup><a href="#Picrin">20</a></sup>, Racket<sup><a href="#Racket">21</a></sup>,
+libraries that are part of Armpit Scheme<sup><a href="#Armpit">12</a></sup>, Gerbil<sup><a href="#Gerbil">13</a></sup>, Bigloo<sup><a href="#Bigloo">14</a></sup>, STklos<sup><a href="#STklos">15</a></sup>, the bindings library in Chicken<sup><a href="#Chicken:bindings">16</a></sup>, Kawa<sup><a href="#Kawa">17</a></sup>, Gambit<sup><a href="#Gambit">18</a></sup>, Gauche<sup><a href="#Gauche">19</a></sup>, Picrin<sup><a href="#Picrin">20</a></sup>, Racket<sup><a href="#Racket">21</a></sup>,
 Scheme 9 from Empty Space<sup><a href="#s9fes">22</a></sup>, and Scheje<sup><a href="#Scheje">23</a></sup>. These matchers vary from very similar to the WCS matcher to S-expression matchers, type-oriented matchers, and expert systems more like ELIZA [<a href="#Norvig">Norvig</a>, Chapter 5]. They also range from a wrapper around a library in the implementation language, part of the core in the implementation language, part of the core in Scheme, a Scheme library, and an example program.  In length, they range from about twenty lines to thousands of lines across several files. Links to documentation and implementation (as available) are in <a href="https://github.com/scheme-requests-for-implementation/srfi-204/blob/master/ref/match-implementations.md">the repository</a>.
 </p>
 <p>
@@ -166,6 +166,7 @@ The following terms will be used in describing pattern matching:
 	<dt>variable</dt><dd>an identifier in a pattern which may be used in the body. May not be <code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>,  <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>.</dd>
 	<dt>operator</dt><dd>the auxiliary syntax <code>$ struct object = and or not ? set! get! ... ___ **1 =.. *..</code> which are exported (if not already defined) via SRFI 206, if available.</dd>
 	<dt>literal</dt><dd>any quoted or self-quoting datum</dd>
+	<dt>is an error/are errors</dt><dd>according to the <a href="https://srfi.schemers.org/srfi-faq">FAQ</a> this phrase, unlike "signals an error," doesn't define any behavior.</dd>
 </dl>
 <h3 id="Patterns">Patterns</h3>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
@@ -254,7 +255,9 @@ At the time of this writing, cyclic literals seem irregularly implemented, at le
 </code></pre>
 <p><code>___</code> is provided as an alias for <code>...</code> when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
-</p><p>
+</p>
+<b>It is an error</b> to refer to the same variable both inside and outside of an ellipsis pattern as in <code>(match x (((a ...) a) a))</code> because the semantics are not clear.
+<p>
 The second kind of ellipsis is <code><b>**1</b></code>, which matches one or more of a pattern (like regex +)</p>
 <pre><code>
 (match (list 1 2) ((a b c **1) c))
@@ -503,6 +506,9 @@ match.  None of the identifiers used are available in the body. This pattern als
 (match #f ((and x (not #f)) x) (_ 'fail)) =&gt; fail
 
 (match 1 ((not 2) #t)) =&gt; #t</code></pre>
+<p>
+<b>It is an error</b> for a pattern to refer to the same variable inside and outside of a not pattern as in (match x ((a (not a)) a)).
+</p>
 <h4 id="Pred">Predicates and Fields</h4>
 <p>The operator <code>?</code> can be used to provide a
 predicate.  The usage is <code>(? predicate pat ...)</code> where
@@ -1023,7 +1029,7 @@ where:
 	in the body, and get! patterns, which return the current value for values thare subject to change.</li>
 </ul>
 <h3 id="Errors">Errors</h3>
-<p>The following is a list of examples of the erroneous conditions, and the message given by the current implementation:</p>
+<p>The following is a list of examples of the erroneous conditions that cause an error to be signaled and the message given by the current implementation:</p>
 <ul>
 	<li><code>(match)                                  "missing match expression"</code></li>
 	<li><code>(match (list 1 2 3))                     "no match clauses"</code></li>
@@ -1034,7 +1040,12 @@ where:
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a ,b ...) b)) ditto</code></li>
 	<li><code>(match '(1 1 1 2 2 2) (`(,@a . b) a)) "dotted tail not allowed after ellipsis"</code></li>
 	</ul>
-<p>A successful match with an empty body [ like <code>(match (list 1 2 3) ((a b c)))</code> ] does not have a reliable return value in the sample implementation. This form should be avoided and should become a syntax error.</p>
+<p>There are also three conditions that are errors and may return a value:
+<ul>
+	<li>a pattern clause with no body, as in <code>(match '(1 2 3) ((a b c)))</code></li>
+	<li>the occurence of the same variable inside and outside an ellipsis, as in <code>(match '((1 2 3) (1 2 3)) (((a ...) a) a))</code></li>
+	<li>the occurence of the same variable inside and outside a not, as in <code>(match '(1 2) ((a (not a)) a))</code></li>
+</ul></p>
 <h3 id="Macros">Using in Other Macros</h3>
 <p>Other macros that use the pattern matcher will be subject to the same constraints, in particular with respect to names. For example:
 <pre><code>
