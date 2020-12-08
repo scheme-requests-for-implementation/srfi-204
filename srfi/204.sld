@@ -1,10 +1,10 @@
 (cond-expand
   (chibi
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax 
+	;; auxiliary syntax
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (chibi)
 	      (scheme case-lambda)
@@ -12,10 +12,10 @@
       (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax 
+	;; auxiliary syntax
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
 	      (scheme base)
@@ -46,10 +46,10 @@
       (include "204/204.scm")))
   ((or larceny (library (srfi 99)))
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax 
+	;; auxiliary syntax
 	___ **1 =.. *.. *** ? $ struct object get!)
       (import (scheme base)
 	      (scheme case-lambda)
