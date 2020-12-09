@@ -66,4 +66,6 @@
   -Add definition of literal pattern to top and in literal patterns section: any quoted or self-quoting datum.
   -Add note that quasiquoted cyclic literals are explicitly illegal by R7RS.
   -Add note about ordering of patterns (a (? (cut pred a)) not ((? (cut pred a)) a)
-  -
+  -Specify it is the bindings egg, and not Chicken as whole that is non-WCS
+  -Add that it is an error for the same variable to be repeated inside and outside of ellipsis and not patterns
+    - this and third may not be compatible with Marc's desire for where a variable was bound to be de-coupled from if repetition is allowed

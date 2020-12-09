@@ -5,10 +5,10 @@
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 
-	___ **1 =.. *.. *** ? $ struct object get!)
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (chibi)
 	      (scheme case-lambda)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!))
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
       (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
@@ -16,10 +16,10 @@
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 
-	___ **1 =.. *.. *** ? $ struct object get!)
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
 	      (scheme base)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? struct object get!)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? struct object get! var)
 	      (rename (gauche base)
 		      (slot-ref gb-slot-ref)
 		      (slot-set! gb-slot-set!)))
@@ -50,10 +50,10 @@
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 
-	___ **1 =.. *.. *** ? $ struct object get!)
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (scheme base)
 	      (scheme case-lambda)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var)
 	      (srfi 99 records))
       (begin
 	(define-syntax is-a?
@@ -74,4 +74,23 @@
 		 ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
 		 ((rtd-mutator rtd n) rec value))))))
       (include "204/204.scm")))
-  (else))
+  (unsyntax
+    (define-library (srfi 204)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
+      (import (scheme base)
+	      (only (srfi :206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+      (include  "204/204.scm")))
+  (else
+    (define-library (srfi 204)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
+      (import (scheme base)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+      (include  "204/204.scm"))))

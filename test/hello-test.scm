@@ -32,4 +32,10 @@
 	   (lambda (match) (regexp-match-submatch match 0)))
 	  (else (lp (cdr has))))))
     (include "test/hello-common.scm"))
+  (unsyntax
+    (import (scheme base)
+	    (srfi :64))
+    (define test-name "unsyntax-hello-test")
+    (define scheme-version-name (symbol->string (car (features))))
+    (include "hello-common.scm"))
   )
