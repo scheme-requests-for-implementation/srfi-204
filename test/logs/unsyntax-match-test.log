@@ -1,0 +1,87 @@
+# Starting test unsyntax-match-test
+ok 1 - unsyntax-0.0.3.18-6066
+ok 2 - any
+ok 3 - symbol
+ok 4 - number
+ok 5 - string
+ok 6 - literal symbol
+ok 7 - null
+ok 8 - pair
+ok 9 - vector
+ok 10 - any doubled
+ok 11 - and empty
+ok 12 - and single
+ok 13 - and double
+ok 14 - or empty
+ok 15 - or single
+ok 16 - or double
+ok 17 - or unbalanced
+ok 18 - not
+ok 19 - pred
+ok 20 - named pred
+ok 21 - duplicate symbols pass
+ok 22 - duplicate symbols fail
+ok 23 - duplicate symbols fail 2
+ok 24 - duplicate symbols samth
+ok 25 - duplicate symbols bound
+ok 26 - duplicate quasiquote
+ok 27 - ellipses
+ok 28 - real ellipses
+ok 29 - vector ellipses
+ok 30 - pred ellipses
+ok 31 - failure continuation
+ok 32 - let
+ok 33 - let*
+ok 34 - getter car
+ok 35 - getter cdr
+ok 36 - getter vector
+ok 37 - setter car
+ok 38 - setter cdr
+ok 39 - setter vector
+ok 40 - single tail
+ok 41 - single tail 2
+ok 42 - single duplicate tail
+ok 43 - multiple tail
+ok 44 - tail against improper list
+ok 45 - Riastradh quasiquote
+ok 46 - unquote-splicing
+ok 47 - unquote-splicing tail
+ok 48 - unquote-splicing tail fail
+ok 49 - trivial tree search
+ok 50 - simple tree search
+ok 51 - deep tree search
+ok 52 - non-tail tree search
+ok 53 - restricted tree search
+ok 54 - fail restricted tree search
+ok 55 - sxml tree search
+ok 56 - failed sxml tree search
+ok 57 - collect tree search
+ok 58 - anded tail pattern
+ok 59 - anded search pattern
+ok 60 - joined tail
+ok 61 - list **1
+ok 62 - list **1 failed
+ok 63 - list **1 with predicate
+ok 64 - list **1 with failed predicate
+ok 65 - list =.. too few
+ok 66 - list =..
+ok 67 - list =.. too many
+ok 68 - list =.. tail
+ok 69 - list =.. tail fail
+ok 70 - list *.. too few
+ok 71 - list *.. lo
+ok 72 - list *.. hi
+ok 73 - list *.. too many
+ok 74 - list *.. tail
+ok 75 - list *.. tail 2
+ok 76 - list *.. tail
+ok 77 - list *.. tail fail
+ok 78 - match-named-let
+ok 79 - match-letrec
+ok 80 - match-letrec quote
+ok 81 - match-letrec mnieper
+ok 82 - record positional
+ok 83 - record named
+ok 84 - setter record positional
+ok 85 - setter record named
+1..85

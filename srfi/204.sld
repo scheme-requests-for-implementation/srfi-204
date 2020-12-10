@@ -82,7 +82,7 @@
 	;; auxiliary syntax 
 	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (scheme base)
-	      (only (srfi :206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
       (include  "204/204.scm")))
   (else
     (define-library (srfi 204)

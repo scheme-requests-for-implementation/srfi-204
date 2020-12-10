@@ -27,6 +27,8 @@ GXI = gxi
 GXIFLAGS = --lang r7rs
 LOKO = loko
 LOKOFLAGS = --script
+UNSYNTAX = unsyntax-scheme
+UNSYNTAXFLAGS = -I $(top_srcdir)
 
 # change when testing a new interpreter
 SCM := $(GUILE)
@@ -56,6 +58,8 @@ RESET := $(shell tput sgr0)
 HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 	    | sed '/unexpected/ s/$$/ $(RED)[FAIL]$(RESET)/'\
 	    | sed '/^ERROR:/ s/$$/ $(RED)[FAIL]$(RESET)/'
+HANDLE_USRES := sed '/^ok/ s/$$/  $(GREEN)[PASS]$(RESET)/'\
+	      | sed '/^not ok/ s/$$/  $(RED)[PASS]$(RESET)/'\
 ############################################################
 #			   Rules			   #
 ############################################################
@@ -117,6 +121,9 @@ loko-srfi-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-srfi-test: loko-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using loko
 	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
+
+unsyntax-match-test: unsyntax-match-test.scm $(match) ## run tests for (chibi match) using unsyntax-scheme
+	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-match-test.log | $(HANDLE_USRES)
 
 false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
 	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
