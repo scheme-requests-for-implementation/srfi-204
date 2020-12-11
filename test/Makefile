@@ -49,6 +49,7 @@ srfi_all := chez-srfi-test gauche-srfi-test guile-srfi-test\
 match := match-common.scm
 srfi := srfi-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
+unsyn_deps := srfi/204/204.scm srfi/unsyntax/204.sld $(srfi-206)
 
 # add red/green [FAIL]/[PASS] to output based on the words
 # unexpected|ERROR/expected
@@ -58,8 +59,8 @@ RESET := $(shell tput sgr0)
 HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 	    | sed '/unexpected/ s/$$/ $(RED)[FAIL]$(RESET)/'\
 	    | sed '/^ERROR:/ s/$$/ $(RED)[FAIL]$(RESET)/'
-HANDLE_USRES := sed '/^ok/ s/$$/  $(GREEN)[PASS]$(RESET)/'\
-	      | sed '/^not ok/ s/$$/  $(RED)[PASS]$(RESET)/'\
+HANDLE_USRES := sed '/^ok/ s/^/$(GREEN)[PASS]$(RESET)/'\
+	      | sed '/^not ok/ s/^/$(RED)[FAIL]$(RESET)/'\
 ############################################################
 #			   Rules			   #
 ############################################################
@@ -122,8 +123,11 @@ loko-srfi-test: export LOKO_LIBRARY_PATH :=\
 loko-srfi-test: loko-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using loko
 	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
 
-unsyntax-match-test: unsyntax-match-test.scm $(match) ## run tests for (chibi match) using unsyntax-scheme
+unsyntax-match-test: unsyntax-match-test.scm $(unsyn_deps) ## run tests for (chibi match) using unsyntax-scheme
 	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-match-test.log | $(HANDLE_USRES)
+
+unsyntax-srfi-test: unsyntax-srfi-test.scm $(unsyn_deps) ## run example code in srfi 204 spec using unsyntax
+	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-srfi-test.log | $(HANDLE_USRES)
 
 false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
 	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
