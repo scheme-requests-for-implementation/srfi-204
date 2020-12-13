@@ -81,7 +81,7 @@
     (begin
       (include "srfi/204.sld")
       (import (srfi 204))
-      (include "test/r6rs-srfi-common.scm")))
+      (include "test/no-srfi-26-r7rs-srfi-common.scm")))
   (else))
 (cond-expand
   (chibi

@@ -215,12 +215,19 @@
 	      (define (extract-imports file-name)
 		(define extract
 		  (match-lambda
-		    (((_ *** `(import . ,imports)) . rest)
-		     (cons imports (extract rest)))
+		    (`(import . ,imports) imports)
+		    (((and (key *** `(import . ,imports)) inner) . rest)
+		     (append (if (null? key)
+				 (list imports)
+				 (extract inner)) (extract rest)))
 		    ((this . rest) (extract rest))
-		    (() '())))
+		    (any '())))
 		(call-with-input-file file-name
-				      (lambda (port) (extract (read port)))))
+		  (lambda (port)
+		    (let loop ((port port) (out '()))
+		      (if (eof-object? (peek-char port))
+			  out
+			  (loop port (append out (extract (read port)))))))))
 	      (extract-imports "data/srfi-test.scm")))
 	
 ;; boolean operators
@@ -388,7 +395,7 @@
 ;; record operators
 (let ()
   (cond-expand
-    ((or r7rs (not r6rs))
+    ((and (not unsyntax) (or r7rs (not r6rs)))
      (define-record-type employee
        (make-employee name title)
        employee?
@@ -416,7 +423,7 @@
 		    (list t n)))))
 
 (let () (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type posn
 	  (make-posn x y)
 	  posn?
@@ -436,7 +443,7 @@
   ((not larceny)
    (let ()
      (cond-expand
-       ((or r7rs (not r6rs))
+       ((and (not unsyntax) (or r7rs (not r6rs)))
 	(define-record-type box-type
 	  (box value)
 	  box?
@@ -447,15 +454,15 @@
        (if (and (box? a) (box? b))
 	   (box-equal? (unbox a) (unbox b))
 	   (equal? a b)))
-     (match-let (((and (= (lambda (box) (cut unbox box)) get-value)
-		       (= (lambda (box) (cut set-box! box <>)) set-value!))
+     (match-let (((and (= (lambda (box) (lambda () (unbox box))) get-value)
+		       (= (lambda (box) (lambda (x) (set-box! box x))) set-value!))
 		  (box 1)))
 
 		(test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
 		(test-equal "non-linear equality predicate"
 			    'ok
 			    (match (list (box 1) (box 1))
-				   ((a (? (cut box-equal? a <>))) 'ok)
+				   ((a (? (lambda (x) (box-equal? a x)))) 'ok)
 				   (_ 'fail)))
 		(test-equal "equality predicate in body"
 			    'ok
@@ -488,7 +495,7 @@
 (if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
 (let ()
   (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type checkable
      (make-checkable pred value)
      checkable?

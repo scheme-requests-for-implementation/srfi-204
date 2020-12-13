@@ -392,6 +392,11 @@
 				out
 				(loop port (append out (extract (read port)))))))))
 
+(define (pp lst)
+  (for-each (lambda (sub) (display sub) (newline)) lst))
+
+(pp (extract-imports "../../test/data/srfi-test.scm"))
+
 (define (match-on-file filename matcher)
   (call-with-input-file
     filename

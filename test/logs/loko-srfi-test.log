@@ -1,0 +1,12 @@
+%%%% Starting test srfi-test-loko0.5.0
+match w/o body screen (3 possibilities):
+  undefined value
+  last value
+  error
+  
+  whichever passes is the behavior of this implementation.
+FAIL match w/o body has undefined value
+FAIL match w/o body has last value
+# of expected passes      102 [32m[PASS](B[m
+# of unexpected failures  2 [31m[FAIL](B[m
+# of skipped tests        5

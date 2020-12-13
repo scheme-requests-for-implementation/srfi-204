@@ -1,8 +1,5 @@
-
-$ chezscheme --libdirs ..:$CHEZSCHEMELIBDIRS match-test.scm
 Chez Scheme Version 9.5
 Copyright 1984-2017 Cisco Systems, Inc.
 
 %%%% Starting test chez-match-test
-# of expected passes      85
->
+# of expected passes      85 [32m[PASS](B[m

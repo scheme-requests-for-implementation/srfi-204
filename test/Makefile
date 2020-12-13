@@ -43,9 +43,9 @@ guile_deps := srfi/srfi-204.guile.sls $(r6rs_deps)
 chez_deps := srfi/204/:204.chezscheme.sls $(r6rs_deps) # currently these two don't work
 loko_deps := srfi/204/%3a204.loko.sls $(r6rs_deps)     # due to special chars
 match_all :=  chibi-match-test chez-match-test gauche-match-test\
-	guile-match-test larceny-match-test loko-match-test
+	guile-match-test larceny-match-test loko-match-test unsyntax-match-test
 srfi_all := chez-srfi-test gauche-srfi-test guile-srfi-test\
-	guile-3-srfi-test larceny-srfi-test loko-srfi-test
+	guile-3-srfi-test larceny-srfi-test loko-srfi-test unsyntax-srfi-test
 match := match-common.scm
 srfi := srfi-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
@@ -59,8 +59,8 @@ RESET := $(shell tput sgr0)
 HANDLE_RES := sed '/ expected / s/$$/ $(GREEN)[PASS]$(RESET)/'\
 	    | sed '/unexpected/ s/$$/ $(RED)[FAIL]$(RESET)/'\
 	    | sed '/^ERROR:/ s/$$/ $(RED)[FAIL]$(RESET)/'
-HANDLE_USRES := sed '/^ok/ s/^/$(GREEN)[PASS]$(RESET)/'\
-	      | sed '/^not ok/ s/^/$(RED)[FAIL]$(RESET)/'\
+HANDLE_USRES := sed '/^ok/ s/.*/$(GREEN)[PASS]&$(RESET)/'\
+	      | sed '/^not ok/ s/.*/$(RED)[FAIL]&$(RESET)/'\
 ############################################################
 #			   Rules			   #
 ############################################################
@@ -105,23 +105,23 @@ guile-3-srfi-test: srfi-test.scm $(srfi) $(guile_deps) ## run example code in sr
 	@$(GUILE-3) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 chez-match-test: chez-match-test.scm $(match) ## run tests for (chibi match) using chezscheme
-	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES)
+	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-match-test.log
 
 chez-srfi-test: chez-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using chezscheme
-	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES)
+	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-srfi-test.log
 
 
 loko-match-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-match-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-match-test: loko-match-test.scm $(match)  ## run tests for (chibi match) using loko
-	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
+	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-match-test.log
 
 loko-srfi-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-srfi-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-srfi-test: loko-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using loko
-	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES)
+	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-srfi-test.log
 
 unsyntax-match-test: unsyntax-match-test.scm $(unsyn_deps) ## run tests for (chibi match) using unsyntax-scheme
 	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-match-test.log | $(HANDLE_USRES)

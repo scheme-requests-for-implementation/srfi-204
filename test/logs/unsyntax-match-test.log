@@ -1,5 +1,5 @@
 # Starting test unsyntax-match-test
-ok 1 - unsyntax-0.0.3.18-6066
+ok 1 - unsyntax-0.0.3.20-dd01
 ok 2 - any
 ok 3 - symbol
 ok 4 - number
