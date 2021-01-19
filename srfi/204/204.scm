@@ -1,3 +1,26 @@
+;; Copyright (C) Felix Thibault (2020).  All Rights Reserved.
+
+;; Permission is hereby granted, free of charge, to any person
+;; obtaining a copy of this software and associated documentation
+;; files (the "Software"), to deal in the Software without
+;; restriction, including without limitation the rights to use, copy,
+;; modify, merge, publish, distribute, sublicense, and/or sell copies
+;; of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice (including
+;; the next paragraph) shall be included in all copies or substantial
+;; portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+;; NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+;; BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
+
 ;;;; match.scm -- portable hygienic pattern matcher -*- coding: utf-8 -*-
 ;;
 ;; This code is written by Alex Shinn and placed in the
@@ -241,12 +264,15 @@
 ;; A variant of this file which uses COND-EXPAND in a few places for
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
+;; Changes marked FT at end were part of SRFI process, not in original
+;; match library.
 ;;
-;; 2020/09/04 - perf fix for `not`; rename `..=', `..=', `..1' per SRFI 204
-;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
-;; 2020/08/21 - handle underscores separately, not as literals
+;; 2021/01/12 - add var,
+;; 2020/09/04 - perf fix for `not`
+;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @ FT
+;; 2020/08/21 - handle underscores separately, not as literals FT
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
-;; 2020/08/03 - added bindings for auxiliary syntax
+;; 2020/08/03 - added bindings for auxiliary syntax FT
 ;; 2020/07/06 - adding `=..' and `*..' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
