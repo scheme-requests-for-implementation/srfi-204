@@ -2,4 +2,6 @@ Chez Scheme Version 9.5
 Copyright 1984-2017 Cisco Systems, Inc.
 
 %%%% Starting test chez-match-test
-# of expected passes      85 [32m[PASS](B[m
+FAIL test var var 2
+# of expected passes      128 [32m[PASS](B[m
+# of unexpected failures  1 [31m[FAIL](B[m

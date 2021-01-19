@@ -27,7 +27,7 @@
 	make-match-pred make-match-get make-match-set
 	
 	;;auxiliary syntax
-	___ **1 =.. *.. *** ? $ struct object get!)
+	___ **1 =.. *.. *** ? $ struct object get! var)
 
       (import (guile))
 
@@ -52,6 +52,6 @@
 		(eq? (struct-vtable rec) rtd)))))
 
       (include-from-path "./srfi/204/auxiliary-syntax.scm")
-      (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get!)
+      (define-auxiliary-keywords ___ **1 =.. *.. *** ? $ struct object get! var)
       (include-from-path "./srfi/204/204.scm"))
 

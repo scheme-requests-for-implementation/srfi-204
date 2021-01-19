@@ -294,4 +294,129 @@
 		   ((object Point (x (set! x))) (x 7)))
 	      (match-let (((object Point (x a) (y b)) p))
 			 (list a b))))
+
+(let-syntax ((test-var (syntax-rules ()
+			 ((test-var '(syn ...))
+			  (begin (test-equal 
+				   (string-append "var " (symbol->string 'syn) " in macro")
+				   1
+				   (match '(1 1) (((var syn) (var syn)) syn)
+					  (_ 'fail)))
+				 ...)))))
+  (test-var '(...  =.. *.. **1 _ quote $ struct @ object =
+	    and or not ? set! get! quasiquote ___ unquote
+	    unquote-splicing var)))
+;; for some reason all these tests pass
+
+(test-equal "test var var 2"
+	    1
+	    (match '(1 1) (((var var) (var var)) var)
+		   (_ 'fail)))
+
+(test-equal "test var ... 2"
+	    1
+	    (match '(1 1) (((var ...) (var ...)) ...)
+		   (_ 'fail)))
+
+(test-equal "test var =.. 2"
+	    1
+	    (match '(1 1) (((var =..) (var =..)) =..)
+		   (_ 'fail)))
+
+(test-equal "test var *.. 2"
+	    1
+	    (match '(1 1) (((var *..) (var *..)) *..)
+		   (_ 'fail)))
+
+(test-equal "test var **1 2"
+	    1
+	    (match '(1 1) (((var **1) (var **1)) **1)
+		   (_ 'fail)))
+
+(test-equal "test var _ 2"
+	    1
+	    (match '(1 1) (((var _) (var _)) _)
+		   (_ 'fail)))
+
+(test-equal "test var quote 2"
+	    1
+	    (match '(1 1) (((var quote) (var quote)) quote)
+		   (_ 'fail)))
+
+(test-equal "test var $ 2"
+	    1
+	    (match '(1 1) (((var $) (var $)) $)
+		   (_ 'fail)))
+
+(test-equal "test var struct 2"
+	    1
+	    (match '(1 1) (((var struct) (var struct)) struct)
+		   (_ 'fail)))
+
+(test-equal "test var @ 2"
+	    1
+	    (match '(1 1) (((var @) (var @)) @)
+		   (_ 'fail)))
+
+(test-equal "test var object 2"
+	    1
+	    (match '(1 1) (((var object) (var object)) object)
+		   (_ 'fail)))
+
+(test-equal "test var = 2"
+	    1
+	    (match '(1 1) (((var =) (var =)) =)
+		   (_ 'fail)))
+
+(test-equal "test var and 2"
+	    1
+	    (match '(1 1) (((var and) (var and)) and)
+		   (_ 'fail)))
+
+(test-equal "test var or 2"
+	    1
+	    (match '(1 1) (((var or) (var or)) or)
+		   (_ 'fail)))
+
+(test-equal "test var not 2"
+	    1
+	    (match '(1 1) (((var not) (var not)) not)
+		   (_ 'fail)))
+
+(test-equal "test var ? 2"
+	    1
+	    (match '(1 1) (((var ?) (var ?)) ?)
+		   (_ 'fail)))
+
+(test-equal "test var set! 2"
+	    1
+	    (match '(1 1) (((var set!) (var set!)) set!)
+		   (_ 'fail)))
+
+(test-equal "test var get! 2"
+	    1
+	    (match '(1 1) (((var get!) (var get!)) get!)
+		   (_ 'fail)))
+
+(test-equal "test var quasiquote 2"
+	    1
+	    (match '(1 1) (((var quasiquote) (var quasiquote)) quasiquote)
+		   (_ 'fail)))
+
+(test-equal "test var ___ 2"
+	    1
+	    (match '(1 1) (((var ___) (var ___)) ___)
+		   (_ 'fail)))
+
+(test-equal "test var unquote 2"
+	    1
+	    (match '(1 1) (((var unquote) (var unquote)) unquote)
+		   (_ 'fail)))
+
+(test-equal "test var unquote-splicing 2"
+	    1
+	    (match '(1 1) (((var unquote-splicing) (var unquote-splicing))
+			   unquote-splicing)
+		   (_ 'fail)))
+
 (test-end test-name)
