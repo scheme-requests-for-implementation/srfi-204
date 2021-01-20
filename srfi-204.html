@@ -1019,7 +1019,7 @@ where:
 	<li>a pattern clause with no body, as in <code>(match '(1 2 3) ((a b c)))</code></li>
 	<li>the occurence of the same variable inside and outside an ellipsis, as in <code>(match '((1 2 3) (1 2 3)) (((a ...) a) a))</code></li>
 	<li>the occurence of the same variable inside and outside a not, as in <code>(match '(1 2) ((a (not a)) a))</code></li>
-</ul></p>
+</ul>
 <h3 id="Macros">Using in Other Macros</h3>
 <p>Other macros that use the pattern matcher will be subject to the same constraints, in particular with respect to names. For example:
 <pre><code>
