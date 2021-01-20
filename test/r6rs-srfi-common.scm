@@ -1,3 +1,26 @@
+;; Copyright (C) Felix Thibault (2020).  All Rights Reserved.
+
+;; Permission is hereby granted, free of charge, to any person
+;; obtaining a copy of this software and associated documentation
+;; files (the "Software"), to deal in the Software without
+;; restriction, including without limitation the rights to use, copy,
+;; modify, merge, publish, distribute, sublicense, and/or sell copies
+;; of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice (including
+;; the next paragraph) shall be included in all copies or substantial
+;; portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+;; NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+;; BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
+
 (test-begin (string-append test-name "-" scheme-version-name))
 (test-equal "Introduction" #t (let ((ls (list 1 2 3)))
 				(match ls
@@ -215,12 +238,19 @@
 	      (define (extract-imports file-name)
 		(define extract
 		  (match-lambda
-		    (((_ *** `(import . ,imports)) . rest)
-		     (cons imports (extract rest)))
+		    (`(import . ,imports) imports)
+		    (((and (key *** `(import . ,imports)) inner) . rest)
+		     (append (if (null? key)
+				 (list imports)
+				 (extract inner)) (extract rest)))
 		    ((this . rest) (extract rest))
-		    (() '())))
+		    (any '())))
 		(call-with-input-file file-name
-				      (lambda (port) (extract (read port)))))
+		  (lambda (port)
+		    (let loop ((port port) (out '()))
+		      (if (eof-object? (peek-char port))
+			  out
+			  (loop port (append out (extract (read port)))))))))
 	      (extract-imports "data/srfi-test.scm")))
 
 ;; boolean operators
@@ -388,7 +418,7 @@
 ;; record operators
 (let ()
   (cond-expand
-    ((or r7rs (not r6rs))
+    ((and (not unsyntax) (or r7rs (not r6rs)))
      (define-record-type employee
        (make-employee name title)
        employee?
@@ -416,7 +446,7 @@
 		    (list t n)))))
 
 (let () (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type posn
 	  (make-posn x y)
 	  posn?
@@ -432,39 +462,42 @@
 		     (set-x 7)
 		     (match p (($ posn x y) (list x y)))))))
 
-(let ()
-  (cond-expand
-    ((or r7rs (not r6rs))
-     (define-record-type box-type
-       (box value)
-       box?
-       (value unbox set-box!)))
-    (else (define-record-type (box-type box box?)
-	    (fields (mutable value unbox set-box!)))))
-  (define (box-equal? a b)
-    (if (and (box? a) (box? b))
-	(box-equal? (unbox a) (unbox b))
-	(equal? a b)))
-  (match-let (((and (= (lambda (box) (cut unbox box)) get-value)
-		    (= (lambda (box) (cut set-box! box <>)) set-value!))
-	       (box 1)))
+(cond-expand
+  ((not larceny)
+   (let ()
+     (cond-expand
+       ((and (not unsyntax) (or r7rs (not r6rs)))
+	(define-record-type box-type
+	  (box value)
+	  box?
+	  (value unbox set-box!)))
+       (else (define-record-type (box-type box box?)
+	       (fields (mutable value unbox set-box!)))))
+     (define (box-equal? a b)
+       (if (and (box? a) (box? b))
+	   (box-equal? (unbox a) (unbox b))
+	   (equal? a b)))
+     (match-let (((and (= (lambda (box) (lambda () (unbox box))) get-value)
+		       (= (lambda (box) (lambda (x) (set-box! box x))) set-value!))
+		  (box 1)))
 
-	     (test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
-	     (test-equal "non-linear equality predicate"
-			 'ok
-			 (match (list (box 1) (box 1))
-				((a (? (cut box-equal? a <>))) 'ok)
-				(_ 'fail)))
-	     (test-equal "equality predicate in body"
-			 'ok
-			 (match (list (box 1) (box 1))
-				((a b) (if (box-equal? a b) 'ok 'fail))))
-	     (test-equal "box value via field"
-			 1
-			 (match (box 1) ((= unbox value) value)))
-	     (test-equal "getter via field" 1 (get-value))
-	     (set-value! 18)
-	     (test-equal "setter via field" 18 (get-value))))
+		(test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
+		(test-equal "non-linear equality predicate"
+			    'ok
+			    (match (list (box 1) (box 1))
+				   ((a (? (lambda (x) (box-equal? a x)))) 'ok)
+				   (_ 'fail)))
+		(test-equal "equality predicate in body"
+			    'ok
+			    (match (list (box 1) (box 1))
+				   ((a b) (if (box-equal? a b) 'ok 'fail))))
+		(test-equal "box value via field"
+			    1
+			    (match (box 1) ((= unbox value) value)))
+		(test-equal "getter via field" 1 (get-value))
+		(set-value! 18)
+		(test-equal "setter via field" 18 (get-value)))))
+  (else))
 
 ;; match/match-lambda(*)/match-let (*)/match-letrec
 (test-equal "simple match" 'ok (match '(1 1 1) ((a =.. 3) 'ok) (_ 'fail)))
@@ -485,7 +518,7 @@
 (if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
 (let ()
   (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type checkable
      (make-checkable pred value)
      checkable?

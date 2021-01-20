@@ -1,0 +1,5 @@
+(use-modules (srfi srfi-204)
+	     (srfi srfi-64))
+(define test-name "var-test")
+(define scheme-version-name (string-append "guile-" (version)))
+(include-from-path "test/benchmark/var-vs-no-var.scm")

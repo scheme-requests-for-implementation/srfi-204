@@ -13,6 +13,12 @@ Test end:
   actual-value: (ok ok)
   expected-value: (ok ok)
 Test begin:
+  test-name: "Self-evaluating Vector Literal"
+Test end:
+  result-kind: pass
+  actual-value: ok
+  expected-value: ok
+Test begin:
   test-name: "Simple Variable"
 Test end:
   result-kind: pass
@@ -308,7 +314,7 @@ Test begin:
   test-name: "or ellipsis, many undef values"
 Test end:
   result-kind: pass
-  actual-value: ((#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/fthibault1969/playground/git/gerbil/bin:/home/fthibault1969/.cabal/bin" #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/home/fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>))
+  actual-value: ((#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/fthibault1969/playground/git/gerbil/bin:/home/fthibault1969/.cabal/bin" #<undef> #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "/home/fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>) (#<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> "fthibault1969" #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef> #<undef>))
   expected-value: #t
 Test begin:
   test-name: "fold match-lambda* as or ellipsis"
@@ -645,6 +651,6 @@ Test end:
   actual-value: #t
   expected-value: #t
 Group end: srfi-test-gauche-0.9.6
-# of expected passes      99
+# of expected passes      100
 # of unexpected failures  5
 # of skipped tests        5

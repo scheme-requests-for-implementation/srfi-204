@@ -1,25 +1,48 @@
+;; Copyright (C) Felix Thibault (2020).  All Rights Reserved.
+
+;; Permission is hereby granted, free of charge, to any person
+;; obtaining a copy of this software and associated documentation
+;; files (the "Software"), to deal in the Software without
+;; restriction, including without limitation the rights to use, copy,
+;; modify, merge, publish, distribute, sublicense, and/or sell copies
+;; of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice (including
+;; the next paragraph) shall be included in all copies or substantial
+;; portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+;; NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+;; BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
+
 (cond-expand
   (chibi
     (define-library (srfi 204)
       (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax
-	___ **1 =.. *.. *** ? $ struct object get!)
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (chibi)
 	      (scheme case-lambda)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!))
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
       (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
       (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax
-	___ **1 =.. *.. *** ? $ struct object get!)
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (only (gauche base) is-a? slot-definition-name class-slots)
 	      (scheme base)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? struct object get!)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? struct object get! var)
 	      (rename (gauche base)
 		      (slot-ref gb-slot-ref)
 		      (slot-set! gb-slot-set!)))
@@ -49,11 +72,11 @@
       (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
-	;; auxiliary syntax
-	___ **1 =.. *.. *** ? $ struct object get!)
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
       (import (scheme base)
 	      (scheme case-lambda)
-	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var)
 	      (srfi 99 records))
       (begin
 	(define-syntax is-a?
@@ -74,4 +97,23 @@
 		 ((rtd-mutator rtd (vector-ref (rtd-all-field-names rtd) n)) rec value)
 		 ((rtd-mutator rtd n) rec value))))))
       (include "204/204.scm")))
-  (else))
+  (unsyntax
+    (define-library (srfi 204)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
+      (import (scheme base)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+      (include  "204/204.scm")))
+  (else
+    (define-library (srfi 204)
+      (export 
+	;; (chibi match) forms
+	match match-lambda match-lambda* match-let match-letrec match-let*
+	;; auxiliary syntax 
+	___ **1 =.. *.. *** ? $ struct object get! var)
+      (import (scheme base)
+	      (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+      (include  "204/204.scm"))))

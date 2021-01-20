@@ -1,3 +1,5 @@
+The question of people's use of match-letrec came up in the forum and this document contains links to the examples I found online of people using match-letrec.
+
 <https://github.com/stefanos1316/Rosetta_Code_Research_MSR/blob/9ffa9026c5919cae5f199a5721a30d69bfb1be75/Scripts/Task/formal-power-series/racket/formal-power-series-1.rkt>
 
 <https://github.com/maxsnew/Redex-Enum-Paper/blob/d77ec860d138cb023628cc41f532dd4eb142f15b/model/redex-model.rkt>

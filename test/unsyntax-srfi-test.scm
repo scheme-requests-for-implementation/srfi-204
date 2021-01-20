@@ -21,10 +21,27 @@
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
 
-;;; most of false branches were tested with (util match) from
-;;; gauche, some syntax differences (no internal ellipses) made
-;;; it so I never got a clean run, even using
-;;; test-read-eval-string
+(import (except (scheme base) define-record-type)
+	(scheme char)
+	(scheme cxr)
+	(scheme file)
+	(scheme process-context)
+	(scheme read)
+	(scheme write)
+	(rnrs records syntactic (6))
+	(srfi 64)
+	(srfi unsyntax 204)
+	(srfi 1))
+(define non-linear-pattern #t)
+(define non-linear-pred #t)
+(define non-linear-field #t)
+(define record-implemented #t)
+(define test-name "srfi-test")
+(define scheme-version-name (symbol->string (car (features))))
+
+;;; run all examples in SRFI 204 spec, substituting LAMBDA for
+;;; CUT since SRFI 26 isn't available on Unsyntax
+
 (test-begin (string-append test-name "-" scheme-version-name))
 (test-equal "Introduction" #t (let ((ls (list 1 2 3)))
 				(match ls
@@ -50,22 +67,22 @@
 
 ;; non-linear patterns
 (if (not non-linear-pattern) (test-skip 4))
-(test-equal "repeated pattern" 'A (test-read-eval-string "(match (list 'A 'B 'A) ((a b a) a))"))
-(test-equal "quasi-quote fail repeated pattern"
+(test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
+(test-equal "quasi-quote fail repeated pattern" 
 	    'fail
-	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail))"))
+	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
 (test-equal "quasi-quote repeated pattern 1"
 	    'A
-	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail))"))
+	    (match (list 'A 'B 'A) (`(,a B ,a) a) (_ 'fail)))
 (test-equal "quasi-quote repeated pattern 2"
 	    'A
-	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail))"))
+	    (match (list 'A 'B 'A) (`(,a ,b ,a) a) (_ 'fail)))
 
 (if non-linear-pattern (test-skip 4))
 (test-error "error repeated pattern"
-	    #t
+	    #t 
 	    (test-read-eval-string  "(match (list 'A 'B 'A) ((a b a) a))"))
-(test-error "error quasi-quote fail repeated pattern"
+(test-error "error quasi-quote fail repeated pattern" 
 	    #t
 	    (test-read-eval-string "(match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail))"))
 (test-error "error quasi-quote repeated pattern 1"
@@ -77,7 +94,7 @@
 
 (test-eqv "repeated pattern->failure"
 	 1
-	 (match (list 1 2 1)
+	 (match (list 1 2 1) 
 		((a b c) (=> fail) (if (equal? a c) a (fail)))
 		(_ 'fail)))
 
@@ -92,7 +109,7 @@
 	    #t
 	    (match (list 1 2 3) ((1 2 3 ...) #t)))
 (test-equal "single quasi-quote splicing match"
-	    #t
+	    #t 
 	    (match (list 1 2 3) (`(1 2 ,@3) #t)))
 (test-equal "triple ellipsis match"
 	    #t
@@ -117,10 +134,9 @@
 	      '((1 4) (2 5) (3 6))
 	      (transpose '((1 2 3) (4 5 6)))))
 
-(let ((palindrome?
+(let ((palindrome? 
 	(if non-linear-pattern
-	    (test-read-eval-string
-	      "(lambda (str)
+	    (lambda (str)
 		(let loop ((chars (filter char-alphabetic?
 					  (string->list (string-foldcase str)))))
 		  (match chars
@@ -128,9 +144,8 @@
 			 ((a) #t)
 			 ((a a) #t)
 			 ((a b ... a) (loop b))
-			 (_ #f))))")
-	    (test-read-eval-string
-	      "(lambda (str)
+			 (_ #f))))
+	    (lambda (str)
 		(let loop ((chars (filter char-alphabetic?
 					  (string->list (string-foldcase str)))))
 		  (match chars
@@ -138,7 +153,7 @@
 			 ((a) #t)
 			 ((a b) (eqv? a b))
 			 ((a b ... c) (if (eqv? a c) (loop b) #f))
-			 (_ #f))))"))))
+			 (_ #f)))))))
 
 (test-equal "middle ellipsis" #t (palindrome? "Able was I, ere I saw Elba."))
 (test-equal "middle ellipsis fail"
@@ -262,37 +277,36 @@
 			  out
 			  (loop port (append out (extract (read port)))))))))
 	      (extract-imports "data/srfi-test.scm")))
-
+	
 ;; boolean operators
 ;; using (util match) to test false branch, a number of boolean patterns
 ;; that are OK in (chibi match) gave errors, so did t-r-e-s conversion.
-(test-equal "empty and match" #t (test-read-eval-string "(match 1 ((and) #t))"))
+(test-equal "empty and match" #t (match 1 ((and) #t)))
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
 (test-equal "and identifier matching literal match" 1 (match 1 ((and x 1) x)))
-(test-equal "and false match" #t (test-read-eval-string "(match #f ((and) #t) (_ #f))"))
+(test-equal "and false match" #t (match #f ((and) #t) (_ #f)))
 (test-equal "and false catch via failure"
 	    #f
 	    (match #f ((and x) (=> fail) (if x #t (fail))) (_ #f)))
-(test-equal "empty or fail" #f (test-read-eval-string "(match 1 ((or) #t) (else #f))"))
+(test-equal "empty or fail" #f (match 1 ((or) #t) (else #f)))
 (test-equal "or identifier match" 1 (match 1 ((or x) x)))
-(test-equal "or identifier mis-matched literal match" 1 (test-read-eval-string "(match 1 ((or x 2) x))"))
+(test-equal "or identifier mis-matched literal match" 1 (match 1 ((or x 2) x)))
 
 (let ((last-matches-one-of-first-three
 	(if non-linear-pattern
-	    (test-read-eval-string "(match-lambda ((a a) #t)
+	    (match-lambda ((a a) #t)
 			  ((a b c ... (or a b)) #t)
 			  ((a b c d ... c) #t)
-			  (_ #f))")
+			  (_ #f))
 
-	    (test-read-eval-string
-	      "(match-lambda ((a b) (equal? a b))
+	    (match-lambda ((a b) (equal? a b))
 			     ((a b c ... d)
 			      (=> fail)
 			      (if (or (equal? d a) (equal? d b))
 				  #t
 				  (fail)))
 			     ((a b c d ... e) (equal? c e))
-			     (_ #f))"))))
+			     (_ #f)))))
   (test-equal "or pattern with repetition"
 	      #t
 	      (last-matches-one-of-first-three '(1 2 3 4 5 2))))
@@ -316,7 +330,7 @@
 	     (check-output
 	       (fold (match-lambda*
 		       ((("PATH" . path) (p h u)) (list path h u))
-		       ((("USERPROFILE" . home)  (p h u)) (list p home u))
+		       ((("USERPROFILE" . home)  (p h u)) (list p home u)) 
 		       ((("HOME" . home)  (p h u)) (list p home u))
 		       ((("USER" . user)  (p h u))  (list p h user))
 		       ((("USERNAME" . user)  (p h u))  (list p h user))
@@ -353,24 +367,22 @@
 		  (any (error #f "not implemented yet" any))))
 
   (test-equal "quasi-quoted dotted pair/pred/boolean sexpr eval"
-	      67
+	      67 
 	      (eval-sexpr '(+ (* 3 4 5) (- 10 3)))))
 
 (if non-linear-pred
-    (test-read-eval-string
-      "(letrec ((fibby?  (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
+    (letrec ((fibby?  (match-lambda ((a b (? (lambda (x) (= (+ a b) x)) c) . rest)
 					(fibby? (cons b (cons c rest))))
       ((a b) #t)
       ((a) #t)
       (() #t)
       (_ #f))))
 
-	 (test-equal \"non-linear pred match\" #t (fibby? '(4 7 11 18 29 47))))")
+	 (test-equal "non-linear pred match" #t (fibby? '(4 7 11 18 29 47))))
     (test-error "error non-linear pred"
 		#t
-		(test-read-eval-string "(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b))))) #t)
+		(test-read-eval-string "(match '(1 2 3) ((a b (? (lambda (x) (= (+ a b) x)))) #t)
 					       (_ #f))")))
-
 (let ()
   (define fibby?
     (match-lambda ((a b c . rest)
@@ -431,14 +443,14 @@
 ;; record operators
 (let ()
   (cond-expand
-    ((or r7rs (not r6rs))
+    ((and (not unsyntax) (or r7rs (not r6rs)))
      (define-record-type employee
        (make-employee name title)
        employee?
        (name employee-name)
        (title employee-title)))
     (else
-      (define-record-type employee (fields name title))))
+      (define-record-type employee (fields (immutable name) (immutable title)))))
   (if (not record-implemented) (test-skip 2))
   (test-equal "posistional record"
 	      (list "Doctor" "Bob")
@@ -459,14 +471,14 @@
 		    (list t n)))))
 
 (let () (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type posn
 	  (make-posn x y)
 	  posn?
 	  (x posn-x set-posn-x!)
 	  (y posn-y set-posn-y!)))
   (else (define-record-type posn (fields (mutable x) (mutable y)))))
-
+  
   (if (not record-implemented) (test-skip 1))
   (test-equal "record setter"
 	      (list 7 4)
@@ -479,7 +491,7 @@
   ((not larceny) ;; larceny has issues with srfi 26
    (let ()
      (cond-expand
-       ((or r7rs (not r6rs))
+       ((and (not unsyntax) (or r7rs (not r6rs)))
 	(define-record-type box-type
 	  (box value)
 	  box?
@@ -492,14 +504,14 @@
 	   (equal? a b)))
      (define-values (get-value set-value!)
        (match (box 1)
-	      ((and (= (lambda (box) (cut unbox box)) get)
-		    (= (lambda (box) (cut set-box! box <>)) set))
+	      ((and (= (lambda (box) (lambda () (unbox box))) get)
+		    (= (lambda (box) (lambda (x) (set-box! box x))) set))
 	       (values get set))))
      (test-assert "boxes not eqv" (not (eqv? (box 1) (box 1))))
      (test-equal "non-linear equality predicate"
 		 'ok
 		 (match (list (box 1) (box 1))
-			((a (? (cut box-equal? a <>))) 'ok)
+			((a (? (lambda (x) (box-equal? a x)))) 'ok)
 			(_ 'fail)))
      (test-equal "equality predicate in body"
 		 'ok
@@ -529,35 +541,34 @@
 			      (if (= (car a) 1) (fail) 'ok))
 		   (_ 'fail)))
 
-(test-read-eval-string
-"(let ()
+(let ()
   (cond-expand
-  ((or r7rs (not r6rs))
+  ((and (not unsyntax) (or r7rs (not r6rs)))
    (define-record-type checkable
      (make-checkable pred value)
      checkable?
      (pred checkable-pred)
      (value checkable-value)))
-  (else (define-record-type checkable (fields pred value))))
+  (else (define-record-type checkable (fields (mutable pred) (mutable value)))))
   (define check (if non-linear-pred
 		 (match-lambda (($ checkable pred (? pred ok)) ok) (($ checkable) 'bad-data))
 		 (lambda arg #f)))
 
 (if (or (not non-linear-pred) (not record-implemented)) (test-skip 2))
-(test-equal \"match-lambda non-linear pred match\"
+(test-equal "match-lambda non-linear pred match"
 	    1
 	    (check (make-checkable odd? 1)))
-(test-equal \"match-lambda non-linear pred fail\"
+(test-equal "match-lambda non-linear pred fail"
 	    'bad-data
-	    (check (make-checkable odd? 2))))")
+	    (check (make-checkable odd? 2))))
 
 (if (not non-linear-field) (test-skip 1))
 (let ((zero-to-three-cycle (if non-linear-field
-			       (test-read-eval-string "(match-lambda ((and c (= car c)) 0)
-		  ((and c (= cdr c)) 1)
-		  ((and c (= cddr c)) 2)
-		  ((and c (= cdddr c)) 3)
-		  (_ 'fail))")
+			       (match-lambda ((and c (= car c)) 0)
+					     ((and c (= cdr c)) 1)
+					     ((and c (= cddr c)) 2)
+					     ((and c (= cdddr c)) 3)
+					     (_ 'fail))
 			       (lambda arg #f))))
 
   (define l3 (list 1 2 3))
@@ -588,7 +599,7 @@
 	(match-let loop (((a . rest) (cdr (iota (+ n 1))))
 			 (out 1))
 		   (if (null? rest) (* a out) (loop rest (* a out))))))
-
+  
   (test-equal "match-named-let/tail"
 	      39916800
 	      (fact 11))
@@ -619,19 +630,19 @@
   undefined value
   last value
   error
-
+  
   whichever passes is the behavior of this implementation.")
 (display message)
 (newline)
-(test-equal "match w/o body has undefined value"
+(test-equal "match w/o body has undefined value" 
 	    (if #f #t)
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
-(test-equal "match w/o body has last value"
+(test-equal "match w/o body has last value" 
 	    2
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
-(test-error "match w/o body causes error"
+(test-error "match w/o body causes error" 
 	    #t
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
@@ -652,11 +663,9 @@
 	   (match l (() '())
 		  ((s ... . rest) (cons (list s ...) (lp rest)))
 		  (end (list end))))))))
-
   (test-equal "match macro, no name clash"
 	      '((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
 	      ((make-chunker a b c d) (iota 20)))
-
   (test-error "error match macro _ name clash"
 	      #t
 	      (test-read-eval-string "((make-chunker a b c _) (iota 20))"))
@@ -664,5 +673,5 @@
   (test-error "error match macro ___ name clash"
 	      #t
 	      (test-read-eval-string "((make-chunker a b c ___) (iota 20))")))
-
 (test-end (string-append test-name "-" scheme-version-name))
+

@@ -272,7 +272,7 @@
     ((or (p b c d ... x)
 	 (a p c d ... x)
 	 (a b p d ... x))
-     (=> fail)
+     (=> fail) 
      (if (equal? x p)
 	 #t
 	 (fail)))
@@ -321,7 +321,7 @@
 
 (define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
 
-;;;emulate
+;;;emulate 
 (import (scheme case-lambda))
 (define (make-pred pred)
   (case-lambda
@@ -392,11 +392,6 @@
 				out
 				(loop port (append out (extract (read port)))))))))
 
-(define (pp lst)
-  (for-each (lambda (sub) (display sub) (newline)) lst))
-
-(pp (extract-imports "../../test/data/srfi-test.scm"))
-
 (define (match-on-file filename matcher)
   (call-with-input-file
     filename
@@ -408,13 +403,21 @@
 
 (define extract-imports
   (match-lambda
-      (`(import . ,imports) imports)
+      (`(import . ,imports) (list imports))
       (((and (key *** `(import . ,imports)) inner) . rest)
        (append (if (null? key)
 		   (list imports)
 		   (extract-imports inner)) (extract-imports rest)))
       ((this . rest) (extract-imports rest))
       (any '())))
+
+(match-on-file "forum-topics.scm" extract-imports)
+
+#| (((srfi srfi-9))
+    ((scheme case-lambda))
+    ((srfi 69))
+    ((srfi 204) (scheme red) (chibi json))
+    ((srfi 69)))|#
 
 (define (get-imports filename)
   (extract-imports (file->sexpr filename)))
@@ -453,7 +456,7 @@
 (fold (lambda (env-var out)
 	(match env-var
 	      (("PATH" . path) (match-let (((a b c) out)) (list path b c)))
-	      (("USERPROFILE" . home) (match-let (((a b c) out)) (list a home c)))
+	      (("USERPROFILE" . home) (match-let (((a b c) out)) (list a home c))) 
 	      (("HOME" . home) (match-let (((a b c) out)) (list a home c)))
 	      (("USER" . user)  (match-let (((a b c) out))  (list a b user)))
 	      (("USERNAME" . user)  (match-let (((a b c) out))  (list a b user)))
@@ -463,7 +466,7 @@
 
 (fold (match-lambda*
 	((("PATH" . path) (p h u)) (list path h u))
-	((("USERPROFILE" . home)  (p h u)) (list p home u))
+	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
 	((("HOME" . home)  (p h u)) (list p home u))
 	((("USER" . user)  (p h u))  (list p h user))
 	((("USERNAME" . user)  (p h u))  (list p h user))
@@ -698,11 +701,4 @@
 (extract-num-addends '((+ (* 1 (+ 2 3)) (+ 4 5)) (- (/ 6 (+ 7 8)) (+ 9 10))))
 
 ; => ((2 3) (4 5) )
-
-(define (even-for-op? n op incr id)
-  (match-letrec
-    (((evenlike oddlike)
-      (list (lambda (n) (if (<= n id) #t (oddlike (op n incr))))
-	    (lambda (n) (if (<= n id) #f (evenlike (op n incr)))))))
-    (evenlike n)))
 

@@ -21,8 +21,14 @@
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
 
+(import (except (scheme base) define-record-type)
+	(rnrs records syntactic (6))
+	(srfi 64)
+	(srfi unsyntax 204))
+(define test-name "unsyntax-match-test")
+(define scheme-version-name (symbol->string (car (features))))
 (cond-expand
-  ((and r6rs (not r7rs))
+  ((or unsyntax (and r6rs (not r7rs)))
     (define-record-type (Point make-point point?) (fields (mutable x) (mutable y))))
   (else
     (define-record-type Point
@@ -294,19 +300,18 @@
 		   ((object Point (x (set! x))) (x 7)))
 	      (match-let (((object Point (x a) (y b)) p))
 			 (list a b))))
-
-(let-syntax ((test-var (syntax-rules ()
-			 ((test-var syn ...)
-			  (begin (test-equal 
-				   (string-append "var " (symbol->string 'syn) " in macro")
-				   1
-				   (match '(1 1) (((var syn) (var syn)) syn)
-					  (_ 'fail)))
-				 ...)))))
-  (test-var ...  =.. *.. **1 _ quote $ struct @ object =
+(define-syntax test-var
+  (syntax-rules ()
+    ((test-var syn ...)
+     (begin (test-equal 
+	      (string-append "var " (symbol->string 'syn))
+	      1
+	      (match '(1 1) (((var syn) (var syn)) syn)
+		     (_ 'fail)))
+	    ...))))
+(test-var ...  =.. *.. **1 _ quote $ struct @ object =
 	    and or not ? set! get! quasiquote ___ unquote
-	    unquote-splicing var))
-;; for some reason all these tests pass
+	    unquote-splicing var)
 
 (test-equal "test var var 2"
 	    1

@@ -36,10 +36,11 @@
 <!-- - document and test make-match-pred make-match-get make-match-set (decided cut was better option)-->
 - get all srfi tests to run for all implementations (can be post last call)
 - figure out how to make verbose test-runner like Guile's
-- add forum credits in ack section
+<!-- - add forum credits in ack section -->
 - make sure all new nonlinear tests have skips
-- set up srfi tests like match tests in Makefile, document Makefile
-- get all srfi tests to pass
+<!-- - set up srfi tests like match tests in Makefile -->
+- document Makefile
+<!-- - get all srfi tests to pass --> **except extract-imports**
 - make srfi tests for chibi-scheme and cyclone (maybe)
 <!-- - work some on benchmarking -->
 <!-- - make srfi-test.scm in srfi/test containing all example code. -->
@@ -61,3 +62,10 @@
   - Export auxiliary syntax always (so auxiliary-syntax.scm is part of library)
     or only when srfi-206 is available?
   - can generic functions affect equal? used by matcher?
+- Feedback from Alex
+  -Add definition of literal pattern to top and in literal patterns section: any quoted or self-quoting datum.
+  -Add note that quasiquoted cyclic literals are explicitly illegal by R7RS.
+  -Add note about ordering of patterns (a (? (cut pred a)) not ((? (cut pred a)) a)
+  -Specify it is the bindings egg, and not Chicken as whole that is non-WCS
+  -Add that it is an error for the same variable to be repeated inside and outside of ellipsis and not patterns
+    - this and third may not be compatible with Marc's desire for where a variable was bound to be de-coupled from if repetition is allowed

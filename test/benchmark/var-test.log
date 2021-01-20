@@ -1,0 +1,409 @@
+%%%% Starting test var-test
+Group begin: var-test
+Test begin:
+  test-name: "guile-2.2.4"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 3
+  source-form: (test-equal scheme-version-name 1 1)
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ..."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote ...))) 1 (match (quote (1 1)) (((var ...) (var ...)) ...) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..))) 1 (match (quote (1 1)) (((var =..) (var =..)) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..))) 1 (match (quote (1 1)) (((var *..) (var *..)) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1))) 1 (match (quote (1 1)) (((var **1) (var **1)) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote _))) 1 (match (quote (1 1)) (((var _) (var _)) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote))) 1 (match (quote (1 1)) (((var quote) (var quote)) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote $))) 1 (match (quote (1 1)) (((var $) (var $)) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct))) 1 (match (quote (1 1)) (((var struct) (var struct)) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote @))) 1 (match (quote (1 1)) (((var @) (var @)) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote object))) 1 (match (quote (1 1)) (((var object) (var object)) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ="
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote =))) 1 (match (quote (1 1)) (((var =) (var =)) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote and))) 1 (match (quote (1 1)) (((var and) (var and)) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote or))) 1 (match (quote (1 1)) (((var or) (var or)) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote not))) 1 (match (quote (1 1)) (((var not) (var not)) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ?"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?))) 1 (match (quote (1 1)) (((var ?) (var ?)) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set!"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!))) 1 (match (quote (1 1)) (((var set!) (var set!)) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get!"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!))) 1 (match (quote (1 1)) (((var get!) (var get!)) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote))) 1 (match (quote (1 1)) (((var quasiquote) (var quasiquote)) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___))) 1 (match (quote (1 1)) (((var ___) (var ___)) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote))) 1 (match (quote (1 1)) (((var unquote) (var unquote)) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing))) 1 (match (quote (1 1)) (((var unquote-splicing) (var unquote-splicing)) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 14
+  source-form: (test-equal (string-append "var " (symbol->string (quote var))) 1 (match (quote (1 1)) (((var var) (var var)) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var ..."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote ...))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var =.."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote =..))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var *.."
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote *..))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var **1"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote **1))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var _"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote _))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var quote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote quote))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var $"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote $))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var struct"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote struct))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var @"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote @))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var object"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote object))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var ="
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote =))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var and"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote and))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var or"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote or))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var not"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote not))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var ?"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote ?))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var set!"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote set!))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var get!"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote get!))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var quasiquote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote quasiquote))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var ___"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote ___))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var unquote"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote unquote))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var unquote-splicing"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote unquote-splicing))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "no-var var"
+  source-file: "test/benchmark/var-vs-no-var.scm"
+  source-line: 28
+  source-form: (test-equal (string-append "no-var " (symbol->string (quote var))) 1 (test-read-eval-string "(match '(1 1) ((syn syn) syn)\n\t\t     (_ 'fail))"))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Group end: var-test
+# of expected passes      45

@@ -1,3 +1,26 @@
+;; Copyright (C) Felix Thibault (2020).  All Rights Reserved.
+
+;; Permission is hereby granted, free of charge, to any person
+;; obtaining a copy of this software and associated documentation
+;; files (the "Software"), to deal in the Software without
+;; restriction, including without limitation the rights to use, copy,
+;; modify, merge, publish, distribute, sublicense, and/or sell copies
+;; of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice (including
+;; the next paragraph) shall be included in all copies or substantial
+;; portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+;; NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+;; BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+;; ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
+
 ;;;; match.scm -- portable hygienic pattern matcher -*- coding: utf-8 -*-
 ;;
 ;; This code is written by Alex Shinn and placed in the
@@ -241,12 +264,15 @@
 ;; A variant of this file which uses COND-EXPAND in a few places for
 ;; performance can be found at
 ;;   http://synthcode.com/scheme/match-cond-expand.scm
+;; Changes marked FT at end were part of SRFI process, not in original
+;; match library.
 ;;
-;; 2020/09/04 - perf fix for `not`; rename `..=', `..=', `..1' per SRFI 204
-;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @
-;; 2020/08/21 - handle underscores separately, not as literals
+;; 2021/01/12 - add var,
+;; 2020/09/04 - perf fix for `not`
+;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @ FT
+;; 2020/08/21 - handle underscores separately, not as literals FT
 ;; 2020/08/21 - fixing match-letrec with unhygienic insertion
-;; 2020/08/03 - added bindings for auxiliary syntax
+;; 2020/08/03 - added bindings for auxiliary syntax FT
 ;; 2020/07/06 - adding `=..' and `*..' patterns; fixing ,@ patterns
 ;; 2016/10/05 - treat keywords as literals, not identifiers, in Chicken
 ;; 2016/03/06 - fixing named match-let (thanks to Stefan Israelsson Tampe)
@@ -342,7 +368,20 @@
 ;; MATCH-UNDERSCORE.
 
 (define-syntax match-one
-  (syntax-rules ()
+  (syntax-rules (var)
+    ;; catch var here in case the identifier is an ellipsis
+    ((match-one v (var x) g+s (sk ...) fk (id ...))
+     (match-check-identifier
+      x
+      (let-syntax
+          ((new-sym?
+            (syntax-rules (id ...)
+              ((new-sym? x sk2 fk2) sk2)
+              ((new-sym? y sk2 fk2) fk2))))
+        (new-sym? random-sym-to-match
+                  (let ((x v)) (sk ... (id ... x)))
+                  (if (equal? v x) (sk ... (id ...)) fk)))
+      (if (equal? v x) (sk ... (id ...)) fk)))
     ;; If it's a list of two or more values, check to see if the
     ;; second one is an ellipsis and handle accordingly, otherwise go
     ;; to MATCH-TWO.
@@ -877,7 +916,7 @@
 ;; (match-extract-vars pattern continuation (ids ...) (new-vars ...))
 
 (define-syntax match-extract-vars
-  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set!)
+  (syntax-rules (___ **1 =.. *.. *** ? $ struct object = quote quasiquote and or not get! set! var)
     ((match-extract-vars (? pred . p) . x)
      (match-extract-underscore p . x))
     ((match-extract-vars ($ rec . p) . x)
@@ -898,6 +937,15 @@
      (match-extract-underscore p . x))
     ((match-extract-vars (not . p) . x)
      (match-extract-underscore p . x))
+    ((match-extract-vars (var p) (k ...) (i ...) v)
+     (let-syntax
+         ((new-sym?
+           (syntax-rules (i ...)
+             ((new-sym? p sk fk) sk)
+             ((new-sym? any sk fk) fk))))
+       (new-sym? random-sym-to-match
+                 (k ... ((p p-ls) . v))
+                 (k ... v))))
     ;; A non-keyword pair, expand the CAR with a continuation to
     ;; expand the CDR.
     ((match-extract-vars (p q . r) k i v)

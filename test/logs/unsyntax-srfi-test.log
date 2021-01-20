@@ -1,0 +1,118 @@
+# Starting test srfi-test-unsyntax-0.0.3.20-dd01
+ok 1 - Introduction
+ok 2 - Literal Patterns
+ok 3 - Self-evaluating Vector Literal
+ok 4 - Simple Variable
+ok 5 - Throwaway Variable
+ok 6 - Quasi-quote variable fail
+ok 7 - Quasi-quote variable pass
+ok 8 - repeated pattern
+ok 9 - quasi-quote fail repeated pattern
+ok 10 - quasi-quote repeated pattern 1
+ok 11 - quasi-quote repeated pattern 2
+ok 12 # SKIP error repeated pattern
+ok 13 # SKIP error quasi-quote fail repeated pattern
+ok 14 # SKIP error quasi-quote repeated pattern 1
+ok 15 # SKIP error quasi-quote repeated pattern 2
+ok 16 - repeated pattern->failure
+ok 17 - empty ellipsis match
+ok 18 - empty quasi-quote splicing match
+ok 19 - single ellipsis match
+ok 20 - single quasi-quote splicing match
+ok 21 - triple ellipsis match
+ok 22 - triple quasi-quote splicing match
+ok 23 - subexpression ellipsis match
+ok 24 - subexpression quasi-quote splicing match
+ok 25 - double ellipsis match
+not ok 26 - middle ellipsis
+ok 27 - middle ellipsis fail
+ok 28 - underscore ellipsis
+ok 29 - **1 error
+ok 30 - **1 match
+ok 31 - quasi-quote unquote-splicing **1 error
+ok 32 - quasi-quote unquote-splicing **1 match
+ok 33 - =.. match
+ok 34 - =.. fail
+ok 35 - *.. 2 4 match 3
+ok 36 - *.. 2 4 match 4
+ok 37 - *.. 2 4 fail hi
+ok 38 - ... proper list match
+ok 39 - ... dotted-pair fail
+ok 40 - tail pattern proper list match
+ok 41 - tail pattern dotted-pair match
+ok 42 - tree match for path
+ok 43 - underscore tree match for destination
+not ok 44 - extract imports
+ok 45 - empty and match
+ok 46 - and identifier match
+ok 47 - and identifier matching literal match
+ok 48 - and false match
+ok 49 - and false catch via failure
+ok 50 - empty or fail
+ok 51 - or identifier match
+ok 52 - or identifier mis-matched literal match
+ok 53 - or pattern with repetition
+ok 54 - or ellipsis, many undef values
+ok 55 - fold match-lambda* as or ellipsis
+ok 56 - mostly defined or ellipsis
+ok 57 - not #f match
+ok 58 - not #f fail
+ok 59 - not match
+ok 60 - predicate match
+ok 61 - quasi-quoted dotted pair/pred/boolean sexpr eval
+ok 62 - non-linear pred match
+ok 63 - pred catch repetition in body match
+ok 64 - pred false fail
+ok 65 - field false match
+ok 66 - field #f bad match
+ok 67 - field (not #f) good match
+ok 68 - field car
+ok 69 - field N->N proc
+ok 70 - list setter test
+ok 71 - list getter test
+ok 72 - alist get value
+ok 73 - alist get value after set
+ok 74 - alist get list after set
+ok 75 - posistional record
+ok 76 - named record
+ok 77 - record emulation via pred/field
+ok 78 - record setter
+ok 79 - boxes not eqv
+ok 80 - non-linear equality predicate
+ok 81 - equality predicate in body
+ok 82 - box value via field
+ok 83 - getter via field
+ok 84 - setter via field
+ok 85 - simple match
+ok 86 - simple match + failure fail
+ok 87 - simple match + failure match
+ok 88 - match-lambda non-linear pred match
+ok 89 - match-lambda non-linear pred fail
+ok 90 - match-lambda/non-linear field
+ok 91 # SKIP error repeated pattern in field
+ok 92 - match-lambda*/lambda pred/tail
+ok 93 - match-named-let/tail
+ok 94 - match-named-let/tail catch exceptional value
+ok 95 - error missing match expression
+ok 96 - error no match clauses
+ok 97 - error no matching pattern
+ok 98 - error invalid use of ***
+ok 99 - error multiple ellipsis patterns at same level
+ok 100 - error ellipsis + =.. at same level
+ok 101 - error ellipsis + ,@ at same level
+ok 102 - error dotted tail not allowed after ellipsis
+match w/o body screen (3 possibilities):
+  undefined value
+  last value
+  error
+  
+  whichever passes is the behavior of this implementation.
+not ok 103 - match w/o body has undefined value
+not ok 104 - match w/o body has last value
+ok 105 - match w/o body causes error
+ok 106 - error match-let w/o body, let requires body
+ok 107 - error match-lambda w/o body, lambda requires body
+ok 108 - match macro, no name clash
+ok 109 - error match macro _ name clash
+ok 110 - error match macro ___ name clash
+1..110

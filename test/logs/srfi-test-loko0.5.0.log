@@ -1,6 +1,0 @@
-%%%% Starting test srfi-test-loko0.5.0
-FAIL match w/o body has undefined value
-FAIL match w/o body has last value
-# of expected passes      92
-# of unexpected failures  2
-# of skipped tests        5

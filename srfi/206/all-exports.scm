@@ -31,4 +31,4 @@
  ;; SRFI 190
  yield
  ;; SRFI 204
- $ ? get! *** ___ **1 =.. *.. struct object)
+ $ ? get! *** ___ **1 =.. *.. struct object var)

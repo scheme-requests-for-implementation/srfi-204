@@ -1,3 +1,5 @@
+<!-- this is the description of the pattern grammar in gauche, which I used as a starting point -->
+
 <pre class="example">pat : <var>patvar</var>                       ;; anything, and binds pattern var
     | <b>_</b>                            ;; anything
     | ()                           ;; the empty list

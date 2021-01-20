@@ -1,0 +1,131 @@
+# Starting test unsyntax-match-test
+ok 1 - unsyntax-0.0.3.20-dd01
+ok 2 - any
+ok 3 - symbol
+ok 4 - number
+ok 5 - string
+ok 6 - literal symbol
+ok 7 - null
+ok 8 - pair
+ok 9 - vector
+ok 10 - any doubled
+ok 11 - and empty
+ok 12 - and single
+ok 13 - and double
+ok 14 - or empty
+ok 15 - or single
+ok 16 - or double
+ok 17 - or unbalanced
+ok 18 - not
+ok 19 - pred
+ok 20 - named pred
+ok 21 - duplicate symbols pass
+ok 22 - duplicate symbols fail
+ok 23 - duplicate symbols fail 2
+ok 24 - duplicate symbols samth
+ok 25 - duplicate symbols bound
+ok 26 - duplicate quasiquote
+ok 27 - ellipses
+ok 28 - real ellipses
+ok 29 - vector ellipses
+ok 30 - pred ellipses
+ok 31 - failure continuation
+ok 32 - let
+ok 33 - let*
+ok 34 - getter car
+ok 35 - getter cdr
+ok 36 - getter vector
+ok 37 - setter car
+ok 38 - setter cdr
+ok 39 - setter vector
+ok 40 - single tail
+ok 41 - single tail 2
+ok 42 - single duplicate tail
+ok 43 - multiple tail
+ok 44 - tail against improper list
+ok 45 - Riastradh quasiquote
+ok 46 - unquote-splicing
+ok 47 - unquote-splicing tail
+ok 48 - unquote-splicing tail fail
+ok 49 - trivial tree search
+ok 50 - simple tree search
+ok 51 - deep tree search
+ok 52 - non-tail tree search
+ok 53 - restricted tree search
+ok 54 - fail restricted tree search
+ok 55 - sxml tree search
+ok 56 - failed sxml tree search
+ok 57 - collect tree search
+ok 58 - anded tail pattern
+ok 59 - anded search pattern
+ok 60 - joined tail
+ok 61 - list **1
+ok 62 - list **1 failed
+ok 63 - list **1 with predicate
+ok 64 - list **1 with failed predicate
+ok 65 - list =.. too few
+ok 66 - list =..
+ok 67 - list =.. too many
+ok 68 - list =.. tail
+ok 69 - list =.. tail fail
+ok 70 - list *.. too few
+ok 71 - list *.. lo
+ok 72 - list *.. hi
+ok 73 - list *.. too many
+ok 74 - list *.. tail
+ok 75 - list *.. tail 2
+ok 76 - list *.. tail
+ok 77 - list *.. tail fail
+ok 78 - match-named-let
+ok 79 - match-letrec
+ok 80 - match-letrec quote
+ok 81 - match-letrec mnieper
+ok 82 - record positional
+ok 83 - record named
+ok 84 - setter record positional
+ok 85 - setter record named
+ok 86 - var ...
+ok 87 - var =..
+ok 88 - var *..
+ok 89 - var **1
+ok 90 - var _
+ok 91 - var quote
+ok 92 - var $
+ok 93 - var struct
+ok 94 - var @
+ok 95 - var object
+ok 96 - var =
+ok 97 - var and
+ok 98 - var or
+ok 99 - var not
+ok 100 - var ?
+ok 101 - var set!
+ok 102 - var get!
+ok 103 - var quasiquote
+ok 104 - var ___
+ok 105 - var unquote
+ok 106 - var unquote-splicing
+ok 107 - var var
+not ok 108 - test var var 2
+ok 109 - test var ... 2
+ok 110 - test var =.. 2
+ok 111 - test var *.. 2
+ok 112 - test var **1 2
+ok 113 - test var _ 2
+ok 114 - test var quote 2
+ok 115 - test var $ 2
+ok 116 - test var struct 2
+ok 117 - test var @ 2
+ok 118 - test var object 2
+ok 119 - test var = 2
+ok 120 - test var and 2
+ok 121 - test var or 2
+ok 122 - test var not 2
+ok 123 - test var ? 2
+ok 124 - test var set! 2
+ok 125 - test var get! 2
+ok 126 - test var quasiquote 2
+ok 127 - test var ___ 2
+ok 128 - test var unquote 2
+ok 129 - test var unquote-splicing 2
+1..129
