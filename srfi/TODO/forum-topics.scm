@@ -272,7 +272,7 @@
     ((or (p b c d ... x)
 	 (a p c d ... x)
 	 (a b p d ... x))
-     (=> fail) 
+     (=> fail)
      (if (equal? x p)
 	 #t
 	 (fail)))
@@ -321,7 +321,7 @@
 
 (define (make-alt-pred new-pred) (lambda (a) (lambda (b) (new-pred a b))))
 
-;;;emulate 
+;;;emulate
 (import (scheme case-lambda))
 (define (make-pred pred)
   (case-lambda
@@ -453,7 +453,7 @@
 (fold (lambda (env-var out)
 	(match env-var
 	      (("PATH" . path) (match-let (((a b c) out)) (list path b c)))
-	      (("USERPROFILE" . home) (match-let (((a b c) out)) (list a home c))) 
+	      (("USERPROFILE" . home) (match-let (((a b c) out)) (list a home c)))
 	      (("HOME" . home) (match-let (((a b c) out)) (list a home c)))
 	      (("USER" . user)  (match-let (((a b c) out))  (list a b user)))
 	      (("USERNAME" . user)  (match-let (((a b c) out))  (list a b user)))
@@ -463,7 +463,7 @@
 
 (fold (match-lambda*
 	((("PATH" . path) (p h u)) (list path h u))
-	((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+	((("USERPROFILE" . home)  (p h u)) (list p home u))
 	((("HOME" . home)  (p h u)) (list p home u))
 	((("USER" . user)  (p h u))  (list p h user))
 	((("USERNAME" . user)  (p h u))  (list p h user))

@@ -16,7 +16,7 @@
 ;;; License along with this library; if not, write to the Free Software
 ;;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-(library 
+(library
       (srfi srfi-204)
       (export
 	;; (chibi match) exports
@@ -25,7 +25,7 @@
 
 	;;extension helpers
 	make-match-pred make-match-get make-match-set
-	
+
 	;;auxiliary syntax
 	___ **1 =.. *.. *** ? $ struct object get! var)
 

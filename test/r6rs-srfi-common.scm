@@ -45,7 +45,7 @@
 ;; non-linear patterns
 (if (not non-linear-pattern) (test-skip 4))
 (test-equal "repeated pattern" 'A (match (list 'A 'B 'A) ((a b a) a)))
-(test-equal "quasi-quote fail repeated pattern" 
+(test-equal "quasi-quote fail repeated pattern"
 	    'fail
 	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
 (test-equal "quasi-quote repeated pattern 1"
@@ -57,7 +57,7 @@
 
 (if non-linear-pattern (test-skip 4))
 (test-error "error repeated pattern" #t (match (list 'A 'B 'A) ((a b a) a)))
-(test-error "error quasi-quote fail repeated pattern" 
+(test-error "error quasi-quote fail repeated pattern"
 	    #t
 	    (match (list 'A 'B 'A) (`(,a b ,a) a) (_ 'fail)))
 (test-error "error quasi-quote repeated pattern 1"
@@ -69,7 +69,7 @@
 
 (test-eqv "repeated pattern->failure"
 	 1
-	 (match (list 1 2 1) 
+	 (match (list 1 2 1)
 		((a b c) (=> fail) (if (equal? a c) a (fail)))
 		(_ 'fail)))
 
@@ -84,7 +84,7 @@
 	    #t
 	    (match (list 1 2 3) ((1 2 3 ...) #t)))
 (test-equal "single quasi-quote splicing match"
-	    #t 
+	    #t
 	    (match (list 1 2 3) (`(1 2 ,@3) #t)))
 (test-equal "triple ellipsis match"
 	    #t
@@ -109,7 +109,7 @@
 	      '((1 4) (2 5) (3 6))
 	      (transpose '((1 2 3) (4 5 6)))))
 
-(let ((palindrome? 
+(let ((palindrome?
 	(if non-linear-pattern
 	    (lambda (str)
 	      (let loop ((chars (filter char-alphabetic?
@@ -252,7 +252,7 @@
 			  out
 			  (loop port (append out (extract (read port)))))))))
 	      (extract-imports "data/srfi-test.scm")))
-	
+
 ;; boolean operators
 (test-equal "empty and match" #t (match 1 ((and) #t)))
 (test-equal "and identifier match" 1 (match 1 ((and x) x)))
@@ -303,7 +303,7 @@
 	     (check-output
 	       (fold (match-lambda*
 		       ((("PATH" . path) (p h u)) (list path h u))
-		       ((("USERPROFILE" . home)  (p h u)) (list p home u)) 
+		       ((("USERPROFILE" . home)  (p h u)) (list p home u))
 		       ((("HOME" . home)  (p h u)) (list p home u))
 		       ((("USER" . user)  (p h u))  (list p h user))
 		       ((("USERNAME" . user)  (p h u))  (list p h user))
@@ -340,7 +340,7 @@
 		  (any (error #f "not implemented yet" any))))
 
   (test-equal "quasi-quoted dotted pair/pred/boolean sexpr eval"
-	      67 
+	      67
 	      (eval-sexpr '(+ (* 3 4 5) (- 10 3)))))
 
 (if non-linear-pred
@@ -453,7 +453,7 @@
 	  (x posn-x set-posn-x!)
 	  (y posn-y set-posn-y!)))
   (else (define-record-type posn (fields (mutable x) (mutable y)))))
-  
+
   (if (not record-implemented) (test-skip 1))
   (test-equal "record setter"
 	      (list 7 4)
@@ -574,7 +574,7 @@
 	(match-let loop (((a . rest) (cdr (iota (+ n 1))))
 			 (out 1))
 		   (if (null? rest) (* a out) (loop rest (* a out))))))
-  
+
   (test-equal "match-named-let/tail"
 	      39916800
 	      (fact 11))
@@ -605,19 +605,19 @@
   undefined value
   last value
   error
-  
+
   whichever passes is the behavior of this implementation.")
 (display message)
 (newline)
-(test-equal "match w/o body has undefined value" 
+(test-equal "match w/o body has undefined value"
 	    (if #f #t)
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
-(test-equal "match w/o body has last value" 
+(test-equal "match w/o body has last value"
 	    2
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
-(test-error "match w/o body causes error" 
+(test-error "match w/o body causes error"
 	    #t
 	    (test-read-eval-string "(match (list 1 2) ((a b)))"))
 
