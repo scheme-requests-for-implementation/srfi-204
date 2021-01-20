@@ -165,7 +165,7 @@ The following terms will be used in describing pattern matching:
 	<dt>variable</dt><dd>an identifier in a pattern which may be used in the body. May not be <code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>,  <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b></code>.</dd>
 	<dt>operator</dt><dd>the auxiliary syntax <code>$ struct object = and or not ? set! get! ... ___ **1 =.. *..</code> which are exported (if not already defined) via SRFI 206, if available.</dd>
 	<dt>literal</dt><dd>any quoted or self-quoting datum</dd>
-	<dt>is an error/are errors</dt><dd>according to the <a href="https://srfi.schemers.org/srfi-faq">FAQ</a> this phrase, unlike "signals an error," doesn't define any behavior.</dd>
+	<dt>is an error/are errors</dt><dd>according to the <a href="https://srfi.schemers.org/srfi-faq.html">FAQ</a> this phrase, unlike "signals an error," doesn't define any behavior.</dd>
 </dl>
 <h3 id="Patterns">Patterns</h3>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
