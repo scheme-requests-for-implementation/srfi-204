@@ -23,7 +23,7 @@
 
 (library
   (srfi :204)
-  (export 
+  (export
     ;; (chibi match) forms
     match match-lambda match-lambda* match-let match-letrec match-let*
     ;; auxiliary syntax

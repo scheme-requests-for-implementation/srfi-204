@@ -24,7 +24,7 @@
 (cond-expand
   (chibi
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 
@@ -35,7 +35,7 @@
       (include  "204/204.scm")))
   (gauche
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 
@@ -69,7 +69,7 @@
       (include "204/204.scm")))
   ((or larceny (library (srfi 99)))
     (define-library (srfi 204)
-      (export 
+      (export
 	;; (chibi match) forms
 	match match-lambda match-lambda* match-let match-letrec match-let*
 	;; auxiliary syntax 

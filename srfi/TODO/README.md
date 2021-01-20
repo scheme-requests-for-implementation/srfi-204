@@ -30,7 +30,7 @@
   - guile **these are on hold until (srfi :206) is available**
   - chez **meanwhile, get in r6rs file form**
   - loko
- 
+
   - cyclone **post last call, or maybe not at all**
   - unsyntax **post last call**
 <!-- - document and test make-match-pred make-match-get make-match-set (decided cut was better option)-->

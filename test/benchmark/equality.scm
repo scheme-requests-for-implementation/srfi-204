@@ -119,8 +119,8 @@
   (let lp ((seq seq)
 	   (out 0))
     (match seq
-	 (((a b) . rest) 
-	  (if (alt-=? a b) 
+	 (((a b) . rest)
+	  (if (alt-=? a b)
 	      (lp rest (+ out 1))
 	      (lp rest (- out 1))))
 	 (_ out))))
@@ -132,8 +132,8 @@
   (let lp ((seq seq)
 	   (out 0))
     (match seq
-	 (((a b) . rest) 
-	  (if (= a b) 
+	 (((a b) . rest)
+	  (if (= a b)
 	      (lp rest (+ out 1))
 	      (lp rest (- out 1))))
 	 (_ out))))
@@ -146,8 +146,8 @@
   (let lp ((seq seq)
 	   (out 0))
     (match seq
-	 (((a b) . rest) 
-	  (if (alt-=? a b) 
+	 (((a b) . rest)
+	  (if (alt-=? a b)
 	      (lp rest (+ out 1))
 	      (lp rest (- out 1))))
 	 (_ out))))
