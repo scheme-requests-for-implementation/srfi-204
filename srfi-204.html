@@ -331,7 +331,7 @@ Tail patterns will match dotted pairs, and ellipsis patterns won't:
 <p id="handle-arithmetic-sexpr">Tail patterns also don't require any special treatment in quasi-patterns</p>
 <pre><code>
 (define handle-arithmetic-sexpr
- (match-lambda (`(+ . ,operands) (apply + (map <a href="#eval-sexpr ">eval-sexpr</a> operands)))
+ (match-lambda (`(+ . ,operands) (apply + (map <a href="#eval-sexpr">eval-sexpr</a> operands)))
                (`(- . ,operands) (apply - (map eval-sexpr operands)))
                (`(* . ,operands) (apply * (map eval-sexpr operands)))
                (`(/ . ,operands) (apply / (map eval-sexpr operands)))))
@@ -362,7 +362,7 @@ used.</p>
 </code></pre>
 <p>
 Other examples of tree patterns that handle mixed data types or retrieve all
-matches are given in the <a href="#Pred">predicate</a> and <a href="#Extension">extension</a> sections.
+matches are given in the <a href="#Pred">predicate</a> and <a href="#extension">extension</a> sections.
 </p>
 <h4 id="Boolean">Boolean Patterns</h4>
 <p>
