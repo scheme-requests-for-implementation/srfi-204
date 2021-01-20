@@ -91,6 +91,8 @@ compound data structures.</p>
 <ul>
 	<li><b>(var var)</b>doesn't work at top level. It does inside a macro.</li>
 	<li>There are some implementations where (var ...) does not work</li>
+	<li><b>(match '(1 (1 1)) (((var var) (var var)) var)) =&gt; 1</b> outside macro,
+	       similar issues with other syntax</li>
 	<li>Need more var tests</li>
 </ul>
 

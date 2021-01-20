@@ -447,7 +447,7 @@
 ;; pattern so far.
 
 (define-syntax match-two
-  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get! var)
+  (syntax-rules (___ **1 =.. *.. *** quote quasiquote ? $ struct object = and or not set! get!)
     ((match-two v () g+s (sk ...) fk i)
      (if (null? v) (sk ... i) fk))
     ((match-two v (quote p) g+s (sk ...) fk i)
@@ -473,18 +473,6 @@
      (if (pred v) (match-one v (and . p) g+s sk fk i) fk))
     ((match-two v (= proc p) . x)
      (let ((w (proc v))) (match-one w p . x)))
-    ((match-two v (var x) g+s (sk ...) fk (id ...))
-     (match-check-identifier
-      x
-      (let-syntax
-          ((new-sym?
-            (syntax-rules (id ...)
-              ((new-sym? x sk2 fk2) sk2)
-              ((new-sym? y sk2 fk2) fk2))))
-        (new-sym? random-sym-to-match
-                  (let ((x v)) (sk ... (id ... x)))
-                  (if (equal? v x) (sk ... (id ...)) fk)))
-      (if (equal? v x) (sk ... (id ...)) fk)))
     ((match-two v (p ___ . r) g+s sk fk i)
      (match-extract-underscore p (match-gen-ellipsis v p r g+s sk fk i) i ()))
     ((match-two v (p) g+s sk fk i)
