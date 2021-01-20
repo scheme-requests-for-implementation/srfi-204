@@ -699,3 +699,10 @@
 
 ; => ((2 3) (4 5) )
 
+(define (even-for-op? n op incr id)
+  (match-letrec
+    (((evenlike oddlike)
+      (list (lambda (n) (if (<= n id) #t (oddlike (op n incr))))
+	    (lambda (n) (if (<= n id) #f (evenlike (op n incr)))))))
+    (evenlike n)))
+

@@ -296,16 +296,16 @@
 			 (list a b))))
 
 (let-syntax ((test-var (syntax-rules ()
-			 ((test-var '(syn ...))
+			 ((test-var syn ...)
 			  (begin (test-equal 
 				   (string-append "var " (symbol->string 'syn) " in macro")
 				   1
 				   (match '(1 1) (((var syn) (var syn)) syn)
 					  (_ 'fail)))
 				 ...)))))
-  (test-var '(...  =.. *.. **1 _ quote $ struct @ object =
+  (test-var ...  =.. *.. **1 _ quote $ struct @ object =
 	    and or not ? set! get! quasiquote ___ unquote
-	    unquote-splicing var)))
+	    unquote-splicing var))
 ;; for some reason all these tests pass
 
 (test-equal "test var var 2"
