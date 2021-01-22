@@ -1,0 +1,2272 @@
+%%%% Starting test guile-match-test
+Group begin: guile-match-test
+Test begin:
+  test-name: "var =.. in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =..) =.. 5) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var *.. in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var *..) =.. 5) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var **1 in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var **1) =.. 5) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var _ in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var _) =.. 5) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quote in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quote) =.. 5) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var $ in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var $) =.. 5) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var struct in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var struct) =.. 5) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var @ in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var @) =.. 5) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var object in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var object) =.. 5) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var = in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =) =.. 5) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var and in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var and) =.. 5) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var or in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var or) =.. 5) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var not in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var not) =.. 5) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ? in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ?) =.. 5) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var set! in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var set!) =.. 5) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var get! in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var get!) =.. 5) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quasiquote in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quasiquote) =.. 5) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ___ in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ___) =.. 5) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote) =.. 5) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote-splicing in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote-splicing) =.. 5) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var var in macro with =.."
+  source-file: "test/var-common.scm"
+  source-line: 33
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with =..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var var) =.. 5) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var =.. in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =..) *.. 2 7) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var *.. in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var *..) *.. 2 7) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var **1 in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var **1) *.. 2 7) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var _ in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var _) *.. 2 7) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quote in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quote) *.. 2 7) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var $ in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var $) *.. 2 7) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var struct in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var struct) *.. 2 7) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var @ in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var @) *.. 2 7) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var object in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var object) *.. 2 7) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var = in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =) *.. 2 7) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var and in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var and) *.. 2 7) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var or in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var or) *.. 2 7) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var not in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var not) *.. 2 7) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ? in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ?) *.. 2 7) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var set! in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var set!) *.. 2 7) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var get! in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var get!) *.. 2 7) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quasiquote in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quasiquote) *.. 2 7) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ___ in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ___) *.. 2 7) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote) *.. 2 7) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote-splicing in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote-splicing) *.. 2 7) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var var in macro with *.."
+  source-file: "test/var-common.scm"
+  source-line: 45
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with *..") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var var) *.. 2 7) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var =.. in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =..) **1) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var *.. in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var *..) **1) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var **1 in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var **1) **1) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var _ in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var _) **1) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quote in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quote) **1) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var $ in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var $) **1) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var struct in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var struct) **1) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var @ in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var @) **1) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var object in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var object) **1) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var = in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var =) **1) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var and in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var and) **1) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var or in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var or) **1) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var not in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var not) **1) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ? in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ?) **1) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var set! in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var set!) **1) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var get! in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var get!) **1) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var quasiquote in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var quasiquote) **1) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var ___ in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var ___) **1) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote) **1) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var unquote-splicing in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var unquote-splicing) **1) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var var in macro with **1"
+  source-file: "test/var-common.scm"
+  source-line: 57
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with **1") (quote (1 2 3 4 5)) (match (quote (1 2 3 4 5)) (((var var) **1) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (1 2 3 4 5)
+  expected-value: (1 2 3 4 5)
+Test begin:
+  test-name: "var =.. in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var =..) _ _ _ _) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.. in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var *..) _ _ _ _) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1 in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var **1) _ _ _ _) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _ in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var _) _ _ _ _) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var quote) _ _ _ _) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $ in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var $) _ _ _ _) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var struct) _ _ _ _) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @ in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var @) _ _ _ _) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var object) _ _ _ _) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var = in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var =) _ _ _ _) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var and) _ _ _ _) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var or) _ _ _ _) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var not) _ _ _ _) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ? in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var ?) _ _ _ _) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set! in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var set!) _ _ _ _) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get! in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var get!) _ _ _ _) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var quasiquote) _ _ _ _) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___ in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var ___) _ _ _ _) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var unquote) _ _ _ _) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var unquote-splicing) _ _ _ _) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var in macro with _"
+  source-file: "test/var-common.scm"
+  source-line: 69
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with _") 1 (match (quote (1 2 3 4 5)) (((var var) _ _ _ _) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.. in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var =..) (quote (a b c d))) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.. in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var *..) (quote (a b c d))) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1 in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var **1) (quote (a b c d))) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _ in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var _) (quote (a b c d))) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var quote) (quote (a b c d))) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $ in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var $) (quote (a b c d))) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var struct) (quote (a b c d))) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @ in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var @) (quote (a b c d))) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var object) (quote (a b c d))) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var = in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var =) (quote (a b c d))) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var and) (quote (a b c d))) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var or) (quote (a b c d))) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var not) (quote (a b c d))) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ? in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var ?) (quote (a b c d))) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set! in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var set!) (quote (a b c d))) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get! in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var get!) (quote (a b c d))) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var quasiquote) (quote (a b c d))) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___ in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var ___) (quote (a b c d))) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var unquote) (quote (a b c d))) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var unquote-splicing) (quote (a b c d))) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var in macro with quote"
+  source-file: "test/var-common.scm"
+  source-line: 82
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with quote") 1 (match (quote (1 (a b c d))) (((var var) (quote (a b c d))) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.. in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var =..) b) (list =.. b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var *.. in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var *..) b) (list *.. b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var **1 in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var **1) b) (list **1 b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var _ in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var _) b) (list _ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var quote in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var quote) b) (list quote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var $ in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var $) b) (list $ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var struct in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var struct) b) (list struct b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var @ in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var @) b) (list @ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var object in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var object) b) (list object b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var = in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var =) b) (list = b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var and in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var and) b) (list and b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var or in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var or) b) (list or b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var not in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var not) b) (list not b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var ? in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var ?) b) (list ? b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var set! in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var set!) b) (list set! b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var get! in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var get!) b) (list get! b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var quasiquote in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var quasiquote) b) (list quasiquote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var ___ in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var ___) b) (list ___ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var unquote in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var unquote) b) (list unquote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var unquote-splicing in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var unquote-splicing) b) (list unquote-splicing b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var var in macro with $"
+  source-file: "test/var-common.scm"
+  source-line: 105
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with $") (list 3 4) (match (make-point 3 4) (($ Point (var var) b) (list var b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var =.. in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var =..) b) (list =.. b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var *.. in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var *..) b) (list *.. b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var **1 in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var **1) b) (list **1 b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var _ in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var _) b) (list _ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var quote in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var quote) b) (list quote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var $ in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var $) b) (list $ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var struct in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var struct) b) (list struct b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var @ in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var @) b) (list @ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var object in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var object) b) (list object b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var = in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var =) b) (list = b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var and in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var and) b) (list and b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var or in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var or) b) (list or b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var not in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var not) b) (list not b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var ? in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var ?) b) (list ? b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var set! in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var set!) b) (list set! b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var get! in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var get!) b) (list get! b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var quasiquote in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var quasiquote) b) (list quasiquote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var ___ in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var ___) b) (list ___ b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var unquote in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var unquote) b) (list unquote b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var unquote-splicing in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var unquote-splicing) b) (list unquote-splicing b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var var in macro with struct"
+  source-file: "test/var-common.scm"
+  source-line: 118
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with struct") (list 3 4) (match (make-point 3 4) ((struct Point (var var) b) (list var b)) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (3 4)
+  expected-value: (3 4)
+Test begin:
+  test-name: "var =.. in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var =..)) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var *.. in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var *..)) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var **1 in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var **1)) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var _ in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var _)) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var quote in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var quote)) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var $ in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var $)) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var struct in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var struct)) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var @ in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var @)) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var object in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var object)) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var = in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var =)) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var and in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var and)) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var or in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var or)) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var not in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var not)) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var ? in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var ?)) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var set! in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var set!)) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var get! in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var get!)) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var quasiquote in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var quasiquote)) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var ___ in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var ___)) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var unquote in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var unquote)) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var unquote-splicing in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var unquote-splicing)) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var var in macro with ="
+  source-file: "test/var-common.scm"
+  source-line: 132
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with =") (quote (b c d)) (match (quote (a b c d)) ((= (lambda (x) (memq (quote b) x)) (var var)) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (b c d)
+  expected-value: (b c d)
+Test begin:
+  test-name: "var =.. in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var =..) 1) (quote (a b c d))) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.. in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var *..) 1) (quote (a b c d))) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1 in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var **1) 1) (quote (a b c d))) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _ in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var _) 1) (quote (a b c d))) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var quote) 1) (quote (a b c d))) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $ in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var $) 1) (quote (a b c d))) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var struct) 1) (quote (a b c d))) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @ in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var @) 1) (quote (a b c d))) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var object) 1) (quote (a b c d))) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var = in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var =) 1) (quote (a b c d))) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var and) 1) (quote (a b c d))) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var or) 1) (quote (a b c d))) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var not) 1) (quote (a b c d))) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ? in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var ?) 1) (quote (a b c d))) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set! in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var set!) 1) (quote (a b c d))) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get! in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var get!) 1) (quote (a b c d))) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var quasiquote) 1) (quote (a b c d))) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___ in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var ___) 1) (quote (a b c d))) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var unquote) 1) (quote (a b c d))) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var unquote-splicing) 1) (quote (a b c d))) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var in macro with and"
+  source-file: "test/var-common.scm"
+  source-line: 145
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with and") 1 (match (quote (1 (a b c d))) (((and (var var) 1) (quote (a b c d))) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.. in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with or") 1 (match 1 ((or (var =..) 2 3) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.. in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with or") 1 (match 1 ((or (var *..) 2 3) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1 in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with or") 1 (match 1 ((or (var **1) 2 3) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _ in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with or") 1 (match 1 ((or (var _) 2 3) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with or") 1 (match 1 ((or (var quote) 2 3) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $ in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with or") 1 (match 1 ((or (var $) 2 3) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with or") 1 (match 1 ((or (var struct) 2 3) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @ in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with or") 1 (match 1 ((or (var @) 2 3) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with or") 1 (match 1 ((or (var object) 2 3) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var = in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with or") 1 (match 1 ((or (var =) 2 3) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with or") 1 (match 1 ((or (var and) 2 3) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with or") 1 (match 1 ((or (var or) 2 3) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with or") 1 (match 1 ((or (var not) 2 3) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ? in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with or") 1 (match 1 ((or (var ?) 2 3) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set! in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with or") 1 (match 1 ((or (var set!) 2 3) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get! in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with or") 1 (match 1 ((or (var get!) 2 3) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with or") 1 (match 1 ((or (var quasiquote) 2 3) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___ in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with or") 1 (match 1 ((or (var ___) 2 3) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with or") 1 (match 1 ((or (var unquote) 2 3) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with or") 1 (match 1 ((or (var unquote-splicing) 2 3) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var in macro with or"
+  source-file: "test/var-common.scm"
+  source-line: 158
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with or") 1 (match 1 ((or (var var) 2 3) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.. in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with and-not") 1 (match 1 ((and (var =..) (not 2)) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var *.. in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with and-not") 1 (match 1 ((and (var *..) (not 2)) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var **1 in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with and-not") 1 (match 1 ((and (var **1) (not 2)) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var _ in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with and-not") 1 (match 1 ((and (var _) (not 2)) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quote in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with and-not") 1 (match 1 ((and (var quote) (not 2)) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var $ in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with and-not") 1 (match 1 ((and (var $) (not 2)) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var struct in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with and-not") 1 (match 1 ((and (var struct) (not 2)) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var @ in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with and-not") 1 (match 1 ((and (var @) (not 2)) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var object in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with and-not") 1 (match 1 ((and (var object) (not 2)) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var = in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with and-not") 1 (match 1 ((and (var =) (not 2)) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var and in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with and-not") 1 (match 1 ((and (var and) (not 2)) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var or in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with and-not") 1 (match 1 ((and (var or) (not 2)) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var not in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with and-not") 1 (match 1 ((and (var not) (not 2)) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ? in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with and-not") 1 (match 1 ((and (var ?) (not 2)) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var set! in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with and-not") 1 (match 1 ((and (var set!) (not 2)) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var get! in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with and-not") 1 (match 1 ((and (var get!) (not 2)) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var quasiquote in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with and-not") 1 (match 1 ((and (var quasiquote) (not 2)) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var ___ in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with and-not") 1 (match 1 ((and (var ___) (not 2)) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with and-not") 1 (match 1 ((and (var unquote) (not 2)) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var unquote-splicing in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with and-not") 1 (match 1 ((and (var unquote-splicing) (not 2)) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var var in macro with and-not"
+  source-file: "test/var-common.scm"
+  source-line: 171
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with and-not") 1 (match 1 ((and (var var) (not 2)) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: 1
+  expected-value: 1
+Test begin:
+  test-name: "var =.. in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote =..)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var =..)) =..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var *.. in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote *..)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var *..)) *..) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var **1 in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote **1)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var **1)) **1) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var _ in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote _)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var _)) _) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var quote in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote quote)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var quote)) quote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var $ in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote $)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var $)) $) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var struct in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote struct)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var struct)) struct) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var @ in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote @)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var @)) @) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var object in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote object)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var object)) object) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var = in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote =)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var =)) =) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var and in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote and)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var and)) and) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var or in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote or)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var or)) or) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var not in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote not)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var not)) not) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var ? in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote ?)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var ?)) ?) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var set! in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote set!)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var set!)) set!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var get! in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote get!)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var get!)) get!) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var quasiquote in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote quasiquote)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var quasiquote)) quasiquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var ___ in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote ___)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var ___)) ___) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var unquote in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var unquote)) unquote) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var unquote-splicing in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote unquote-splicing)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var unquote-splicing)) unquote-splicing) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Test begin:
+  test-name: "var var in macro with ?"
+  source-file: "test/var-common.scm"
+  source-line: 184
+  source-form: (test-equal (string-append "var " (symbol->string (quote var)) " in macro with ?") (quote (a b c d)) (match (quote (a b c d)) ((? pair? (var var)) var) (_ (quote fail))))
+Test end:
+  result-kind: pass
+  actual-value: (a b c d)
+  expected-value: (a b c d)
+Group end: guile-match-test
+# of expected passes      252
