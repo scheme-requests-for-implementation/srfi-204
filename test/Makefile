@@ -71,6 +71,7 @@ srfi_all := chez-srfi-test gauche-srfi-test guile-srfi-test\
 	guile-3-srfi-test larceny-srfi-test loko-srfi-test unsyntax-srfi-test
 match := match-common.scm
 srfi := srfi-common.scm
+var := var-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
 unsyn_deps := srfi/204/204.scm srfi/unsyntax/204.sld $(srfi-206)
 
@@ -116,6 +117,9 @@ guile-match-test: match-test.scm $(match) $(guile_deps) ## run (chibi match) tes
 	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 guile-srfi-test: srfi-test.scm $(srfi) $(guile_deps) ## run example code in srfi 204 spec using guile
+	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+
+guile-var-test: var-test.scm $(var) $(guile_deps) ## run var tests using guile
 	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 larceny-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with larceny
