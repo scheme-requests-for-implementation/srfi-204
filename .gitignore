@@ -4,3 +4,7 @@ tags
 !/.gitignore
 files.*
 srfi/chez9.5/srfi
+srfi/cyclone0.19/srfi-204.c
+srfi/cyclone0.19/srfi-204.so
+srfi/cyclone0.19/srfi-204.meta
+srfi/cyclone0.19/srfi-204.o
