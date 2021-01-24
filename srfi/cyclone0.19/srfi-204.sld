@@ -1230,7 +1230,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Otherwise COND-EXPANDed bits.
 
-(cond-expand ;; old er cyclone macros had TODO: good enough, used
+(cond-expand
+  (cyclone
+    (define-syntax match-check-ellipsis
+      (er-macro-transformer
+	(lambda (expr rename compare)
+	  (if (compare '... (cadr expr))
+	      (car (cddr expr))
+	      (cadr (cddr expr))))))
+    (define-syntax match-check-identifier
+      (er-macro-transformer
+	(lambda (expr rename compare)
+	  (if (symbol? (cadr expr)) ;; TODO: good enough?
+	      (car (cddr expr))
+	      (cadr (cddr expr))))))
+    (define-syntax match-bound-identifier=?
+      (er-macro-transformer
+	(lambda (expr rename compare)
+	  (if (eq? (cadr expr) (car (cddr expr)))
+	      (cadr (cddr expr))
+	      (car (cddr (cddr expr))))))))
  (chibi      ;; symbol? where chibi uses identifier. Using portable version
   (define-syntax match-check-ellipsis ;; for now
     (er-macro-transformer
