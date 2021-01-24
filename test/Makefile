@@ -113,6 +113,7 @@ chibi-srfi-test: export TEST_VERBOSE=true
 chibi-srfi-test: srfi-test.scm $(chibi_deps) ## run example code in srfi 204 spec using chibi
 	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
 
+#cyclone-match-test: export TEST_VERBOSE=true #currently causes an error before tests run
 cyclone-match-test: $(cyc_match)  ## run (chibi match) test suit using cyclone
 	@$(ICYC) $(ICYCFLAGS) $< | tee cyclone-match-test.log
 
