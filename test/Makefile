@@ -52,6 +52,9 @@ LOKO = loko
 LOKOFLAGS = --script
 UNSYNTAX = unsyntax-scheme
 UNSYNTAXFLAGS = -I $(top_srcdir)
+CYCC := cyclone
+ICYC := icyc
+ICYCFLAGS := -I $(top_srcdir)
 
 # change when testing a new interpreter
 SCM := $(GUILE)
@@ -74,6 +77,9 @@ srfi := srfi-common.scm
 var := var-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
 unsyn_deps := srfi/204/204.scm srfi/unsyntax/204.sld $(srfi-206)
+cyc_deps := srfi/cyclone0.19/srfi-204.so
+cyc_so_deps := srfi/cyclone0.19/srfi-204.sld
+cyc_match := srfi/cyclone0.19/match-test.scm $(cyc_deps)
 
 # add red/green [FAIL]/[PASS] to output based on the words
 # unexpected|ERROR/expected
@@ -106,6 +112,12 @@ chibi-match-test: match-test.scm $(chibi_deps) ## run (chibi match) test suite w
 chibi-srfi-test: export TEST_VERBOSE=true
 chibi-srfi-test: srfi-test.scm $(chibi_deps) ## run example code in srfi 204 spec using chibi
 	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
+
+cyclone-match-test: $(cyc_match)  ## run (chibi match) test suit using cyclone
+	@$(ICYC) $(ICYCFLAGS) $< | tee cyclone-match-test.log
+
+srfi/cyclone0.19/srfi-204.so: $(cyc_so_deps)
+	@$(CYCC) $<
 
 gauche-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with gauche
 	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
