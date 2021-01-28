@@ -77,9 +77,11 @@ srfi := srfi-common.scm
 var := var-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
 unsyn_deps := srfi/204/204.scm srfi/unsyntax/204.sld $(srfi-206)
-cyc_deps := srfi/cyclone0.19/srfi-204.so
+cyc_dep := srfi/cyclone0.19/srfi-204.so
+cyc_deps := $(cyc_dep) srfi/cyclone0.19/srfi-204.c\
+	srfi/cyclone0.19/srfi-204.meta srfi/cyclone0.19/srfi-204.o
 cyc_so_deps := srfi/cyclone0.19/srfi-204.sld
-cyc_match := srfi/cyclone0.19/match-test.scm $(cyc_deps)
+cyc_match := srfi/cyclone0.19/match-test.scm $(cyc_dep)
 
 # add red/green [FAIL]/[PASS] to output based on the words
 # unexpected|ERROR/expected
@@ -102,6 +104,11 @@ help:  ## print this message
 clean:  ## get rid of log files
 	rm -f *.log
 
+.ONESHELL:
+clean-cyclone:
+	cd $(top_srcdir)
+	$(RM) $(cyc_deps)
+
 match-all: $(match_all) ## run all targets for (chibi match) library test suite
 srfi-all: $(srfi_all) ## run all targets for examples from srfi
 
@@ -110,14 +117,14 @@ chibi-match-test: match-test.scm $(chibi_deps) ## run (chibi match) test suite w
 	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-match-test.log
 
 chibi-srfi-test: export TEST_VERBOSE=true
-chibi-srfi-test: srfi-test.scm $(chibi_deps) ## run example code in srfi 204 spec using chibi
+chibi-srfi-test: srfi-test.scm $(chibi_dep) ## run example code in srfi 204 spec using chibi
 	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
 
 #cyclone-match-test: export TEST_VERBOSE=true #currently causes an error before tests run
 cyclone-match-test: $(cyc_match)  ## run (chibi match) test suit using cyclone
-	@$(ICYC) $(ICYCFLAGS) $< | tee cyclone-match-test.log
+	@$(ICYC) $(ICYCFLAGS) $< |& tee cyclone-match-test.log
 
-srfi/cyclone0.19/srfi-204.so: $(cyc_so_deps)
+$(cyc_dep): $(cyc_so_deps)
 	@$(CYCC) $<
 
 gauche-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with gauche

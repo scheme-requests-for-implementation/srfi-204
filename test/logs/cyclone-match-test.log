@@ -1,21 +1,26 @@
 
-cyclone> (version)
-"cyclone-0.19"
-cyclone> (run-match-tests)
-match: 
-.............................................................................!.!....
-82 out of 84 (97.6%) tests passed in 0.0 seconds.
-2 errors (2.4%).
-no source in: ((exception "Unbound variable" p-ls) (name$58742 . "match-letrec") (source
-$58744 match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (
-list x a))))) (append (y) (b))) (var-names$58745) (var-values$58746))
-ERROR: test-84
-    ("Unbound variable" p-ls)ERROR: match-letrec mnieper
+              :@
+            @@@
+          @@@@:
+        `@@@@@+
+       .@@@+@@@
+       @@     @@     Cyclone Scheme->C compiler
+      ,@             http://justinethier.github.io/cyclone/
+      '@
+      .@             (c) 2014-2021 Justin Ethier
+       @@     #@     Version 0.24
+       `@@@#@@@.
+        #@@@@@
+        +@@@+
+        @@#
+      `@.
+
+[1mmatch: [0m
+.......................................................................
+......[2m[31m![39m[0m.[2m[31m![39m[0m....no source in: ((exception "Unbound variable" p-ls) (name$25497 . "match-letrec") (source$25499 match-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a))))) (append (y) (b))) (var-names$25500) (var-values$25501))
+
+82 out of 84 (97.6%) tests passed in 1.0 seconds.
+[2m[31m2 errors (2.4%).
+[39m[0m[31mERROR: [39mtest-84
+    ("Unbound variable" p-ls)[31mERROR: [39mmatch-letrec mnieper
     ("Unbound variable" p-ls)(foo a)
-("match" (failures ("    " ERROR ((exception "Unbound variable" p-ls) (name . "match-let
-rec mnieper") (source foo a) (var-names) (var-values))) ("    " ERROR ((exception "Unbou
-nd variable" p-ls) (gen-name . "test-84") (name$58742 . "match-letrec") (source$58744 ma
-tch-letrec (((x y) (list 1 (lambda () (list a x)))) ((a b) (list 2 (lambda () (list x a)
-)))) (append (y) (b))) (var-names$58745) (var-values$58746)))) (ERROR . 2) (trailing . #
-t) (PASS . 82) (count . 84) (skip-group? . #f) (level . 0) (verbose . #f) (parent . #f) 
-(start-time . 1600641189.0))
