@@ -25,6 +25,14 @@
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output
     (import (srfi match-test)))
+  (cyclone
+    (import (except (scheme base) equal?)
+	(scheme write)
+	(srfi cyclone0.19 srfi-204)
+	(only (cyclone test) test-begin test test-end))
+    (define test-name "cyclone-match-test")
+    (define scheme-version-name (string-append "cyclone-" *version*))
+    (include "../srfi/cyclone0.19/match-test.scm"))
   (guile
     (use-modules (srfi srfi-204)
 	    (srfi srfi-64)
