@@ -24,7 +24,7 @@
 (import (except (scheme base) define-record-type)
 	(rnrs records syntactic (6))
 	(srfi 64)
-	(srfi unsyntax 204))
+	(srfi 204))
 (define test-name "unsyntax-match-test")
 (define scheme-version-name (symbol->string (car (features))))
 (cond-expand
@@ -303,7 +303,7 @@
 (define-syntax test-var
   (syntax-rules ()
     ((test-var syn ...)
-     (begin (test-equal 
+     (begin (test-equal
 	      (string-append "var " (symbol->string 'syn))
 	      1
 	      (match '(1 1) (((var syn) (var syn)) syn)

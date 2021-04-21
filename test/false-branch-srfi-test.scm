@@ -1,3 +1,4 @@
+(import (scheme base))
 (cond-expand
   (gauche
     (import (gauche base)
@@ -13,18 +14,5 @@
     (define test-name "false-branch-srfi-test")
     (define scheme-version-name (string-append "gauche-" (gauche-version)))
     (include "./test/srfi-common.scm"))
-  (guile
-    (import (guile)
-	    (srfi srfi-64)
-	    (srfi srfi-9)
-	    (rnrs unicode))
-    (include-from-path "srfi-204/srfi-204.scm")
-    (define non-linear-pattern #t)
-    (define non-linear-pred #t)
-    (define non-linear-field #t)
-    (define record-implemented #f)
-    (define test-name  "false-branch-srfi-test")
-    (define scheme-version-name (string-append "guile-" (version)))
-    (include-from-path "./test/srfi-common.scm")
-    ))
+  (else))
 

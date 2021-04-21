@@ -76,7 +76,7 @@ match := match-common.scm
 srfi := srfi-common.scm
 var := var-common.scm
 r6rs_srfi := r6rs-srfi-common.scm
-unsyn_deps := srfi/204/204.scm srfi/unsyntax/204.sld $(srfi-206)
+unsyn_deps := srfi/204/204.scm srfi/204.sld $(srfi-206)
 cyc_dep := srfi/cyclone0.19/srfi-204.so
 cyc_deps := $(cyc_dep) srfi/cyclone0.19/srfi-204.c\
 	srfi/cyclone0.19/srfi-204.meta srfi/cyclone0.19/srfi-204.o
@@ -99,7 +99,7 @@ HANDLE_USRES := sed '/^ok/ s/.*/$(GREEN)[PASS]&$(RESET)/'\
 .PHONY: check clean help
 
 help:  ## print this message
-	@grep -E '^[^ :]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	grep -E '^[^ :]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 clean:  ## get rid of log files
 	rm -f *.log
@@ -114,70 +114,70 @@ srfi-all: $(srfi_all) ## run all targets for examples from srfi
 
 chibi-match-test: export TEST_VERBOSE=true
 chibi-match-test: match-test.scm $(chibi_deps) ## run (chibi match) test suite with chibi
-	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-match-test.log
+	$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-match-test.log
 
 chibi-srfi-test: export TEST_VERBOSE=true
 chibi-srfi-test: srfi-test.scm $(chibi_dep) ## run example code in srfi 204 spec using chibi
-	@$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
+	$(CHIBISHCEME) $(CHIBISHCEMEFLAGS) $< | tee chibi-srfi-test.log
 
 #cyclone-match-test: export TEST_VERBOSE=true #currently causes an error before tests run
 cyclone-match-test: $(cyc_match)  ## run (chibi match) test suit using cyclone
-	@$(ICYC) $(ICYCFLAGS) $< |& tee cyclone-match-test.log
+	$(ICYC) $(ICYCFLAGS) $< | $(HANDLE_RES) | tee cyclone-match-test.log
 
 $(cyc_dep): $(cyc_so_deps)
-	@$(CYCC) $<
+	$(CYCC) $<
 
 gauche-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with gauche
-	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
+	$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
 
 gauche-srfi-test: srfi-test.scm $(srfi) $(r7rs_deps) ## run example code in srfi 204 spec using gauche
-	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
+	$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
 
-guile-match-test: match-test.scm $(match) $(guile_deps) ## run (chibi match) test suite with guile
-	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+guile-match-test: guile-match-test.scm $(match) $(guile_deps) ## run (chibi match) test suite with guile
+	$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
-guile-srfi-test: srfi-test.scm $(srfi) $(guile_deps) ## run example code in srfi 204 spec using guile
-	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+guile-srfi-test: guile-srfi-test.scm $(srfi) $(guile_deps) ## run example code in srfi 204 spec using guile
+	$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 guile-var-test: var-test.scm $(var) $(guile_deps) ## run var tests using guile
-	@$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+	$(GUILE) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 larceny-match-test: match-test.scm $(match) $(r7rs_deps) ## run (chibi match) test suite with larceny
-	@$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
+	$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
 
 larceny-srfi-test: srfi-test.scm $(srfi) $(r7rs_deps) ## run example code in srfi 204 spec using larceny (fails b/c SRFI 26)
-	@$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
+	$(LARCENY) $(LARCENYFLAGS) $< |& $(HANDLE_RES)
 
-guile-3-srfi-test: srfi-test.scm $(srfi) $(guile_deps) ## run example code in srfi 204 spec using guile-3
-	@$(GUILE-3) $(GUILEFLAGS) $< |& $(HANDLE_RES)
+guile-3-srfi-test: guile-srfi-test.scm $(srfi) $(guile_deps) ## run example code in srfi 204 spec using guile-3
+	$(GUILE-3) $(GUILEFLAGS) $< |& $(HANDLE_RES)
 
 chez-match-test: chez-match-test.scm $(match) ## run tests for (chibi match) using chezscheme
-	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-match-test.log
+	$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-match-test.log
 
 chez-srfi-test: chez-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using chezscheme
-	@$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-srfi-test.log
+	$(CHEZ) $(CHEZFLAGS) $< |& $(HANDLE_RES) | tee chez-srfi-test.log
 
 
 loko-match-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-match-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-match-test: loko-match-test.scm $(match)  ## run tests for (chibi match) using loko
-	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-match-test.log
+	$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-match-test.log
 
 loko-srfi-test: export LOKO_LIBRARY_FILE_EXTENSIONS := .sld
 loko-srfi-test: export LOKO_LIBRARY_PATH :=\
        	$(top_srcdir):$(HOME)/.akku/lib:$$LOKO_LIBRARY_PATH
 loko-srfi-test: loko-srfi-test.scm $(r6rs_srfi) ## run example code in srfi 204 spec using loko
-	@$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-srfi-test.log
+	$(LOKO) $(LOKOFLAGS) $< |& $(HANDLE_RES) | tee loko-srfi-test.log
 
 unsyntax-match-test: unsyntax-match-test.scm $(unsyn_deps) ## run tests for (chibi match) using unsyntax-scheme
-	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-match-test.log | $(HANDLE_USRES)
+	$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-match-test.log | $(HANDLE_USRES)
 
 unsyntax-srfi-test: unsyntax-srfi-test.scm $(unsyn_deps) ## run example code in srfi 204 spec using unsyntax
-	@$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-srfi-test.log | $(HANDLE_USRES)
+	$(UNSYNTAX) $(UNSYNTAXFLAGS) $< | tee unsyntax-srfi-test.log | $(HANDLE_USRES)
 
 false-branch: false-branch-srfi-test.scm ## run false branches of srfi-test w/ util match
-	@$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
+	$(GOSH) $(GOSHFLAGS) $< |& $(HANDLE_RES)
 
 hello-test: hello-test.scm ## run a passing test using SCM
-	@$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)
+	$(SCM) $(SCMFLAGS) $< |& $(HANDLE_RES)

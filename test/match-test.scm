@@ -21,6 +21,8 @@
 ;; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
 
+;this is for r7rs
+(import (scheme base))
 (cond-expand
   (chibi
     ;;export TEST_VERBOSE=true to get verbose output
@@ -33,13 +35,6 @@
     (define test-name "cyclone-match-test")
     (define scheme-version-name (string-append "cyclone-" *version*))
     (include "../srfi/cyclone0.19/match-test.scm"))
-  (guile
-    (use-modules (srfi srfi-204)
-	    (srfi srfi-64)
-	    (srfi srfi-9))
-    (define test-name "guile-match-test")
-    (define scheme-version-name (string-append "guile-" (version)))
-    (include-from-path "test/match-common.scm"))
   (gauche
     (import (only (gauche base) gauche-version)
 	    (srfi 204)
@@ -72,7 +67,17 @@
     (begin
       (include "srfi/204.sld")
       (import (srfi 204))
-      (include "test/match-common.scm"))))
+      (include "test/match-common.scm")))
+  ;does not work
+  (unsyntax
+    (import (except (scheme base) define-record-type)
+	    (rnrs records syntactic (6))
+	    (srfi 64)
+	    (srfi 204))
+    (define test-name "unsyntax-match-test")
+    (define scheme-version-name (symbol->string (car (features))))
+    )
+  (else))
 (cond-expand
   (chibi
     (run-match-tests))
