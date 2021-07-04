@@ -1,4 +1,4 @@
-```
+
 (match \<arg-expr\> \<clause\><sup>+</sup>)  
 (match-lambda \<clause\><sup>+</sup>)  
 (match-lambda\* \<clause\><sup>+</sup>)  
@@ -65,4 +65,4 @@
                           (unquote \<pattern\>) |  
                           ,@\<pattern\> |  
                           (unquote-splicing \<pattern\>  
-```
+
