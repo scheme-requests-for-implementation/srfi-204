@@ -1,3 +1,4 @@
+```
 (match \<arg-expr\> \<clause\><sup>+</sup>)  
 (match-lambda \<clause\><sup>+</sup>)  
 (match-lambda\* \<clause\><sup>+</sup>)  
@@ -29,11 +30,11 @@
                                          and or not set! get! \*** =.. \*.. = ?  
                                          @ struct object ... ___ _  
 \<pattern expression> -> () |  
-                         <boolean> |  
-                         <number> |  
-                         <character> |  
-                         <quotation> |  
-                         <vector>  
+                         \<boolean\> |  
+                         \<number\> |  
+                         \<character\> |  
+                         \<quotation\> |  
+                         \<vector\>  
 \<tail pattern\> -> (\<pattern\><sup>+</sup> . \<pattern\>) |  
                     \#(\<pattern\><sup>+</sup> . \<pattern\>)  
 \<ellipsis pattern\> -> (\<pattern\><sup>+</sup> \<pattern ellipsis\> \<pattern\><sup>\*</sup>) |  
@@ -64,3 +65,4 @@
                           (unquote \<pattern\>) |  
                           ,@\<pattern\> |  
                           (unquote-splicing \<pattern\>  
+```
