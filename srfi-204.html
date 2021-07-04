@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css" type="text/css">
 <style>
 code {
-	background-color:#F5F5F5
+	background-color:#F0F0F0
 }
 pre {
-	background-color:#F5F5F5
+	background-color:#F0F0F0
 }
 dt {
 	font-weight:bold
@@ -158,7 +158,7 @@ elements.
 If no patterns match, an error is signalled. The forms <code>match</code>, <code>match-lambda</code>, and <code>match-lambda*</code> all can match their expression(s) against multiple patterns, but <code>match-let</code>, <code>match-let*</code>, and <code>match-letrec</code> match each expression against one pattern, so non-matching conditions have to be caught outside the match.
 The following terms will be used in describing pattern matching:
 <dl>
-	<dt>pattern</dt><dd>an expression that is supposed to match against the first argument to the <code>match</code> form.</dd>
+	<dt>pattern</dt><dd>data that is supposed to match against the first argument to the <code>match</code> form.</dd>
 	<dt>body</dt><dd>the set of expressions that is evaluated when a pattern matches.</dd>
 	<dt>failure</dt><dd>a thunk that can be called in the body to signal that a match was not successful, and restart matching at the next pattern clause.</dd>
 	<dt>next, subsequent, etc.</dt><dd>patterns are matched in the order they are listed. Matching stops at the first match unless a call is made to failure.</dd>
@@ -169,6 +169,9 @@ The following terms will be used in describing pattern matching:
 	<dt>literal</dt><dd>any quoted or self-quoting datum</dd>
 	<dt>is an error/are errors</dt><dd>according to the <a href="https://srfi.schemers.org/srfi-faq.html">FAQ</a> this phrase, unlike "signals an error," doesn't define any behavior.</dd>
 </dl>
+<h3 id="Syntax">Syntax</h3>
+<p></p>
+<h4 id="match"><code>(match expr (clause) ...)<br>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds patvar
@@ -252,6 +255,7 @@ qp  : ()                           ;; the empty list
     | <var>,@</var>pat                        ;; a pattern
 
 </pre>
+<!--
 <h3 id="Syntax">Syntax</h3>
 <p></p>
 <h4 id="match"><code>(match expr (pattern . body) ...)<br>
@@ -364,6 +368,7 @@ matches and binds the patterns with all match patterns in scope.</p>
 Similar to <code>match-let</code>, but analogously to <code>let*</code>
 matches and binds the patterns in sequence, with preceding match
 patterns in scope.</p>
+-->
 <h3 id="TailContexts">Tail Contexts</h3>
 <p>
 If a pattern matcher is in tail context, expressions marked as tail-bodies below will be in tail context.</p>
