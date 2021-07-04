@@ -1,8 +1,8 @@
-(match \<arg-expr\> \<clause\><sup>+<sup>)
-(match-lambda \<clause\><sup>+<sup>)
-(match-lambda\* \<clause\><sup>+<sup>)
-(match-let <identifier><sup>?<sup> (\<match-let clause\><sup>+<sup>) \<body\><sup>+<sup>)
-(match-letrec (\<match-let clause\><sup>+<sup>) \<body\><sup>+<sup>)
+(match \<arg-expr\> \<clause\><sup>+</sup>)
+(match-lambda \<clause\><sup>+</sup>)
+(match-lambda\* \<clause\><sup>+</sup>)
+(match-let <identifier><sup>?</sup> (\<match-let clause\><sup>+</sup>) \<body\><sup>+</sup>)
+(match-letrec (\<match-let clause\><sup>+</sup>) \<body\><sup>+</sup>)
 
 \<arg-expr\> -> \<expression\>
 \<clause\> -> (\<pattern\> \<body\>) |
@@ -10,7 +10,7 @@
 \<match-let clause\> -> (\<pattern\> \<arg-expr\>) |
                         \<binding spec\>
 
-\<pattern\> -> (\<pattern\><sup>+<sup>) |
+\<pattern\> -> (\<pattern\><sup>+</sup>) |
                \<pattern identifier\> |
                \<pattern expression\> |
                \<tail pattern\> |
@@ -34,20 +34,20 @@
                          <character> |
                          <quotation> |
                          <vector>
-\<tail pattern\> -> (\<pattern\><sup>+<sup> . \<pattern\>) |
-                    \#(\<pattern\><sup>+<sup> . \<pattern\>)
-\<ellipsis pattern\> -> (\<pattern\><sup>+<sup> \<pattern ellipsis\> \<pattern\><sup>\*<sup>) |
-                        \#(\<pattern\><sup>+<sup> \<pattern ellipsis\> \<pattern\><sup>\*<sup>)
-\<record pattern\> -> ($ \<record type\> \<pattern\><sup>+<sup>) |
-                      (struct \<record type\> \<pattern\><sup>+<sup>) |
-                      (object \<record type\> (\<slot name\> \<pattern\>)<sup>+<sup>)
+\<tail pattern\> -> (\<pattern\><sup>+</sup> . \<pattern\>) |
+                    \#(\<pattern\><sup>+</sup> . \<pattern\>)
+\<ellipsis pattern\> -> (\<pattern\><sup>+</sup> \<pattern ellipsis\> \<pattern\><sup>\*</sup>) |
+                        \#(\<pattern\><sup>+</sup> \<pattern ellipsis\> \<pattern\><sup>\*</sup>)
+\<record pattern\> -> ($ \<record type\> \<pattern\><sup>+</sup>) |
+                      (struct \<record type\> \<pattern\><sup>+</sup>) |
+                      (object \<record type\> (\<slot name\> \<pattern\>)<sup>+</sup>)
 \<getter or setter pattern\> -> (get! \<pattern identifier\>) |
                                 (set! \<pattern identifier\>)
 \<field pattern\> -> (= \<operator\> \<pattern\>)
 \<predicate pattern\> -> (? \<predicate\> \<pattern\>)
-\<boolean pattern\> -> (and \<pattern\><sup>\*<sup>) |
-                       (or \<pattern\><sup>\*<sup>) |
-                       (not \<pattern\><sup>+<sup>)
+\<boolean pattern\> -> (and \<pattern\><sup>\*</sup>) |
+                       (or \<pattern\><sup>\*</sup>) |
+                       (not \<pattern\><sup>+</sup>)
 \<tree pattern\> -> (\<pattern\> \*\*\* \<pattern\>)
 \<quasi-quote pattern\> -> \`\<quasi-quote datum\> |
                         -> (quasi-quote \<quasi-quote datum\>)
@@ -58,7 +58,7 @@
                         \*.. <number> <number> |
 \<quasi-quote datum\> -> \<pattern expression\> |
                          \<identifier\> |
-                         (\<quasi-quote contents\><sup>+<sup>)
+                         (\<quasi-quote contents\><sup>+</sup>)
 
 \<quasi-quote contents -> ,\<pattern\> |
                           (unquote \<pattern\>) |
