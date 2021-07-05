@@ -553,7 +553,7 @@ At the time of this writing, cyclic literals seem irregularly implemented, at le
 
 (first-column '((1 2 3) (4 5 6) (7 8 9))) =&gt; (1 4 7)
 </code></pre>
-<p><code>___</code> is provided as an alias for <code>...</code> when it is
+<p><code>___</code> is provided for when it is
 inconvenient to use the ellipsis (as in a syntax-rules template).
 </p>
 <b>It is an error</b> to refer to the same variable both inside and outside of an ellipsis pattern as in <code>(match x (((a ...) a) a))</code> because the semantics are not clear.
