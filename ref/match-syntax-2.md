@@ -138,7 +138,7 @@ A tail pattern matches the rest of a list or vector.
 
 A pattern followed by ellipsis matches zero or more times. A pattern followed by <code>=.. k</code> matches k times. A pattern followed by <code>\*.. k j</code> matches between k and j times (inclusive).
 
-The <code>$</code> and <code>struct</code> syntax of record patterns match record fields positionally. The <code>object<code> record pattern matches an identifier against the record field slot names. This pattern may not be available (because an implementation has not made the necessary record introspection forms available) or may not be available for a particular record (because the record type is not exported).
+The <code>$</code> and <code>struct</code> syntax of record patterns match record fields positionally. The <code>object</code> record pattern matches an identifier against the record field slot names. This pattern may not be available (because an implementation has not made the necessary record introspection forms available) or may not be available for a particular record (because the record type is not exported).
 
 Getter and setter functions bind a zero- and one-argument function to their identifier. The getter function returns the value of its match when called, and the setter function will take a new value to set its match to.
 
