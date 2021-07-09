@@ -300,6 +300,7 @@
 		   ((object Point (x (set! x))) (x 7)))
 	      (match-let (((object Point (x a) (y b)) p))
 			 (list a b))))
+#|
 (define-syntax test-var
   (syntax-rules ()
     ((test-var syn ...)
@@ -423,5 +424,6 @@
 	    (match '(1 1) (((var unquote-splicing) (var unquote-splicing))
 			   unquote-splicing)
 		   (_ 'fail)))
+|#
 
 (test-end test-name)
