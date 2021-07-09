@@ -27,8 +27,8 @@
     ;; (chibi match) forms
     match match-lambda match-lambda* match-let match-letrec match-let*
     ;; auxiliary syntax
-    ___ **1 =.. *.. *** ? $ struct object get! var)
-  (import (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get! var))
+    ___ **1 =.. *.. *** ? $ struct object get!)
+  (import (only (srfi 206 all) ___ **1 =.. *.. *** ? $ struct object get!))
   (cond-expand
     (chibi
       (import (chibi)))

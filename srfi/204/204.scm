@@ -244,6 +244,7 @@
 ;; Changes marked FT at end were part of SRFI process, not in original
 ;; match library.
 ;;
+;; 2021/07/09 - remove var.
 ;; 2021/01/12 - add var,
 ;; 2020/09/04 - perf fix for `not`
 ;; 2020/08/24 - convert ..= ..* ..1 to =.. *.. **1, remove @ FT
@@ -345,20 +346,7 @@
 ;; MATCH-UNDERSCORE.
 
 (define-syntax match-one
-  (syntax-rules (var)
-    ;; catch var here in case the identifier is an ellipsis
-    ((match-one v (var x) g+s (sk ...) fk (id ...))
-     (match-check-identifier
-      x
-      (let-syntax
-          ((new-sym?
-            (syntax-rules (id ...)
-              ((new-sym? x sk2 fk2) sk2)
-              ((new-sym? y sk2 fk2) fk2))))
-        (new-sym? random-sym-to-match
-                  (let ((x v)) (sk ... (id ... x)))
-                  (if (equal? v x) (sk ... (id ...)) fk)))
-      (if (equal? v x) (sk ... (id ...)) fk)))
+  (syntax-rules ()
     ;; If it's a list of two or more values, check to see if the
     ;; second one is an ellipsis and handle accordingly, otherwise go
     ;; to MATCH-TWO.
