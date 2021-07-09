@@ -10,6 +10,7 @@ clauses. It is an error for the \<non-pattern identifier\> to be a pattern varia
 A pattern can have one of the following forms:  
 ```
 <pattern> -> (<pattern> ...) |  
+            #(<pattern> ...) |
                <pattern identifier> |  
                <pattern s-expression> |  
                <tail pattern> |  
@@ -31,7 +32,7 @@ Syntax: A \<pattern identifier\> is any identifier except <code>and or not set! 
 and can be used as a pattern variable. A pattern variable will match any value.  
 
 
-A \<pattern s-expression\> can be (), which matches the empty list, a boolean, number, character, vector, a symbol or (quote \<pattern s-expression\> ...). A \<pattern s-expression\> matches an \<arg-expression\> that is exactly like it.
+A \<pattern s-expression\> can be  a boolean, number, character, vector, a (quote symbol) or (quote \<pattern s-expression\> ...). A \<pattern s-expression\> matches an \<arg-expression\> that is exactly like it. (A symbol in a quoted s-expression does not need a separate quote).
 
 
 A tail pattern has the form:
@@ -76,7 +77,7 @@ A field pattern has the form:
 
 A predicate pattern has the form:
 ```
-<predicate pattern> -> (? <predicate> <pattern>)
+<predicate pattern> -> (? <predicate> <pattern> ...)
 ```
 
 
@@ -92,6 +93,7 @@ A tree pattern has the form:
 ```
 <tree pattern> -> (<pattern> *** <pattern>)
 ```
+Syntax: It is an error to combine \*\*\* with ..., \_\_\_, ., \*.., or =.. .
 
 A quasi-quote pattern has the form:
 ```
@@ -119,7 +121,36 @@ Helper forms:
 (match-lambda* <clause> <clause> ...)
 (match-let (<match-let clause> ...) <body>)
 (match-let <identifier> (<match-let clause> ...) <body>)
+(match-let\* (<match-let clause> ...) <body>)
 (match-letrec (<match-let clause> ...) <body>)
 <match-let clause> -> (<pattern> <arg-expression>) |
                       <binding spec>
 ```
+
+Semantics: The use of match takes an expression and compares it to a series of patterns, beginning with the leftmost. When the expression matches a pattern, it evaluates the corresponding body, with any bindings formed in the pattern. A  failure pattern assigns a zero-argument function to a procedure so that if it is determined in the body that the match actually failed, that procedure can be called to restart matching at the next argument. 
+
+A pattern identifier (which is any identifier except <code>and or not set! get! $ struct object _ ... \_\_\_ =..  \*\*\* \*.. = ? quote quasi-quote unquote-splicing</code>) will match and bind anything, and bind it to that pattern variable. The special identifier _ matches anything but does not bind. The forms (\<pattern\> ...) and #(\<pattern\> ...) match lists and vectors whose elements match the contained patterns (() and #() match the empty list and vector).
+
+
+A pattern s-expression matches literal values.
+
+A tail pattern matches the rest of a list or vector.
+
+A pattern followed by ellipsis matches zero or more times. A pattern followed by <code>=.. k</code> matches k times. A pattern followed by <code>\*.. k j</code> matches between k and j times (inclusive).
+
+The <code>$</code> and <code>struct</code> syntax of record patterns match record fields positionally. The <code>object<code> record pattern matches an identifier against the record field slot names. This pattern may not be available (because an implementation has not made the necessary record introspection forms available) or may not be available for a particular record (because the record type is not exported).
+
+Getter and setter functions bind a zero- and one-argument function to their identifier. The getter function returns the value of its match when called, and the setter function will take a new value to set its match to.
+
+A field pattern <code>(= \<operator\> \<pattern\> ...)</code> applies operator (a one argument function) to what it is matching, and then matches the return value against its pattern. A predicate pattern <code>(? \<predicate\> \<pattern\>)</code> is similar in that it applies its predicate to a value, but if the predicate is true, that value is then matched against all additional patterns.
+
+A boolean pattern has one of the forms <code>(and \<pattern\> ...), (or \<pattern\> ...), (not \<pattern\> \<pattern\> ...)</code>. All of the forms in an and pattern must match, and an empty and pattern is true. At least one of the forms in the or pattern must match, and an empty or is false. None of the forms in a not pattern should match and an empty not is a syntax error.
+
+In a tree pattern (\<left pattern\> \*\*\* \<right pattern\>), the /<left pattern\> represents a path to the subtree that matches the \<right pattern\>.
+
+In a quasi-quote pattern, \<pattern s-expressions\> and \<identifiers\> match their literal values (as symbols in the case of \<identifiers\>). Unquoted \<pattern\>s match as usual, and unquote-spliced \<pattern\>s have ellipsis matching.
+
+<code>match-lambda</code> produces a one-argument lambda expression that matches its argument. <code>match-lambda\*</code> makes a lambda expression that accepts any number of arguments and matches against a list of those arguments.
+
+
+<code>match-let</code> <code>match-let\*</code> and <code>match-letrec</code> both allow binding a name to a value through either standard let/letrec syntax or by matching a pattern against a value.
