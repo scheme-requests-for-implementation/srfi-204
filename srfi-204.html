@@ -46,6 +46,7 @@ dt {
 	<li><a href="#Specification">Specification</a>
 	<ul>
 		<li><a href="#Intro">Introduction</a></li>
+		<li><a href="#Syntax-Semantics">Syntax and Semantics</a></li>
 		<li><a href="#Grammar">Pattern Grammar</a></li>
 		<li><a href="#Syntax">Syntax</a>
 		<ul>
@@ -169,13 +170,120 @@ The following terms will be used in describing pattern matching:
 	<dt>literal</dt><dd>any quoted or self-quoting datum</dd>
 	<dt>is an error/are errors</dt><dd>according to the <a href="https://srfi.schemers.org/srfi-faq.html">FAQ</a> this phrase, unlike "signals an error," doesn't define any behavior.</dd>
 </dl>
-<h3 id="Syntax">Syntax</h3>
-<p></p>
-<h4 id="match"><code>(match expr (clause) ...)<br>
+<h3 id="Syntax-Semantics">Syntax and Semantics</h3>
+<p>A pattern matcher has the following form:</p>
+<pre><code>(match &lt;arg-expression&gt; &lt;clause&gt; &lt;clause&gt; ... )
+&lt;clause&gt; -&gt; (&lt;pattern&gt; &lt;body&gt;) |
+            (&lt;pattern&gt;  (=&gt; &lt;non-pattern identifier&gt;) &lt;body&gt;)
+</code></pre>
+<p>Syntax: it is an error if &lt;arg-expression&gt; does not match a pattern in any of the
+clauses. It is an error for the &lt;non-pattern identifier&gt; to be a pattern variable.</p>
+<p>A pattern can have one of the following forms:</p>
+<pre><code>&lt;pattern&gt; -&gt; (&lt;pattern&gt; ...) |
+            #(&lt;pattern&gt; ...) |
+               &lt;pattern identifier&gt; |
+               &lt;pattern s-expression&gt; |
+               &lt;tail pattern&gt; |
+               &lt;ellipsis pattern&gt; |
+               &lt;record pattern&gt; |
+               &lt;getter or setter pattern&gt; |
+               &lt;field pattern&gt; |
+               &lt;predicate pattern&gt; |
+               &lt;boolean pattern&gt; |
+               &lt;tree pattern&gt; |
+               &lt;quasi-quote pattern&gt; |
+               _
+</code></pre>
+<p>Syntax: A &lt;pattern identifier&gt; is any identifier except <code>and or not set! get! $ struct object _ ... ___
+=..
+***
+*..
+= ? quote quasi-quote unquote-splicing</code>
+and can be used as a pattern variable. A pattern variable will match any value, and can be repeated.</p>
+<p>A &lt;pattern s-expression&gt; can be  a boolean, number, character, vector, a (quote symbol) or (quote &lt;pattern s-expression&gt; ...). A &lt;pattern s-expression&gt; matches an &lt;arg-expression&gt; that is exactly like it. (A symbol in a quoted s-expression does not need a separate quote).</p>
+<p>A tail pattern has the form:</p>
+<pre><code>&lt;tail pattern&gt; -&gt; (&lt;pattern&gt; &lt;pattern&gt; ... . &lt;pattern&gt;) |
+                 #(&lt;pattern&gt; &lt;pattern&gt; ... . &lt;pattern&gt;)
+</code></pre>
+<p>An ellipsis pattern has the form:</p>
+<pre><code>&lt;ellipsis pattern&gt; -&gt; (&lt;pattern&gt; &lt;pattern&gt; ... &lt;ellipsis form&gt; &lt;pattern&gt; ...) |
+                     #(&lt;pattern&gt; &lt;pattern&gt; ... &lt;ellipsis form&gt; &lt;pattern&gt; ...)
+&lt;ellipsis form&gt; -&gt; ... |
+                   ___ |
+                   =.. &lt;number&gt; |
+                   *.. &lt;number 1&gt; &lt;number 2&gt;
+</code></pre>
+<p>Syntax: It is an error for a list to contain more than one ellipsis form or tail pattern, but the patterns that list contains can contain additional ellipsis forms or tail patterns. It is an error for &lt;number 2&gt; to be less than &lt;number 1&gt;.</p>
+<p>A record pattern has the form:</p>
+<pre><code>&lt;record pattern&gt; -&gt; ($ &lt;record type&gt; &lt;pattern&gt; &lt;pattern&gt; ...) |
+                    (struct &lt;record type&gt; &lt;pattern&gt; &lt;pattern&gt; ...) |
+                    (object &lt;record type&gt; (&lt;slot name&gt; &lt;pattern&gt;) (&lt;slot name&gt; &lt;pattern&gt;) ...)
+&lt;record type&gt; -&gt; implementation dependent
+&lt;slot name&gt; -&gt; &lt;identifier&gt;
+</code></pre>
+<p>Syntax: It is an error for the number of patterns in the $ or struct forms to exceed the number of fields in the record. It is an error if the record does not have a field named &lt;slot name&gt;. If a record is exported from a library without its &lt;record type&gt;, this form cannot be used.</p>
+<p>A getter or setter pattern has the form:</p>
+<pre><code>&lt;getter or setter pattern&gt; -&gt; (get! &lt;pattern identifier&gt;) |
+                              (set! &lt;pattern identifier&gt;)
+</code></pre>
+<p>A field pattern has the form:</p>
+<pre><code>&lt;field pattern&gt; -&gt; (= &lt;operator&gt; &lt;pattern&gt;)
+</code></pre>
+<p>A predicate pattern has the form:</p>
+<pre><code>&lt;predicate pattern&gt; -&gt; (? &lt;predicate&gt; &lt;pattern&gt; ...)
+</code></pre>
+<p>A boolean pattern has the form:</p>
+<pre><code>&lt;boolean pattern&gt; -&gt; (and &lt;pattern&gt; ...) |
+                     (or  &lt;pattern&gt; ...) |
+                     (not &lt;pattern&gt; &lt;pattern&gt; ...)
+</code></pre>
+<p>Syntax: It is an error for not patterns to be empty. It is an error to refer to the same variable inside and outside a not pattern.</p>
+<p>A tree pattern has the form:</p>
+<pre><code>&lt;tree pattern&gt; -&gt; (&lt;pattern&gt; *** &lt;pattern&gt;)
+</code></pre>
+<p>Syntax: It is an error to combine *** with ..., ___, ., *.., or =.. .</p>
+<p>A quasi-quote pattern has the form:</p>
+<pre><code>&lt;quasi-quote pattern&gt; -&gt; `&lt;quasi-quote datum&gt; |
+                         (quasi-quote &lt;quasi-quote datum&gt;)
+&lt;quasi-quote datum&gt; -&gt; &lt;pattern s-expression&gt; |
+                       &lt;identifier&gt; |
+                       (&lt;quasi-quote contents&gt; ...)
+&lt;quasi-quote contents&gt; -&gt; &lt;quasi-quote datum&gt; |
+                          ,&lt;pattern&gt; |
+                          (unquote &lt;pattern&gt;) |
+                          ,@&lt;pattern&gt; |
+                          (unquote-splicing &lt;pattern&gt;)
+</code></pre>
+<p>Syntax: identifiers in unquoted patterns are subject to the same naming constraints as other pattern variables. ,@/unquote-splicing is a type of ellipsis pattern so it is a syntax error if a list contains this pattern in combination with tail, or other ellipsis patterns (=.. and *.. have to be unquoted to be interpreted as ellipsis patterns).</p>
+<p>A _ pattern is a wildcard that will match anything but does not bind.</p>
+<p>Helper forms:</p>
+<pre><code>(match-lambda &lt;clause&gt; &lt;clause&gt; ...)
+(match-lambda* &lt;clause&gt; &lt;clause&gt; ...)
+(match-let (&lt;match-let clause&gt; ...) &lt;body&gt;)
+(match-let &lt;identifier&gt; (&lt;match-let clause&gt; ...) &lt;body&gt;)
+(match-let\* (&lt;match-let clause&gt; ...) &lt;body&gt;)
+(match-letrec (&lt;match-let clause&gt; ...) &lt;body&gt;)
+&lt;match-let clause&gt; -&gt; (&lt;pattern&gt; &lt;arg-expression&gt;) |
+                      &lt;binding spec&gt;
+</code></pre>
+<p>Semantics: The use of match takes an expression and compares it to a series of patterns, beginning with the leftmost. When the expression matches a pattern, it evaluates the corresponding body, with any bindings formed in the pattern. A  failure pattern assigns a zero-argument function to a procedure so that if it is determined in the body that the match actually failed, that procedure can be called to restart matching at the next argument.</p>
+<p>A pattern identifier (which is any identifier except <code>and or not set! get! $ struct object _ ... ___ =..  *** *.. = ? quote quasi-quote unquote-splicing</code>) will match and bind anything, and bind it to that pattern variable. The special identifier _ matches anything but does not bind. The forms (&lt;pattern&gt; ...) and #(&lt;pattern&gt; ...) match lists and vectors whose elements match the contained patterns (() and #() match the empty list and vector).</p>
+<p>A pattern s-expression matches literal values.</p>
+<p>A tail pattern matches the rest of a list or vector.</p>
+<p>A pattern followed by ellipsis matches zero or more times. A pattern followed by <code>=.. k</code> matches k times. A pattern followed by <code>*.. k j</code> matches between k and j times (inclusive).</p>
+<p>The <code>$</code> and <code>struct</code> syntax of record patterns match record fields positionally. The <code>object</code> record pattern matches an identifier against the record field slot names. This pattern may not be available (because an implementation has not made the necessary record introspection forms available) or may not be available for a particular record (because the record type is not exported).</p>
+<p>Getter and setter functions bind a zero- and one-argument function to their identifier. The getter function returns the value of its match when called, and the setter function will take a new value to set its match to.</p>
+<p>A field pattern <code>(= &lt;operator&gt; &lt;pattern&gt; ...)</code> applies operator (a one argument function) to what it is matching, and then matches the return value against its pattern. A predicate pattern <code>(? &lt;predicate&gt; &lt;pattern&gt;)</code> is similar in that it applies its predicate to a value, but if the predicate is true, that value is then matched against all additional patterns.</p>
+<p>A boolean pattern has one of the forms <code>(and &lt;pattern&gt; ...), (or &lt;pattern&gt; ...), (not &lt;pattern&gt; &lt;pattern&gt; ...)</code>. All of the forms in an and pattern must match, and an empty and pattern is true. At least one of the forms in the or pattern must match, and an empty or is false. None of the forms in a not pattern should match and an empty not is a syntax error.</p>
+<p>In a tree pattern (&lt;left pattern&gt; *** &lt;right pattern&gt;), the /&lt;left pattern&gt; represents a path to the subtree that matches the &lt;right pattern&gt;.</p>
+<p>In a quasi-quote pattern, &lt;pattern s-expressions&gt; and &lt;identifiers&gt; match their literal values (as symbols in the case of &lt;identifiers&gt;). Unquoted &lt;pattern&gt;s match as usual, and unquote-spliced &lt;pattern&gt;s have ellipsis matching.</p>
+<p><code>match-lambda</code> produces a one-argument lambda expression that matches its argument. <code>match-lambda*</code> makes a lambda expression that accepts any number of arguments and matches against a list of those arguments.</p>
+<p><code>match-let</code> <code>match-let*</code> and <code>match-letrec</code> both allow binding a name to a value through either standard let/letrec syntax or by matching a pattern against a value.</p>
+</article>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds patvar
-    | <var>(<b>var</b> patvar)</var>                 ;; anything, and binds patvar
+   <!-- | <var>(<b>var</b> patvar)</var>                 ;; anything, and binds patvar-->
     | <b>_</b>                            ;; anything
     | ()                           ;; the empty list
     | #t                           ;; #t
@@ -220,7 +328,7 @@ The following terms will be used in describing pattern matching:
 
 patvar : an identifier except <b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>,
          <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b>
-	 <b>unquote</b>, <b>unquote-splicing</b>, <b>var</b>.
+	 <b>unquote</b>, <b>unquote-splicing</b><!--, <b>var</b>-->.
 
 ooo : <b>...</b>                          ;; zero or more
     | <b>___</b>                          ;; zero or more
@@ -441,6 +549,7 @@ where:
      no expansion for:
        (match-syntax-error "dotted tail not allowed after ellipsis" rest)
 </code></pre>
+<!--
 <p>The <code><b>var</b></code> operator is useful in cases like these:
 <pre><code>
 (define-syntax make-chunker
@@ -462,6 +571,7 @@ where:
 =&gt; ((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19))
 
 </code></pre>
+-->
 <h2 id="Patterns">Pattern Examples</h2>
 <p>A pattern is an expression made up of pattern operators, literals, and identifiers, which are interpreted as pattern variables. A quasi-pattern is a type of pattern that is quasi-quoted so it is made up of literals, unquoted identifiers, and unquoted operator expressions. Both types of patterns can be used in the sub-forms below, with some caveats for quasi-patterns. </p>
 <h3 id="Literals">Literal Patterns</h3>
@@ -476,19 +586,21 @@ where:
 At the time of this writing, cyclic literals seem irregularly implemented, at least in the repl, but this is one area where quasi-patterns and other literal patterns differ, since cyclic literals are illegal in quasiquote (R7RS, Sect. 2.4) and will lead to some kind of error/crash when they occur in quasi-patterns.
 </p>
 <h3 id="Variables">Pattern Variables and Var</h3>
-<p>Identifiers in patterns that are not one of the operators (<code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b>, <b>var</b></code>) will match anything and their corresponding binding is available in the body. The special variable <b>_</b> matches anything and does not bind the result. It can be used to get rid of unintersting values or in a block of match expressions, <b>_</b> is often used like <code>else</code> if the result is not needed. Pattern variables have to be unquoted in quasi-patterns.</p>
+<p>Identifiers in patterns that are not one of the operators (<code><b>_</b>, <b>quote</b>, <b>$</b>, <b>struct</b>, <b>@</b>, <b>object</b>, <b>=</b>, <b>and</b>, <b>or</b>, <b>not</b>, <b>?</b>, <b>set!</b>, <b>get!</b>, <b>quasiquote</b>, <b>...</b>, <b>___</b>, <b>**1</b>, <b>=..</b>, <b>*..</b> <b>unquote</b>, <b>unquote-splicing</b><!--, <b>var</b>--></code>) will match anything and their corresponding binding is available in the body. The special variable <b>_</b> matches anything and does not bind the result. It can be used to get rid of unintersting values or in a block of match expressions, <b>_</b> is often used like <code>else</code> if the result is not needed. Pattern variables have to be unquoted in quasi-patterns.</p>
 <pre><code>
 (match (list 1 2 3) ((a b c) b)) =&gt; 2
 (match (list 1 2 3) ((_ b _) b)) =&gt; 2
 (match (list 1 2 3) (`(a ,b c) b) (_ 'fail)) =&gt; fail
 (match (list 1 2 3) (`(1 ,b ,_) b) (_ 'fail)) =&gt; 2
 </code></pre>
+<!--
 <p>Variables inside the <code><b>var</b></code> operator are like regular variables, except they don't have the same limitations on naming. This operator is still experimental and some implementation-dependent limitations (such as on <code><b>...</b></code>) may still exist.</p>
 <pre> <code>
 (match (list 1 2 3) (((var a) (var b) (var c)) b)) =&gt; 2
 (match (list 1 2 3) (((var quote) (var _) (var $)) _)) =&gt; 2
 (match (list 1 2 3) ((quote _ $) _)) ERROR
 </code> </pre>
+-->
 <h3 id="Repetition">Nonlinear Patterns: Repetition</h3>
 <p>A nonlinear pattern has repeated pattern variables:</p>
 <pre><code>
