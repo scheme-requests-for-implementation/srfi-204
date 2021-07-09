@@ -308,6 +308,7 @@
 	    unquote-splicing var))
 ;; for some reason all these tests pass
 
+#|
 (test-equal "test var var 2"
 	    1
 	    (match '(1 1) (((var var) (var var)) var)
@@ -418,5 +419,6 @@
 	    (match '(1 1) (((var unquote-splicing) (var unquote-splicing))
 			   unquote-splicing)
 		   (_ 'fail)))
+|#
 
 (test-end test-name)
