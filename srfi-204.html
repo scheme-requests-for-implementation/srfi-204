@@ -281,7 +281,6 @@ and can be used as a pattern variable. A pattern variable will match any value, 
 <p>In a quasi-quote pattern, &lt;pattern s-expressions&gt; and &lt;identifiers&gt; match their literal values (as symbols in the case of &lt;identifiers&gt;). Unquoted &lt;pattern&gt;s match as usual, and unquote-spliced &lt;pattern&gt;s have ellipsis matching.</p>
 <p><code>match-lambda</code> produces a one-argument lambda expression that matches its argument. <code>match-lambda*</code> makes a lambda expression that accepts any number of arguments and matches against a list of those arguments.</p>
 <p><code>match-let</code> <code>match-let*</code> and <code>match-letrec</code> both allow binding a name to a value through either standard let/letrec syntax or by matching a pattern against a value.</p>
-</article>
 <h3 id="Grammar">Pattern Grammar</h3>
 <p></p>
 <pre>pat : <var>patvar</var>                       ;; anything, and binds patvar
