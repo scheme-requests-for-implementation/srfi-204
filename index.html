@@ -1,83 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Wright-Cartwright-Shinn Pattern Matcher</title>
-    <link href="/admin.css" rel="stylesheet">
-    <link href="/list.css" rel="stylesheet">
-    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/x-mathjax-config">
-     MathJax.Hub.Config({
-       tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-     });
-    </script>
-    <script crossorigin="anonymous" integrity=
-            "sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" src=
-            "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-            type="text/javascript"></script>
-  </head>
-
-  <body>
-    <h1>SRFI 204: Wright-Cartwright-Shinn Pattern Matcher</h1>
-    <p class="authors">by Felix Thibault</p>
-    <p class="based-on"></p>
-    <p class="status">status: <em>withdrawn</em> (2022-02-02)</p>
-    <p class="keywords">keywords: <a href="https://srfi.schemers.org/?keywords=pattern-matching">Pattern Matching</a></p><span class="see-also">See also <a href="/srfi-200/">SRFI 200: Pattern Matching</a> and <a href="/srfi-201/">SRFI 201: Syntactic Extensions to the Core Scheme Bindings</a>.</span>
-
-    <ul class="info">
-      <li><a href="srfi-204.html">The SRFI Document</a></li>
-      <li><a href="https://srfi-email.schemers.org/srfi-204/">Discussion Archive</a></li>
-      <li><a href="https://github.com/scheme-requests-for-implementation/srfi-204">Git repo (on Github)</a></li>
-      <li>
-        <a href="mailto:srfi-204@srfi.schemers.org">srfi-204@<span class="antispam">nospam</span>srfi.schemers.org (subscribers only)</a></li>
-      <li>
-        <span class="firefox-column-workaround">
-          <form method="POST" action="https://www.simplelists.com/subscribe.php">
-            <div class="title">Subscribe to srfi-204 mailing list</div>
-            <input name="email"
-                   placeholder="email address"
-                   tabindex="1"
-                   type="email" >
-            <input name="name"
-                   placeholder="full name"
-                   tabindex="2"
-                   type="text" >
-            <p>
-              <input id="sub-digest"
-                     name="digest"
-                     tabindex="3"
-                     type="checkbox"
-                     value="digest" >
-              <label for="sub-digest">daily digest?</label></p>
-            <input class="submit"
-                   name="submit"
-                   tabindex="4"
-                   type="submit"
-                   value="Subscribe to srfi-204" >
-            <input type="hidden" name="action" value="subscribe">
-            <input type="hidden" name="list" value="srfi-204@srfi.schemers.org"></form></a></li>
-      <li>
-        <span class="firefox-column-workaround">
-          <form method="POST" action="https://www.simplelists.com/subscribe.php">
-            <p class="title">Unsubscribe from srfi-204 mailing list</p>
-            <input name="email"
-                   placeholder="email address"
-                   tabindex="5"
-                   type="email" >
-            <input class="submit"
-                   name="submit"
-                   tabindex="6"
-                   type="submit"
-                   value="Unsubscribe from srfi-204" >
-            <input name="action"
-                   type="hidden"
-                   value="unsubscribe" >
-            <input name="list"
-                   type="hidden"
-                   value="srfi-204@srfi.schemers.org"></form></a></li></ul>
-    <h2>Abstract</h2><p>Pattern matching decomposes a compound data structure
-into parts and assigns those parts to variables. This
-SRFI describes a pattern-matching library already in use by
-several scheme implementations which can match many common
-compound data structures.</p></body></html>
+    <head>
+      <!-- SPDX-FileCopyrightText: 2024 Arthur A. Gleckler -->
+      <!-- SPDX-License-Identifier: MIT -->
+      <title>Wright-Cartwright-Shinn Pattern Matcher</title>
+      <link href="/admin.css" rel="stylesheet">
+      <link href="/list.css" rel="stylesheet">
+      <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+      <script crossorigin="anonymous" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head>
+    <body>
+      <h1>SRFI 204: Wright-Cartwright-Shinn Pattern Matcher</h1>
+      <p class="authors">by Felix Thibault</p>
+      <p class="based-on"></p>
+      <p class="status">status: <em>withdrawn</em> (2022-02-02)</p>
+      <p class="keywords">keywords: <a href="https://srfi.schemers.org/?keywords=pattern-matching">Pattern Matching</a></p><span class="see-also">See also <a href="/srfi-200/">SRFI 200: Pattern Matching</a>, <a href="/srfi-201/">SRFI 201: Syntactic Extensions to the Core Scheme Bindings</a>, <a href="/srfi-204/">SRFI 204: Wright-Cartwright-Shinn Pattern Matcher</a>, and <a href="/srfi-241/">SRFI 241: Match — Simple Pattern-Matching Syntax to Express Catamorphisms on Scheme Data</a>.</span>
+      <ul class="info">
+        <li><a href="srfi-204.html">The SRFI Document</a></li>
+        <li><a href="https://srfi-email.schemers.org/srfi-204/">Discussion Archive</a></li>
+        <li><a href="https://github.com/scheme-requests-for-implementation/srfi-204">Git repo (on GitHub)</a></li>
+        <li><a href="mailto:srfi-204@srfi.schemers.org">srfi-204@<span class="antispam">nospam</span>srfi.schemers.org (subscribers only)</a></li>
+        <li><span class="firefox-column-workaround">
+            <form method="POST" action="https://www.simplelists.com/subscribe.php">
+              <div class="title">Subscribe to srfi-204 mailing list</div><input name="email" placeholder="email address" tabindex="1" type="email"><input name="name" placeholder="full name" tabindex="2" type="text">
+              <p><input id="sub-digest" name="digest" tabindex="3" type="checkbox" value="digest"><label for="sub-digest">daily digest?</label></p><input class="submit" name="submit" tabindex="4" type="submit" value="Subscribe to srfi-204"><input type="hidden" name="action" value="subscribe"><input type="hidden" name="list" value="srfi-204@srfi.schemers.org"></form></span></li>
+        <li><span class="firefox-column-workaround">
+            <form method="POST" action="https://www.simplelists.com/subscribe.php">
+              <div class="title">Unsubscribe from srfi-204 mailing list</div><input name="email" placeholder="email address" tabindex="5" type="email"><input class="submit" name="submit" tabindex="6" type="submit" value="Unsubscribe from srfi-204"><input type="hidden" name="action" value="unsubscribe"><input name="list" type="hidden" value="srfi-204@srfi.schemers.org"></form></span></li></ul>
+      <h2>Abstract</h2><p>Pattern matching decomposes a compound data structure into parts and assigns those parts to variables. This SRFI describes a pattern-matching library already in use by several scheme implementations which can match many common compound data structures.</p></body></html>
